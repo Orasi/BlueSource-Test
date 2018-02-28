@@ -326,7 +326,7 @@ public class Employees {
 			return false;
 		}
 	}
-	
+
 	public void clickFirstName() {
 		tblEmployees.syncVisible(5,true);
 		btnFirstName.syncVisible(5,true);
