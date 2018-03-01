@@ -16,8 +16,9 @@
 			<!--<class name="com.bluesource.accounts.CreateAccount" />
 			
 			
-			<class name="com.bluesource.employees.NonbillableMissingOnPTO" />-->
-			<class name="com.bluesource.employees.ManagerListInactiveEmployees" />
+			<class name="com.bluesource.employees.NonbillableMissingOnPTO" />
+			<class name="com.bluesource.employees.ManagerListInactiveEmployees" />-->
+			<class name="com.bluesource.rates.RateUpdateWithProjectTime" />
 		</classes>
 	</test>
 

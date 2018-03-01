@@ -19,7 +19,9 @@ import com.orasi.utils.TestReporter;
 import com.orasi.web.OrasiDriver;
 import com.orasi.web.PageLoaded;
 import com.orasi.web.webelements.Button;
+import com.orasi.web.webelements.Checkbox;
 import com.orasi.web.webelements.Element;
+import com.orasi.web.webelements.Label;
 import com.orasi.web.webelements.Link;
 import com.orasi.web.webelements.Listbox;
 import com.orasi.web.webelements.Textbox;
@@ -46,7 +48,18 @@ public class Accounts {
 	@FindBy(css = "div.btn.btn-secondary.btn-xs.quick-nav") private Button btnQuickNav;
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
-
+	@FindBy(xpath = "//*[@id=\'panel_body_1\']/div/table/tbody/tr[1]/td[1]/a") private Link lnkFirstProject;
+	@FindBy(xpath = "//*[@id=\'panel_body_3\']/div/div/table/tbody/tr/td[1]/a") private Link lnkFirstRole;
+	@FindBy(xpath = "//*[@id=\'panel_body_2\']/div/table/tbody/tr/td[8]/span[1]/a") private Button btnEditFirstRate;
+	@FindBy(xpath = "//form[@class=\"edit_role_budget\"]/div/input[@id=\"role_budget_inherit_start_date\"]") private Checkbox cbStartDate;
+	@FindBy(xpath = "//form[@class='edit_role_budget']/div/input[@id='role_budget_start_date']") private Textbox txtStartDate;
+	@FindBy(xpath = "//form[@class=\"edit_role_budget\"]/div/input[@id=\"role_budget_inherit_end_date\"]") private Checkbox cbEndDate;
+	@FindBy(xpath = "//form[@class=\"edit_role_budget\"]/div/input[@id=\"role_budget_end_date\"]") private Textbox txtEndDate;
+	@FindBy(xpath = "//form[@class=\"edit_role_budget\"]/div/input[@id=\"role_budget_rate\"]") private Textbox txtRate;
+	@FindBy(xpath = "//*[@id=\"rate_comments\"]") private Textbox txtComment;
+	@FindBy(xpath = "//*[@id=\"edit_role_budget_233\"]/div[6]/input") private Button btnUpdateComment;
+	@FindBy(xpath = "//*[@id=\"notification-area\"]/div") private Label lblError;
+	
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
 		this.driver = driver;
@@ -376,5 +389,65 @@ public class Accounts {
 		PageLoaded.isDomComplete(driver, 1);
 	}
 	
+	public void clickEditAccount() {
+		btnEditAccount.click();
+	}
+	
+	public void clickFirstProject() {
+		lnkFirstProject.click();
+	}
+	
+	public void clickFirstRole() {
+		lnkFirstRole.click();
+	}
+	
+	public void clickEditFirstRate() {
+		btnEditFirstRate.click();
+	}
+	
+	public void uncheckStartDate() {
+		cbStartDate.syncVisible(1, true);
+		if(cbStartDate.isChecked()) {
+			cbStartDate.uncheck();
+		}
+	}
+	// Enters the param to the start date of the role
+	public void enterStartDate(String dateKeys) {
+		txtStartDate.syncEnabled(1,true);
+		txtStartDate.sendKeys(dateKeys);
+	}
+	
+	public void uncheckEndDate() {
+		cbEndDate.syncVisible(1, true);
+		if(cbEndDate.isChecked()) {
+			cbEndDate.uncheck();
+		}
+	}
+	// Enters the param to the end date of the role
+	public void enterEndDate(String dateKeys) {
+		txtEndDate.syncEnabled(2,true);
+		txtEndDate.sendKeys(dateKeys);
+	}
+	
+	public void enterRate(String rateKeys) {
+		txtRate.click();
+		txtRate.clear();
+		txtRate.sendKeys(rateKeys);
+	}
+	
+	public void enterComment(String comment) {
+		txtComment.click();
+		txtComment.sendKeys(comment);
+	}
+	
+	public void clickUpdateComment() {
+		btnUpdateComment.click();
+	}
+	
+	public String checkError(){
+		String parseThis = lblError.getText().toString();
+		String parsedString = parseThis.substring(2, 94); //92
+		return parsedString;
+	}
 }
 
