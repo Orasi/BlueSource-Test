@@ -1,6 +1,7 @@
 package com.orasi.bluesource;
 
 import com.orasi.web.OrasiDriver;
+import com.orasi.web.PageLoaded;
 import com.orasi.web.webelements.Link;
 import com.orasi.web.webelements.Webtable;
 import com.orasi.web.webelements.impl.internal.ElementFactory;
@@ -22,15 +23,22 @@ public class SubProjectTimeSheets {
 	@FindBy(xpath = "//div[@class='pull-right']/a") private Link lnkOneMonthForward;
 
 	/**Page Interactions**/
+	/**
+	 * Returns true if there are timesheet rows in the table
+	 * @author david.grayson
+	 * @return <code>true</code> if there are time sheets, <code>false</code> if not.
+	 */
 	public boolean hasTimeSheet(){
 		return tblTimesheetSummary.getRowCount() > driver.findElements(By.xpath("//tr[@class='week_row']")).size();
 	}
 
 	public void goBackOneMonth(){
+		PageLoaded.isDomComplete(driver);
 		lnkOneMonthBack.click();
 	}
 
 	public void goForwardOneMonth(){
+		lnkOneMonthForward.syncEnabled(3);
 		lnkOneMonthForward.click();
 	}
 

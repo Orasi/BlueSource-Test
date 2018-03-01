@@ -44,24 +44,32 @@ public class Add_QSF_Number_to_Timesheets_for_Sub_Projects extends WebBaseTest {
 		Accounts accounts = new Accounts(getDriver());
 		SubProjectTimeSheets subProjectTimeSheets = new SubProjectTimeSheets(getDriver());
 
+		TestReporter.logStep("Logging in as Admin");
 		loginPage.AdminLogin();
 
+		TestReporter.logStep("Navigating to Accounts");
 		header.navigateAccounts();
 
+		TestReporter.logStep("Clicking " + strAccount + " account link");
 		accounts.clickAccountLink(strAccount);
 
+		TestReporter.logStep("Click " + strProject + " project link");
 		accounts.clickProjectLink(strProject);
 
-		strSOW = accounts.getSOWNumber();
+		TestReporter.logStep("Getting Project SOW");
+		strSOW = accounts.getProjectSOW();
 
+		TestReporter.logStep("Clicking " + strSubProject + " sub project link");
 		accounts.clickSubprojectLink(strSubProject);
 
+		TestReporter.logStep("Click sub project timesheets");
 		accounts.clickProjectTimeSheets();
 
-		while(subProjectTimeSheets.hasTimeSheet()){
+		while(!subProjectTimeSheets.hasTimeSheet()){
+			TestReporter.logStep("Going back one month");
 			subProjectTimeSheets.goBackOneMonth();
 		}
 
-		TestReporter.assertEquals(strSOW, subProjectTimeSheets.getSOW(), "Verifying sub project timesheet SOW matches sub project SOW");
+		TestReporter.assertEquals(strSOW, subProjectTimeSheets.getSOW(), "Verifying sub project timesheet SOW matches sub projects");
 	}
 }
