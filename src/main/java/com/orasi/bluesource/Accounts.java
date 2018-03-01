@@ -43,6 +43,10 @@ public class Accounts {
 	
 	/**Page Interactions**/
 
+	/**
+	 * Clicks the "project time sheets" option in the project menu
+	 * @author david.grayson
+	 */
 	public void clickProjectTimeSheets(){
 		btnProjectMenu.syncEnabled(3);
 		btnProjectMenu.click();
@@ -50,7 +54,7 @@ public class Accounts {
 	}
 
 	/**
-	 * gets a projects SOW number
+	 * Gets a projects SOW number
 	 * @author david.grayson
 	 * @return a String of the projects SOW number
 	 */

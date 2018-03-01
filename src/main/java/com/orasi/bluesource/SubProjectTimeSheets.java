@@ -32,16 +32,29 @@ public class SubProjectTimeSheets {
 		return tblTimesheetSummary.getRowCount() > driver.findElements(By.xpath("//tr[@class='week_row']")).size();
 	}
 
+	/**
+	 * goes back one month on timesheets page
+	 * @author david.grayson
+	 */
 	public void goBackOneMonth(){
 		PageLoaded.isDomComplete(driver);
 		lnkOneMonthBack.click();
 	}
 
+	/**
+	 * goes forward one month on timesheets page
+	 * @author david.grayson
+	 */
 	public void goForwardOneMonth(){
 		lnkOneMonthForward.syncEnabled(3);
 		lnkOneMonthForward.click();
 	}
 
+	/**
+	 * Gets the SOW of the timesheet on the page
+	 * @author david.grayson
+	 * @return returns the SOW on the time sheet as a String
+	 */
 	public String getSOW(){
 		return tblTimesheetSummary.findElement(By.xpath("//div[@class='sow']")).getText().trim();
 	}
