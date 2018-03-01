@@ -1,30 +1,16 @@
 package com.orasi.bluesource;
 
-import java.lang.reflect.UndeclaredThrowableException;
-import java.util.List;
-
-import javax.lang.model.util.Elements;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.orasi.utils.Randomness;
-import com.orasi.utils.TestReporter;
 import com.orasi.web.OrasiDriver;
 import com.orasi.web.PageLoaded;
-import com.orasi.web.webelements.Button;
-import com.orasi.web.webelements.Element;
-import com.orasi.web.webelements.Link;
-import com.orasi.web.webelements.Listbox;
-import com.orasi.web.webelements.Textbox;
-import com.orasi.web.webelements.Webtable;
+import com.orasi.web.webelements.*;
 import com.orasi.web.webelements.impl.internal.ElementFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.support.FindBy;
+
+import java.lang.reflect.UndeclaredThrowableException;
+import java.util.List;
 
 public class Accounts {
 	private OrasiDriver driver = null;
@@ -46,6 +32,8 @@ public class Accounts {
 	@FindBy(css = "div.btn.btn-secondary.btn-xs.quick-nav") private Button btnQuickNav;
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
+	@FindBy(xpath = "//button[@class='contents btn btn-link']") private Button btnCreateProjectNote;
+	@FindBy(xpath = "//span[@class='badge badge-notify']") private Element elmNotesBadge;
 
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
@@ -54,6 +42,32 @@ public class Accounts {
 	}
 	
 	/**Page Interactions**/
+
+	/**
+	 * Checks the notes badge to get the current number of note associated with the project
+	 * @author david.grayson
+	 * @return number of notes associated with the project
+	 */
+	public int getNumberOfNotes(){
+		return Integer.parseInt(elmNotesBadge.getText());
+	}
+
+	/**
+	 * Checks that the badge with the number of notes is displayed
+	 * @author david.grayson
+	 * @return <code>true</code> if notes are associated with project, <code>false</code> if not.
+	 */
+	public boolean verifyNoteCreated(){
+		return elmNotesBadge.isDisplayed();
+	}
+
+	/**
+	 * Clicks the Notes button to bring up the create note form
+	 * @author david.grayson
+	 */
+	public void clickCreateNote(){
+		btnCreateProjectNote.click();
+	}
 
 	/*
 	 * Click on accounts tab 
