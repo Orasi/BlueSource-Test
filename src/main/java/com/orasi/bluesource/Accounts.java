@@ -33,7 +33,7 @@ public class Accounts {
 	@FindBy(css = "div.btn.btn-secondary.btn-xs.quick-nav") private Button btnQuickNav;
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
-	@FindBy(xpath = "//h4[contains(text(),'Project Info')]/div/button") private Button btnEditProject;
+	@FindBy(xpath = "//h4[contains(text(),'Project Info')]/div/button") private Button btnProjectMenu;
 	@FindBy(xpath = "//span[@class='sow_info']") private Element elmSOWNumber;
 	@FindBy(xpath = "//th[contains(text(),'Project')]/../../..") private Webtable tblSubProjects;
 
@@ -45,6 +45,11 @@ public class Accounts {
 	
 	/**Page Interactions**/
 
+	/**
+	 * Gets all of a projects sub project SOW numbers and returns them as a String
+	 * @author david.grayson
+	 * @return A <code>List<String></code> of a projects sub project SOW numbers
+	 */
 	public List<String> getAllSubProjectSOWs(){
 		ArrayList<String> subProjectSOWs = new ArrayList<>();
 		for(int i=1;i<tblSubProjects.getRowCount()+1;i++){
@@ -55,12 +60,21 @@ public class Accounts {
 		return subProjectSOWs;
 	}
 
+	/**
+	 * gets a projects SOW number
+	 * @author david.grayson
+	 * @return a String of the projects SOW number
+	 */
 	public String getProjectSOW(){
 		return elmSOWNumber.getText().replace('-',' ').trim();
 	}
 
+	/**
+	 * brings up the edit project form
+	 * @author david.grayson
+	 */
 	public void editProject(){
-		btnEditProject.click();
+		btnProjectMenu.click();
 		driver.findLink(By.xpath("//a[@class='avoid-collapse dropdown-item']")).click();
 	}
 
