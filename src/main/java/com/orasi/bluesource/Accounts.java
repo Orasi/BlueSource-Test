@@ -1,30 +1,16 @@
 package com.orasi.bluesource;
 
-import java.lang.reflect.UndeclaredThrowableException;
-import java.util.List;
-
-import javax.lang.model.util.Elements;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.orasi.utils.Randomness;
-import com.orasi.utils.TestReporter;
 import com.orasi.web.OrasiDriver;
 import com.orasi.web.PageLoaded;
-import com.orasi.web.webelements.Button;
-import com.orasi.web.webelements.Element;
-import com.orasi.web.webelements.Link;
-import com.orasi.web.webelements.Listbox;
-import com.orasi.web.webelements.Textbox;
-import com.orasi.web.webelements.Webtable;
+import com.orasi.web.webelements.*;
 import com.orasi.web.webelements.impl.internal.ElementFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.support.FindBy;
+
+import java.lang.reflect.UndeclaredThrowableException;
+import java.util.List;
 
 public class Accounts {
 	private OrasiDriver driver = null;
@@ -55,6 +41,39 @@ public class Accounts {
 	
 	/**Page Interactions**/
 
+
+	public void clickEditRoleRate(String roleRate) {
+		String xpath = "//td[contains(text(),'" + roleRate + "')]/../td/span[@class='actions actions-edit-time']/a";
+		driver.findElement(By.xpath(xpath)).click();
+	}
+
+	/**
+	 * Checks if the rate provided matches the rate field on the Role page
+	 * @author David Grayson
+	 * @return <code>true</code> if the rate field from the Rates table on a Project page
+	 * matches the rate on the Rates table on the Role page, <code>false</code> if not.
+	 */
+	public boolean verifyRoleRate(String rate) {
+		return driver.findWebtable(By.xpath("//th[contains(text(), 'Rate')]/../../..")).getRowWithCellText(rate, 5) != 0;
+	}
+
+	/**
+	 * Gets the rate field in the Role Table on a project page
+	 * @author David Grayson
+	 * @param role the name of the role to get the rate for
+	 */
+	public String getRoleRateFromProjectPage(String role){
+		final int colPosition = 2;
+		try{
+			Webtable tblProjectRoles = driver.findWebtable(By.xpath("//th[contains(text(), 'Rate')]/../../.."));
+			int row = tblProjectRoles.getRowWithCellText(role);
+			return tblProjectRoles.getCell(row, colPosition).getText();
+		} catch (NoSuchElementException e){
+			System.out.println("No such exception, Role table on project page not found\n" + e.getLocalizedMessage());
+			e.printStackTrace();
+		}
+		return null;
+	}
 	/*
 	 * Click on accounts tab 
 	 * Make sure that the correct page loads
@@ -375,6 +394,5 @@ public class Accounts {
 		tblAccounts.clickCell(row, column);
 		PageLoaded.isDomComplete(driver, 1);
 	}
-	
 }
 
