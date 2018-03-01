@@ -1,30 +1,17 @@
 package com.orasi.bluesource;
 
-import java.lang.reflect.UndeclaredThrowableException;
-import java.util.List;
-
-import javax.lang.model.util.Elements;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.orasi.utils.Randomness;
-import com.orasi.utils.TestReporter;
 import com.orasi.web.OrasiDriver;
 import com.orasi.web.PageLoaded;
-import com.orasi.web.webelements.Button;
-import com.orasi.web.webelements.Element;
-import com.orasi.web.webelements.Link;
-import com.orasi.web.webelements.Listbox;
-import com.orasi.web.webelements.Textbox;
-import com.orasi.web.webelements.Webtable;
+import com.orasi.web.webelements.*;
 import com.orasi.web.webelements.impl.internal.ElementFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.support.FindBy;
+
+import java.lang.reflect.UndeclaredThrowableException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Accounts {
 	private OrasiDriver driver = null;
@@ -46,6 +33,9 @@ public class Accounts {
 	@FindBy(css = "div.btn.btn-secondary.btn-xs.quick-nav") private Button btnQuickNav;
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
+	@FindBy(xpath = "//h4[contains(text(),'Project Info')]/div/button") private Button btnEditProject;
+	@FindBy(xpath = "//span[@class='sow_info']") private Element elmSOWNumber;
+	@FindBy(xpath = "//th[contains(text(),'Project')]/../../..") private Webtable tblSubProjects;
 
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
@@ -54,6 +44,25 @@ public class Accounts {
 	}
 	
 	/**Page Interactions**/
+
+	public List<String> getAllSubProjectSOWs(){
+		ArrayList<String> subProjectSOWs = new ArrayList<>();
+		for(int i=1;i<tblSubProjects.getRowCount()+1;i++){
+			tblSubProjects.getCell(i,1).click();
+			subProjectSOWs.add(getProjectSOW());
+			driver.navigate().back();
+		}
+		return subProjectSOWs;
+	}
+
+	public String getProjectSOW(){
+		return elmSOWNumber.getText().replace('-',' ').trim();
+	}
+
+	public void editProject(){
+		btnEditProject.click();
+		driver.findLink(By.xpath("//a[@class='avoid-collapse dropdown-item']")).click();
+	}
 
 	/*
 	 * Click on accounts tab 
