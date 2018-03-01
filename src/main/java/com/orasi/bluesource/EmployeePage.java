@@ -20,6 +20,7 @@ public class EmployeePage {
 	@FindBy(xpath = "//button[@data-target='#modal_1']") Button btnEditGeneral;
 	@FindBy(xpath = "//div//a[contains(text(),'Deactivate Employee')]") Button btnDeactivateEmployee;
 	@FindBy(xpath = "//div[@class='panel-heading']//a[contains(text(),'Deactivate')]") Button btnDeactivate;
+	@FindBy(xpath = "//*[@id=\"accordion\"]/div/div[3]/h4/a") Button btnManageProject;
 	
 	/**Constructor**/
 	public EmployeePage(OrasiDriver driver){
@@ -69,6 +70,10 @@ public class EmployeePage {
 	
 	public void clickDeactivate(){
 		btnDeactivate.click();
+	}
+	
+	public void clickManageProject(){
+		btnManageProject.click();
 	}
 	
 }
