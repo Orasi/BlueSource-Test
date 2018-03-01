@@ -59,9 +59,9 @@ public class Employees {
 	 * @author Paul
 	 */
 	public void clickAddEmployee() {
-		btnAdd.syncVisible(2,true);
-		btnAdd.syncEnabled(2,true);
-		btnAdd.syncInFrame(2,true);
+		btnAdd.syncVisible(1,true);
+		btnAdd.syncEnabled(1,true);
+		btnAdd.syncInFrame(1,true);
 		btnAdd.click();
 	}
 	
@@ -316,6 +316,16 @@ public class Employees {
 			return false;
 		}
 	}
+	/**
+	 * Checks the manager dropdown for the employee name passed,
+	 * returns false when the name is not found and true when found
+	 * 
+	 * @param strOption the name of the employee you want to check for.
+	 * @return <code>true</code> if the name provided is available
+	 * in the dropdown, <code>false</code> otherwise.
+	 * @author Andrew McGrail
+	 */
+	
 	
 	public boolean checkManagerOption(String strOption) {
 		try{
@@ -339,8 +349,8 @@ public class Employees {
 	
 
 	public void clickClose() {
-	btnClose.click();
-	btnClose.syncHidden(1,true);
+		btnClose.click();
+		btnClose.syncHidden(1,true);
 	}
 	
 	public void clickSecondName() {

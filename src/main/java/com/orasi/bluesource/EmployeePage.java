@@ -97,9 +97,9 @@ public class EmployeePage {
 	}
 	
 	public void clickClose() {
-	btnTimeEntryCheckbox.scrollIntoView();
-	btnClose.click();
-	btnClose.syncHidden(2,true);
+		btnTimeEntryCheckbox.scrollIntoView();
+		btnClose.click();
+		btnClose.syncHidden(2,true);
 	}
 	
 }

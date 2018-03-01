@@ -1,5 +1,5 @@
 /*
- * Test for to make sure inactive users do not show up while
+ * Test to make sure inactive users do not show up while
  * selecting an employee's manager.
  * @author: Andrew McGrail
  */
@@ -21,14 +21,7 @@ import com.orasi.utils.TestReporter;
 import com.orasi.web.WebBaseTest;
 
 public class ManagerListInactiveEmployees extends WebBaseTest{	
-	// ************* *
-	// Data Provider
-	// **************
-	/*@DataProvider(name = "login", parallel=true)
-	public Object[][] scenarios() {
-	return new ExcelDataProvider("/testdata/blueSource_Users.xlsx", "Sheet1").getTestData();
-	}*/
-			
+		
 	@BeforeMethod
 	@Parameters({ "runLocation", "browserUnderTest", "browserVersion",
 	"operatingSystem", "environment" })
@@ -61,7 +54,7 @@ public class ManagerListInactiveEmployees extends WebBaseTest{
 		 loginPage.AdminLogin();
 		 header.navigateEmployees();
 		 
-		 // Step 3. Select the employee with the username "a.a"
+		 // Step 3. Select the first employee on the list
 		 employees.clickFirstName();
 		 // Step 4. Click the user's Edit button over general info
 		 employeePage.editGeneralInfo();
@@ -76,15 +69,15 @@ public class ManagerListInactiveEmployees extends WebBaseTest{
 		 // Step 9. Scroll down to the 'Manager' dropdown list
 		 employees.scrollTo1stManager();
 		 // Step 10. Verify the Employee that was just deactivated is not appearing in the list.
-		 TestReporter.assertFalse(employees.checkManagerOption("a a"), "Asserting the inactive employee isn't listed as an option.");
+		 TestReporter.assertFalse(employees.checkManagerOption("a a"), "Asserting the inactive employee isn't listed as a manager.");
 		 // Step 11. Click the 'Close' button.
 		 employees.clickClose();
-		 // Step 12. Click on the name of another Employee.
+		 // Step 12. Click on the name of the second Employee.
 		 employees.clickSecondName();
 		 // Step 13. Inside the 'General Info' panel click the 'Edit' button.
 		 employeePage.editGeneralInfo();
 		 // Step 14. Verify in the 'Manager' dropdown list, the Inactive Employee does not appear.
-		 TestReporter.assertFalse(employees.checkManagerOption("a a"), "Asserting the inactive employee isn't listed as an option.");
+		 TestReporter.assertFalse(employees.checkManagerOption("a a"), "Asserting the inactive employee still isn't listed as a manager.");
 		 // Step 15. Click the 'Close' button.
 		 employeePage.clickClose();
 		 // Step 16. Click on 'Employees' in the header.
