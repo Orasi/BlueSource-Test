@@ -53,7 +53,6 @@ public class ManagerListInactiveEmployees extends WebBaseTest{
 		 // Steps 1&2. Log in to 10.238.243.127 as company.admin
 		 loginPage.AdminLogin();
 		 header.navigateEmployees();
-		 
 		 // Step 3. Select the first employee on the list
 		 employees.clickFirstName();
 		 // Step 4. Click the user's Edit button over general info
