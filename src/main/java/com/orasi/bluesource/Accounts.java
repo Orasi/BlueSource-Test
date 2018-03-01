@@ -444,6 +444,11 @@ public class Accounts {
 		btnUpdateComment.click();
 	}
 	
+	/*Parses the error message from attempting to enter out of bounds dates for
+	 * an employee role.
+	 * 
+	 * @Author Andrew McGrail
+	 */	
 	public String checkError(){
 		String parseThis = lblError.getText().toString();
 		String parsedString = parseThis.substring(2, 94); //92
