@@ -22,10 +22,11 @@ public class EmployeePage {
 	@FindBy(partialLinkText = "Deactivate Employee") Button btnDeactivateEmployee;
 	@FindBy(partialLinkText = "Deactivate") Button btnDeactivate;
 	@FindBy(xpath = "//*[@id=\"modal_1\"]/div/div") Label lblModal;
-	@FindBy(xpath = "//*[@id=\'employee_require_nonbillable\']") Button btnTimeEntryCheckbox;
+	@FindBy(xpath = "//*[@id=\"employee_require_nonbillable\"]") Button btnTimeEntryCheckbox;
 	@FindBy(id = "employee_status") Listbox lstStatus;
-	@FindBy(xpath = "//*[@id=\"edit_employee_256\"]/div[25]/input") Button btnUpdateEmployee;
+	@FindBy(xpath = "//*[@id=\"edit_employee_293\"]/div[24]/input") Button btnUpdateEmployee;
 	@FindBy(xpath = "//*[@id='edit_employee_2']/div[24]/button") Button btnClose;
+	@FindBy(xpath = "//*[@id=\"select2-flavor-container\"]/span") Listbox lstNonbillable;
 	
 
 	
@@ -92,6 +93,7 @@ public class EmployeePage {
 	
 	public void clickUpdateEmployee() {
 		btnTimeEntryCheckbox.scrollIntoView();
+		btnUpdateEmployee.syncEnabled(2,true);
 		btnUpdateEmployee.syncVisible(2,true);
 		btnUpdateEmployee.click();
 	}
@@ -100,6 +102,20 @@ public class EmployeePage {
 	btnTimeEntryCheckbox.scrollIntoView();
 	btnClose.click();
 	btnClose.syncHidden(2,true);
+	}
+	
+	public void clickNonbillableTime() {
+		btnTimeEntryCheckbox.syncVisible(2,true);
+		btnTimeEntryCheckbox.scrollIntoView();
+		btnTimeEntryCheckbox.click();
+	}
+	
+	public boolean checkNonbillableRoles() {
+		if(lstNonbillable.isDisplayed()) {
+			return true;
+		}
+		else
+			return false;
 	}
 	
 }
