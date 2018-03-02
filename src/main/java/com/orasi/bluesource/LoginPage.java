@@ -50,6 +50,7 @@ public class LoginPage {
 	 * @param password
 	 */
 	public boolean Login(String role){
+		txtUsername.syncVisible(2,true);
 		txtUsername.set(userCredentialRepo.getString(role));
 		txtPassword.set(userCredentialRepo.getString("PASSWORD"));
 		btnLogin.syncVisible(90, false);
@@ -69,6 +70,7 @@ public class LoginPage {
 	 * @author:
 	 */
 	public void LoginWithCredentials(String username, String password) {
+		txtUsername.syncVisible(2,true);
 		txtUsername.set(username);
 		txtPassword.set(password);
 		btnLogin.syncVisible(90, false);

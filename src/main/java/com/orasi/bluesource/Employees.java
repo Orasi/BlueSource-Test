@@ -327,6 +327,9 @@ public class Employees {
 		}
 	}
 	
+	/*Clicks the first name currently listed from Employees
+	 * @author Andrew McGrail
+	 */
 	public void clickFirstName() {
 		tblEmployees.syncVisible(5,true);
 		btnFirstName.syncVisible(5,true);
@@ -337,12 +340,17 @@ public class Employees {
 		lstManager.scrollIntoView();
 	}
 	
-
+	/*Clicks the close button on the Add Employee modal
+	 * @author Andrew McGrail
+	 */
 	public void clickClose() {
 	btnClose.click();
 	btnClose.syncHidden(1,true);
 	}
 	
+	/*Clicks the second name currently listed from Employees
+	 * @author Andrew McGrail
+	 */
 	public void clickSecondName() {
 		tblEmployees.syncVisible(2,true);
 		btnSecondName.syncVisible(2, true);
