@@ -339,13 +339,47 @@ public class Employees {
 	
 
 	public void clickClose() {
-	btnClose.click();
-	btnClose.syncHidden(1,true);
+		btnClose.click();
+		btnClose.syncHidden(1,true);
 	}
 	
 	public void clickSecondName() {
 		tblEmployees.syncVisible(2,true);
 		btnSecondName.syncVisible(2, true);
 		btnSecondName.click();
+	}
+	
+	/* This method returns the string of the success message
+	 * 
+	 * @return The success message in a String
+	 * @author Andrew McGrail
+	 */
+	public String getSuccessMessage() {
+		return driver.findElement(By.xpath("//*[@id='notification-area']/div")).getText().substring(2,35);
+	}
+	
+	public int findFirstInactiveInTable(){
+		Integer intRow = null;
+		
+		for (int i = 1; i < tblEmployees.getRowCount(); i++) {
+			if (tblEmployees.getCellData(i, 12).equalsIgnoreCase("Inactive")) {
+				intRow = i;
+				break;
+			}
+		}
+		return intRow;
+	}
+	
+	public int findFirstActiveInTable(){
+		Integer intRow = null;
+		tblEmployees.syncVisible(2,true);
+		
+		for (int i = 1; i < tblEmployees.getRowCount(); i++) {
+			if (tblEmployees.getCellData(i, 12).equalsIgnoreCase("Inactive")) {
+				intRow = i;
+				break;
+			}
+		}
+		return intRow;
 	}
 }
