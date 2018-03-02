@@ -13,11 +13,7 @@
 	
 	<test name="In Progress test" parallel="methods" thread-count="20">
 		<classes>
-			<!--<class name="com.bluesource.accounts.CreateAccount" />
-			
-			
-			<class name="com.bluesource.employees.NonbillableMissingOnPTO" />-->
-			<class name="com.bluesource.employees.ManagerListInactiveEmployees" />
+			<class name="com.bluesource.CreateRoleCompanyViewEdit" />
 		</classes>
 	</test>
 

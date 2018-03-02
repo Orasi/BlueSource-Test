@@ -40,8 +40,10 @@ public class Employees {
 	@FindBy(xpath = "//*[@id=\"employee_account_permission\"]") private Listbox lstAccountPermission;
 	@FindBy(xpath = "//*[@id=\'employee_status\']") private Listbox lstManager;
 	@FindBy(xpath = "//*[@id=\"resource-content\"]/div[1]/table/tbody/tr[2]/td[1]/a") Button btnFirstName;
-	@FindBy(linkText = "account") Button btnSecondName;
+	@FindBy(xpath = "//*[@id=\"resource-content\"]/div[1]/table/tbody/tr[3]/td[1]/a") Button btnSecondName;
 	@FindBy(xpath = "//*[@id=\'new_employee\']/div[24]/button") Button btnClose;
+	@FindBy(xpath = "//*[@id=\"resource-content\"]/div[1]/table/tbody/tr[2]/td[4]/a") Link lnkFirstSupervisor;
+	@FindBy(xpath = "//*[@id=\"resource-content\"]/div[1]/table/tbody/tr[3]/td[4]/a") Link lnkSecondSupervisor;
 	
 	/**Constructor**/
 	public Employees(OrasiDriver driver){
@@ -347,5 +349,18 @@ public class Employees {
 		tblEmployees.syncVisible(2,true);
 		btnSecondName.syncVisible(2, true);
 		btnSecondName.click();
+	}
+	
+	/*This method checks the name of the supervisor for the first two
+	 * rows of employees currently on screen
+	 * 
+	 * @param String name - Name of the supervisor you want matched
+	 * @author Andrew McGrail
+	 */
+	public void checkSupervisors(String name) {
+		if(lnkFirstSupervisor.getText().equals(name))
+			btnFirstName.click();
+		else if(lnkSecondSupervisor.getText().equals(name))
+			btnSecondName.click();
 	}
 }

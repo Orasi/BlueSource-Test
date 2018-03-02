@@ -79,8 +79,8 @@ public class Header {
 	}
 	
 	public void navigateLogout() {
-		MessageCenter messageCenter = new MessageCenter(driver);
-		messageCenter.closeMessageCenter();
+		lnkLogout.syncVisible(2,true);
+		lnkLogout.syncEnabled(2,true);
 		lnkLogout.click();		
 	}
 

@@ -26,6 +26,7 @@ public class EmployeePage {
 	@FindBy(id = "employee_status") Listbox lstStatus;
 	@FindBy(xpath = "//*[@id=\"edit_employee_256\"]/div[25]/input") Button btnUpdateEmployee;
 	@FindBy(xpath = "//*[@id='edit_employee_2']/div[24]/button") Button btnClose;
+	@FindBy(xpath = "//div[@id='modal_1']/div/div/div/button") Button btnCloseModal;
 	
 
 	
@@ -97,9 +98,20 @@ public class EmployeePage {
 	}
 	
 	public void clickClose() {
-	btnTimeEntryCheckbox.scrollIntoView();
-	btnClose.click();
-	btnClose.syncHidden(2,true);
+		btnTimeEntryCheckbox.scrollIntoView();
+		btnClose.click();
+		btnClose.syncHidden(2,true);
 	}
 	
+	/*Closes the edit general info modal and waits for the modal to fade.
+	 * 
+	 * @author Andrew McGrail
+	 */
+	public void clickCloseModal() {
+		btnCloseModal.syncVisible(2,true);
+		lblModal.syncVisible(2,true);
+		btnCloseModal.syncVisible(2,true);
+		btnCloseModal.click();
+		lblModal.syncHidden(2,true);
+	}
 }
