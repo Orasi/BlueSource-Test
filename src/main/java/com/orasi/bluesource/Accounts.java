@@ -1,35 +1,20 @@
 package com.orasi.bluesource;
 
+import com.orasi.utils.Randomness;
+import com.orasi.web.OrasiDriver;
+import com.orasi.web.PageLoaded;
+import com.orasi.web.webelements.*;
+import com.orasi.web.webelements.impl.internal.ElementFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.support.FindBy;
+
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.List;
 
-import javax.lang.model.util.Elements;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.orasi.utils.Randomness;
-import com.orasi.utils.TestReporter;
-import com.orasi.web.OrasiDriver;
-import com.orasi.web.PageLoaded;
-import com.orasi.web.webelements.Button;
-import com.orasi.web.webelements.Element;
-import com.orasi.web.webelements.Link;
-import com.orasi.web.webelements.Listbox;
-import com.orasi.web.webelements.Textbox;
-import com.orasi.web.webelements.Webtable;
-import com.orasi.web.webelements.impl.internal.ElementFactory;
-
 public class Accounts {
 	private OrasiDriver driver = null;
-	
-	
+
 	/**Page Elements**/
 	@FindBy(xpath = "//*[@id='resource-content']/div[2]/p") private Element elmNumberPages;
 	@FindBy(xpath = "//*[@id=\"resource-content\"]/div[1]/table/tbody") private Webtable tblAccounts;
@@ -46,6 +31,7 @@ public class Accounts {
 	@FindBy(css = "div.btn.btn-secondary.btn-xs.quick-nav") private Button btnQuickNav;
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
+	@FindBy(xpath = "//button[contains(text(),'Edit Role')]") private Button btnEditRole;
 
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
@@ -54,6 +40,31 @@ public class Accounts {
 	}
 	
 	/**Page Interactions**/
+
+	/**
+	 * Checks that there is one less than what is provided
+	 * @author david.grayson
+	 * @param prevNumOfRole how many of the role were on the page before deletion
+	 * @param strRole name of the role to check
+	 * @return <code>true</code> if there is one less of the role on the project page, <code>false</code> for anything else.
+	 */
+	public boolean wasRoleDeleted(int prevNumOfRole, String strRole){
+		return (prevNumOfRole-1) == getNumberOfRole(strRole);
+	}
+
+	/**
+	 * Gets how many of a particular role is assigned to the project
+	 * @author david.grayson
+	 * @param strRole the name of the role to count as a String
+	 * @return how many of the role are assigned to the project
+	 */
+	public int getNumberOfRole(String strRole){
+		return driver.findElements(By.xpath("//td//a[contains(text(),'" + strRole + "')]")).size();
+	}
+
+	public void clickEditRole(){
+		btnEditRole.click();
+	}
 
 	/*
 	 * Click on accounts tab 
