@@ -1,5 +1,6 @@
 package com.orasi.bluesource;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.FindBy;
 
 import com.orasi.web.OrasiDriver;
@@ -70,7 +71,6 @@ public class EmployeePage {
 	public void editGeneralInfo() {
 		btnEditGeneral.syncVisible(3, true);
 		btnEditGeneral.click();
-		
 	}		
 	
 	public void clickDeactivateEmployee() {
@@ -113,5 +113,14 @@ public class EmployeePage {
 		btnCloseModal.syncVisible(2,true);
 		btnCloseModal.click();
 		lblModal.syncHidden(2,true);
+	}
+	
+	/* This method check if the edit button beside general info exists
+	 * 
+	 * @return boolean - If the edit button exists beside general info
+	 * @author Andrew McGrail
+	 */
+	public boolean checkEditButton() {
+		return driver.findElement(By.xpath("//*[@id='accordion']/div/div")).isDisplayed();
 	}
 }

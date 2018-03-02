@@ -44,6 +44,8 @@ public class Employees {
 	@FindBy(xpath = "//*[@id=\'new_employee\']/div[24]/button") Button btnClose;
 	@FindBy(xpath = "//*[@id=\"resource-content\"]/div[1]/table/tbody/tr[2]/td[4]/a") Link lnkFirstSupervisor;
 	@FindBy(xpath = "//*[@id=\"resource-content\"]/div[1]/table/tbody/tr[3]/td[4]/a") Link lnkSecondSupervisor;
+	@FindBy(xpath = "//*[@id=\"employee_employee_permission\"]") Listbox lstPTOPermission;
+	@FindBy(xpath = "//*[@id=\"notification-area\"]/div") Label lblSuccessMessage;
 	
 	/**Constructor**/
 	public Employees(OrasiDriver driver){
@@ -362,5 +364,23 @@ public class Employees {
 			btnFirstName.click();
 		else if(lnkSecondSupervisor.getText().equals(name))
 			btnSecondName.click();
+	}
+	/*This method sets the "PTO Permission" to whatever you pass
+	 * 
+	 * @param String PTOPermission - The text of the permission you want to select
+	 * @author Andrew McGrail
+	 */
+	public void setPTOPermission(String PTOPermission) {
+		lstPTOPermission.syncVisible(2,true);
+		lstPTOPermission.select(PTOPermission);
+	}
+	
+	/*This method returns the string of the success message at the top of the scren
+	 * 
+	 * @return String of the success message
+	 * @author Andrew McGrail
+	 */
+	public String getSuccessMessage() {
+		return lblSuccessMessage.getText().substring(2, 31);
 	}
 }
