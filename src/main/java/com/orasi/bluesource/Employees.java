@@ -358,10 +358,16 @@ public class Employees {
 		return driver.findElement(By.xpath("//*[@id='notification-area']/div")).getText().substring(2,35);
 	}
 	
+	/* This method finds the row number of the first Inactive employee
+	 * 
+	 * @returns int - row number of inactive employee
+	 * @author Andrew McGrail 
+	 */
 	public int findFirstInactiveInTable(){
 		Integer intRow = null;
 		
-		for (int i = 1; i < tblEmployees.getRowCount(); i++) {
+		//tblEmployees.getRowCount()
+		for (int i = 1; i < 50; i++) {
 			if (tblEmployees.getCellData(i, 12).equalsIgnoreCase("Inactive")) {
 				intRow = i;
 				break;
@@ -370,16 +376,34 @@ public class Employees {
 		return intRow;
 	}
 	
+	/* This method finds the row number of the first Active employee
+	 * 
+	 * @returns int - row number of active employee
+	 * @author Andrew McGrail 
+	 */
 	public int findFirstActiveInTable(){
 		Integer intRow = null;
 		tblEmployees.syncVisible(2,true);
 		
-		for (int i = 1; i < tblEmployees.getRowCount(); i++) {
-			if (tblEmployees.getCellData(i, 12).equalsIgnoreCase("Inactive")) {
+		//tblEmployees.getRowCount()
+		for (int i = 1; i < 50; i++) {
+			if (tblEmployees.getCellData(i, 12).equalsIgnoreCase("Permanent") | tblEmployees.getCellData(i, 12).equalsIgnoreCase("Contractor")) {
 				intRow = i;
 				break;
 			}
 		}
 		return intRow;
 	}
+	
+	/* This method selects the link of the first name for a given row
+	 * and column for the employee webtable
+	 * 
+	 * @param rowNum - The row number
+	 * @param columnNum - The column number
+	 * @author Andrew McGrail 
+	 */
+	public void selectEmployeeFirstname(int rowNum, int columnNum) {
+		driver.findLink(By.xpath("//*[@id=\"resource-content\"]/div[1]/table/tbody/tr["+rowNum+"]/td["+columnNum+"]/a")).click();
+	}
+	
 }

@@ -11,9 +11,7 @@ import com.orasi.bluesource.EmployeePage;
 import com.orasi.bluesource.Employees;
 import com.orasi.bluesource.Header;
 import com.orasi.bluesource.LoginPage;
-import com.orasi.bluesource.MessageCenter;
 import com.orasi.utils.TestReporter;
-import com.orasi.utils.dataHelpers.personFactory.Person;
 import com.orasi.web.WebBaseTest;
 
 public class EmployeesViewInactiveDate extends WebBaseTest{	
@@ -42,7 +40,6 @@ public class EmployeesViewInactiveDate extends WebBaseTest{
 	 public void testEmployeesViewInactiveDate() {
 		 
 		 LoginPage loginPage = new LoginPage(getDriver());
-		 MessageCenter messageCenter = new MessageCenter(getDriver());
 		 Header header = new Header(getDriver());
 		 Employees employees = new Employees(getDriver());
 		 EmployeePage employeePage = new EmployeePage(getDriver());
@@ -52,13 +49,14 @@ public class EmployeesViewInactiveDate extends WebBaseTest{
 		 loginPage.AdminLogin();
 		 //Step 6. Click on a name of an employee that have been marked as inactive (ex. user4.base or user6.base)
 		 header.navigateEmployees();
-		 employees.select_employee(employees.findFirstInactiveInTable(), 1);
+		 employees.selectEmployeeFirstname(employees.findFirstInactiveInTable(), 1);
+		 TestReporter.logStep("Reached page for an employee marked as inactive");
 		 //Step 7. Click 'Edit' button in the 'General Info' section
 		 employeePage.editGeneralInfo();
 		 //Step 8. Verify that 'Inactive Date' has a date present in the box.
-		 
+		 TestReporter.assertTrue(employeePage.checkInactiveDate(), "Verifying the employee has an Inactive Date");
 		 //Step 9. Click the 'x' button in the top right corner.
-		 
+		 employeePage.clickCloseModal();
 		 //Step 10. Click 'Logout'
 		 header.navigateLogout();
 		 TestReporter.assertTrue(loginPage.verifyPageIsLoaded(), "Verifying successful logout");

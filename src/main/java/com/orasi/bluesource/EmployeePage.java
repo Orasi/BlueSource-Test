@@ -26,6 +26,8 @@ public class EmployeePage {
 	@FindBy(id = "employee_status") Listbox lstStatus;
 	@FindBy(xpath = "//*[@id=\"edit_employee_256\"]/div[25]/input") Button btnUpdateEmployee;
 	@FindBy(xpath = "//*[@id='edit_employee_2']/div[24]/button") Button btnClose;
+	@FindBy(xpath = "//*[@id=\"employee_inactive_date\"]") Textbox txtInactiveDate;
+	@FindBy(xpath = "//*[@id=\"modal_1\"]/div/div/div[1]/button") Button btnCloseModal;
 	
 
 	
@@ -97,9 +99,28 @@ public class EmployeePage {
 	}
 	
 	public void clickClose() {
-	btnTimeEntryCheckbox.scrollIntoView();
-	btnClose.click();
-	btnClose.syncHidden(2,true);
+		btnTimeEntryCheckbox.scrollIntoView();
+		btnClose.click();
+		btnClose.syncHidden(2,true);
 	}
 	
+	/* This method determines if the selected employee has an Inactive date.
+	 * 
+	 * return boolean - True if Inactive Date is not empty, false otherwise
+	 * @author Andrew McGrail
+	 */
+	public boolean checkInactiveDate() {
+		return !(txtInactiveDate.getText().equalsIgnoreCase(null));
+	}
+	
+	/* This method clicks the Modal close button
+	 * 
+	 * @author Andrew McGrail
+	 */
+	public void clickCloseModal() {
+		lblModal.syncVisible(2,true);
+		btnCloseModal.syncVisible(2,true);
+		btnCloseModal.click();
+		lblModal.syncHidden(2,true);
+	}
 }

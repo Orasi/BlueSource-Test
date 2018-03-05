@@ -11,9 +11,7 @@ import com.orasi.bluesource.EmployeePage;
 import com.orasi.bluesource.Employees;
 import com.orasi.bluesource.Header;
 import com.orasi.bluesource.LoginPage;
-import com.orasi.bluesource.MessageCenter;
 import com.orasi.utils.TestReporter;
-import com.orasi.utils.dataHelpers.personFactory.Person;
 import com.orasi.web.WebBaseTest;
 
 public class EmployeesMarkingInactive extends WebBaseTest{	
@@ -53,7 +51,7 @@ public class EmployeesMarkingInactive extends WebBaseTest{
 		 loginPage.AdminLogin();
 		 //Step 6. Click on the first or last name of an employee in the employee table.
 		 header.navigateEmployees();
-		 employees.select_employee(employees.findFirstActiveInTable(), 1);
+		 employees.selectEmployeeFirstname(employees.findFirstActiveInTable(), 1);
 		 TestReporter.logStep("Reached page for an employee not marked as inactive");
 		 //Step 7. Click the 'Edit' button in the 'General Info' section
 		 employeePage.editGeneralInfo();
