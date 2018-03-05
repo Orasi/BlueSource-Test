@@ -43,6 +43,9 @@ public class Accounts {
 	
 	/**Page Interactions**/
 
+	/**
+	 * clicks on a projects menu button and then the 'Edit Project' option
+	 */
 	public void clickEditProject(){
 		btnProjectMenu.syncEnabled(3);
 		btnProjectMenu.click();

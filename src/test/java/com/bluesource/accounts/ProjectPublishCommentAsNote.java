@@ -42,26 +42,36 @@ public class ProjectPublishCommentAsNote extends WebBaseTest {
 		Accounts accounts = new Accounts(getDriver());
 		EditProjectForm editProjectForm = new EditProjectForm(getDriver());
 
+		TestReporter.logStep("Logging in as Admin");
 		loginPage.AdminLogin();
 
+		TestReporter.logStep("Navigating to Accounts");
 		header.navigateAccounts();
 
+		TestReporter.logStep("Clicking [" + strAccount + "] account link");
 		accounts.clickAccountLink(strAccount);
 
+		TestReporter.logStep("Clicking [" + strProject + "] project link");
 		accounts.clickProjectLink(strProject);
 
+		TestReporter.logStep("Clicking 'Edit Project'");
 		accounts.clickEditProject();
 
+		TestReporter.logStep("Changing Notification Threshold");
 		editProjectForm.testEditNotificationThreshold();
 
+		TestReporter.logStep("Entering test comments");
 		editProjectForm.testProjectComments();
 
+		TestReporter.logStep("Clicking 'Update Project'");
 		editProjectForm.clickUpdateProject();
 
+		TestReporter.logStep("Clicking 'Edit Project'");
 		accounts.clickEditProject();
 
+		TestReporter.logStep("Clicking 'Change Log' tab");
 		editProjectForm.clickChangeLogTab();
 
-		TestReporter.assertEquals("test test test",editProjectForm.getChangeLogNoteText(),"Verifying change log is accurate");
+		TestReporter.assertEquals("test test test",editProjectForm.getChangeLogNoteText(),"Verifying Change Log is accurate");
 	}
 }
