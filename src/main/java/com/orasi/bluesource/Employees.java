@@ -3,7 +3,6 @@ package com.orasi.bluesource;
 import java.util.ResourceBundle;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.support.FindBy;
 
 import com.orasi.utils.Constants;
@@ -11,10 +10,8 @@ import com.orasi.utils.Sleeper;
 import com.orasi.utils.TestReporter;
 import com.orasi.utils.dataHelpers.personFactory.Person;
 import com.orasi.web.OrasiDriver;
-import com.orasi.web.PageLoaded;
 import com.orasi.web.exceptions.OptionNotInListboxException;
 import com.orasi.web.webelements.Button;
-import com.orasi.web.webelements.Element;
 import com.orasi.web.webelements.Label;
 import com.orasi.web.webelements.Link;
 import com.orasi.web.webelements.Listbox;
@@ -38,6 +35,10 @@ public class Employees {
 	@FindBy(xpath = "//*[@id='accordion']/div/div[3]/h4/a") private Button btnManage;
 	@FindBy(xpath = "//div//input[@id='search-bar']") private Textbox txtEmployeeSearch;
 	@FindBy(xpath = "//*[@id=\"employee_account_permission\"]") private Listbox lstAccountPermission;
+	@FindBy(xpath = "//*[@id=\'employee_status\']") private Listbox lstManager;
+	@FindBy(xpath = "//*[@id=\"resource-content\"]/div[1]/table/tbody/tr[2]/td[1]/a") Button btnFirstName;
+	@FindBy(linkText = "account") Button btnSecondName;
+	@FindBy(xpath = "//*[@id=\'new_employee\']/div[24]/button") Button btnClose;
 	
 	/**Constructor**/
 	public Employees(OrasiDriver driver){
@@ -55,8 +56,10 @@ public class Employees {
 	 * @author Paul
 	 */
 	public void clickAddEmployee() {
-		btnAdd.syncEnabled(5,true);
-		btnAdd.click();		
+		btnAdd.syncVisible(2,true);
+		btnAdd.syncEnabled(2,true);
+		btnAdd.syncInFrame(2,true);
+		btnAdd.click();
 	}
 	
 	/**
@@ -309,7 +312,35 @@ public class Employees {
 		catch (OptionNotInListboxException e){
 			return false;
 		}
-			
 	}
-
+	
+	/** 
+	 * This method selects the link of the first name for a given row
+	 * and column for the employee webtable
+	 * @param rowNum - The row number
+	 * @param columnNum - The column number
+	 * @author Andrew McGrail 
+	 */
+	public void selectEmployeeFirstname(int rowNum, int columnNum) {
+		driver.findLink(By.xpath("//*[@id=\"resource-content\"]/div[1]/table/tbody/tr["+rowNum+"]/td["+columnNum+"]/a")).click();
+	}
+	
+	/**
+	 * This method finds the row number of the first Contractor employee
+	 * @returns int - row number of Contractor employee
+	 * @author Andrew McGrail 
+	 */
+	public int findFirstContractorInTable(){
+		Integer intRow = null;
+		tblEmployees.syncVisible(2,true);
+		
+		//tblEmployees.getRowCount()
+		for (int i = 1; i < 90; i++) {
+			if (tblEmployees.getCellData(i, 12).equalsIgnoreCase("Contractor")) {
+				intRow = i;
+				break;
+			}
+		}
+		return intRow;
+	}
 }
