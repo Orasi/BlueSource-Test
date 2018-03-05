@@ -1,6 +1,5 @@
 package com.orasi.bluesource;
 
-import com.orasi.utils.TestReporter;
 import com.orasi.web.OrasiDriver;
 import com.orasi.web.webelements.Element;
 import com.orasi.web.webelements.Textbox;
@@ -24,30 +23,38 @@ public class EditAccountForm {
 	}
 
 	/**Test methods**/
+
+	/**
+	 * Automatically appends the current name with "test"
+	 * @author david.grayson
+	 * @return the new name of the account
+	 */
 	public String testRenameAccount(){
 		String newName = txtAccountName.getText()+"test";
 		renameAccount(newName);
 		return newName;
 	}
 
+	/**
+	 * automatically changes the industry between 2 values for test purposes
+	 * @author david.grayson
+	 * @return the number associated with the Industry
+	 */
 	public int testChangeIndustry(){
 		int selectionNumber;
 		String selectionText;
 		elmIndustrySelect.syncEnabled(3);
-		elmIndustrySelect.click();
-		//List<Element> industryOptions = driver.findElements(By.xpath("//span[@class='select2-results']/ul/li"));
+		elmIndustrySelect.click(); //opens the 'dropdown', elements don't exist if it isn't open
 		if (industryOptions.size()>0){
-			if (industryOptions.get(1).getAttribute("aria-selected").equals("true")) {
+			if (industryOptions.get(1).getAttribute("aria-selected").equals("true"))
 				selectionNumber = 2;
-			}
 			else
 				selectionNumber = 1;
 		} else {
-			TestReporter.log("size = " + industryOptions.size());
 			return -1;
 		}
 		selectionText = industryOptions.get(selectionNumber).getText();
-		elmIndustrySelect.click();
+		elmIndustrySelect.click(); //closes the 'dropdown'
 		changeIndustry(selectionText);
 
 		return ++selectionNumber;
@@ -63,10 +70,10 @@ public class EditAccountForm {
 
 	public void changeIndustry(String strSelection){
 		elmIndustrySelect.syncEnabled(3);
-		elmIndustrySelect.click();
+		elmIndustrySelect.click(); //opens the 'dropdown', elements don't exist if it isn't open
 		for (Element elm:industryOptions){
 			if (elm.getText().equals(strSelection) && elm.isDisplayed()){
-				elm.click();
+				elm.click(); //selects the element
 				break;
 			}
 		}
@@ -80,17 +87,20 @@ public class EditAccountForm {
 		return txtAccountName.getText();
 	}
 
+	/**
+	 * @author david.grayson
+	 * @return the number associated with the currently selected industry
+	 */
 	public int getIndustry(){
 		elmIndustrySelect.syncEnabled(3);
-		elmIndustrySelect.click();
-		TestReporter.log("size = " + industryOptions.size());
+		elmIndustrySelect.click(); //opens the 'dropdown', elements don't exist if it isn't open
 		for (int i=1;i<industryOptions.size();i++){
 			if (industryOptions.get(i).getAttribute("aria-selected").equals("true")) {
-				elmIndustrySelect.click();
+				elmIndustrySelect.click(); //closes the 'dropdown'
 				return ++i;
 			}
 		}
-		elmIndustrySelect.click();
+		elmIndustrySelect.click(); //closes the 'dropdown'
 		return -1;
 	}
 }

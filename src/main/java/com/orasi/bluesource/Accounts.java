@@ -43,11 +43,15 @@ public class Accounts {
 	
 	/**Page Interactions**/
 
+	/**
+	 * clicks the "Account Audit" collapsing panel and then clicks the "View All" link that is revealed.
+	 * @author david.grayson
+	 */
 	public void clickViewAllAudits(){
 		driver.findElement(By.xpath("//h4[contains(text(),'Account Audit')]/..")).click();
 		lnkViewAllAudits.syncVisible(10);
 		lnkViewAllAudits.scrollIntoView();
-		lnkViewAllAudits.jsClick(); //regular click doesn't seem to work, gives
+		lnkViewAllAudits.jsClick(); //regular click doesn't seem to work, gives ElementNotVisible exception
 	}
 
 	public void clickEditAccount(){
