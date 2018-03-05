@@ -4,8 +4,6 @@ import org.openqa.selenium.support.FindBy;
 
 import com.orasi.web.OrasiDriver;
 import com.orasi.web.webelements.Button;
-import com.orasi.web.webelements.Checkbox;
-import com.orasi.web.webelements.Element;
 import com.orasi.web.webelements.Label;
 import com.orasi.web.webelements.Listbox;
 import com.orasi.web.webelements.Textbox;
@@ -23,9 +21,8 @@ public class EmployeePage {
 	@FindBy(partialLinkText = "Deactivate") Button btnDeactivate;
 	@FindBy(xpath = "//*[@id=\"modal_1\"]/div/div") Label lblModal;
 	@FindBy(xpath = "//*[@id=\'employee_require_nonbillable\']") Button btnTimeEntryCheckbox;
-	@FindBy(id = "employee_status") Listbox lstStatus;
-	@FindBy(xpath = "//*[@id=\"edit_employee_256\"]/div[25]/input") Button btnUpdateEmployee;
-	@FindBy(xpath = "//*[@id='edit_employee_2']/div[24]/button") Button btnClose;
+	@FindBy(xpath = "//div[24]/input") Button btnUpdateEmployee;
+	@FindBy(xpath = "//*[@id='employee_alternative_email']") Textbox txtAltEmail;
 	
 
 	
@@ -67,7 +64,7 @@ public class EmployeePage {
 	}
 
 	public void editGeneralInfo() {
-		btnEditGeneral.syncVisible(3, true);
+		btnEditGeneral.syncVisible(2, true);
 		btnEditGeneral.click();
 		
 	}		
@@ -84,22 +81,26 @@ public class EmployeePage {
 		btnDeactivate.click();
 	}
 	
-	public void selectStatus(String strName) {
-		btnTimeEntryCheckbox.scrollIntoView();
-		lstStatus.syncVisible(2,true);
-		lstStatus.select(strName);
-	}
-	
 	public void clickUpdateEmployee() {
-		btnTimeEntryCheckbox.scrollIntoView();
 		btnUpdateEmployee.syncVisible(2,true);
 		btnUpdateEmployee.click();
 	}
 	
-	public void clickClose() {
-	btnTimeEntryCheckbox.scrollIntoView();
-	btnClose.click();
-	btnClose.syncHidden(2,true);
+	/**
+	 * Sets the Alternate Email on an employees general info modal
+	 * @param email - Email address to be entered into Alternate Email
+	 */
+	public void sendAltEmail(String email) {
+		txtAltEmail.syncVisible(2,true);
+		txtAltEmail.jsSet(email);
 	}
 	
+	/**
+	 * Returns the current text in the Alternate Email textbox
+	 * @return String - String version of the text in the Alternate Email textbox
+	 * @author Andrew McGrail
+	 */
+	public String checkAltEmail() {
+		return txtAltEmail.getText();
+	}
 }
