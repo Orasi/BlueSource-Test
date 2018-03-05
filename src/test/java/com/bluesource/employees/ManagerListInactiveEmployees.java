@@ -1,4 +1,4 @@
-/*
+/** 
  * Test to make sure inactive users do not show up while
  * selecting an employee's manager.
  * @author: Andrew McGrail
@@ -42,9 +42,13 @@ public class ManagerListInactiveEmployees extends WebBaseTest{
 	    	endTest("TestAlert", testResults);
 	    }
 	
-	 @Test//(dataProvider = "login")
+	 @Test
 	 public void testManagerListInactiveEmployees()
 	 {
+		 String successMessage="Employee successfully deactivated";
+		 String fullName=null;
+		 int rowNum=0;
+		 
 		 LoginPage loginPage = new LoginPage(getDriver());
 		 Header header = new Header(getDriver());
 		 Employees employees = new Employees(getDriver());
@@ -53,36 +57,45 @@ public class ManagerListInactiveEmployees extends WebBaseTest{
 		 // Steps 1&2. Log in to 10.238.243.127 as company.admin
 		 loginPage.AdminLogin();
 		 header.navigateEmployees();
-		 // Step 3. Select the first employee on the list
-		 employees.clickFirstName();
+		 TestReporter.logStep("The page listing employees has been reached.");
+		 // Step 3. Select the first Active employee on the list
+		 rowNum=employees.findFirstActiveInTable();
+		 employees.selectEmployeeFirstname(rowNum, 1);
+		 TestReporter.logStep("Successfully landed on the first active employee's page");
 		 // Step 4. Click the user's Edit button over general info
 		 employeePage.editGeneralInfo();
+		 fullName=employeePage.getFullName();
 		 // Step 5. Click Deactive Employee
 		 employeePage.clickDeactivateEmployee();		 
 		 // Step 6. Click Deactive
-		 employeePage.clickDeactivate();		 
+		 employeePage.clickDeactivate();
+		 TestReporter.assertEquals(employees.getSuccessMessage(), successMessage, "Verifying "+fullName+" was successfully made inactive.");
 		 // Step 7. Navigate to the employees page
 		 header.navigateEmployees();
+		 TestReporter.logStep("The page listing employees has been reached.");
 		 // Step 8. Click the add employees button
 		 employees.clickAddEmployee();
+		 TestReporter.logStep("Opened the 'add employees' Modal Popout");
 		 // Step 9. Scroll down to the 'Manager' dropdown list
 		 employees.scrollTo1stManager();
 		 // Step 10. Verify the Employee that was just deactivated is not appearing in the list.
-		 TestReporter.assertFalse(employees.checkManagerOption("a a"), "Asserting the inactive employee isn't listed as a manager.");
+		 TestReporter.assertFalse(employees.checkManagerOption(fullName), "Asserting "+fullName+" isn't listed as a manager.");
 		 // Step 11. Click the 'Close' button.
 		 employees.clickClose();
 		 // Step 12. Click on the name of the second Employee.
 		 employees.clickSecondName();
+		 TestReporter.logStep("Successfully landed on the second employee's page");
 		 // Step 13. Inside the 'General Info' panel click the 'Edit' button.
 		 employeePage.editGeneralInfo();
 		 // Step 14. Verify in the 'Manager' dropdown list, the Inactive Employee does not appear.
-		 TestReporter.assertFalse(employees.checkManagerOption("a a"), "Asserting the inactive employee still isn't listed as a manager.");
+		 TestReporter.assertFalse(employees.checkManagerOption(fullName), "Asserting "+fullName+" still isn't listed as a manager.");
 		 // Step 15. Click the 'Close' button.
 		 employeePage.clickClose();
 		 // Step 16. Click on 'Employees' in the header.
 		 header.navigateEmployees();
+		 TestReporter.logStep("The page listing employees has been reached.");
 		 // Step 17. Click on the name of the Inactive Employee.
-		 employees.clickFirstName();
+		 employees.selectEmployeeFirstname(rowNum, 1);
 		 // Step 18. Inside the 'General Info' panel click the 'Edit' button.
 		 employeePage.editGeneralInfo();
 		 // Step 19. Inside the 'Status' dropdown list, select 'Permanent' and click the 'Update Employee' button.

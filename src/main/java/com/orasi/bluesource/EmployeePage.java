@@ -4,11 +4,8 @@ import org.openqa.selenium.support.FindBy;
 
 import com.orasi.web.OrasiDriver;
 import com.orasi.web.webelements.Button;
-import com.orasi.web.webelements.Checkbox;
-import com.orasi.web.webelements.Element;
 import com.orasi.web.webelements.Label;
 import com.orasi.web.webelements.Listbox;
-import com.orasi.web.webelements.Textbox;
 import com.orasi.web.webelements.Webtable;
 import com.orasi.web.webelements.impl.internal.ElementFactory;
 
@@ -24,8 +21,9 @@ public class EmployeePage {
 	@FindBy(xpath = "//*[@id=\"modal_1\"]/div/div") Label lblModal;
 	@FindBy(xpath = "//*[@id=\'employee_require_nonbillable\']") Button btnTimeEntryCheckbox;
 	@FindBy(id = "employee_status") Listbox lstStatus;
-	@FindBy(xpath = "//*[@id=\"edit_employee_256\"]/div[25]/input") Button btnUpdateEmployee;
-	@FindBy(xpath = "//*[@id='edit_employee_2']/div[24]/button") Button btnClose;
+	@FindBy(xpath = "//form/div[25]/input") Button btnUpdateEmployee;
+	@FindBy(xpath = "//form/div[25]/button") Button btnClose;
+	@FindBy(xpath = "//*[@id='content']/h1") Label lblFullName;
 	
 
 	
@@ -90,16 +88,34 @@ public class EmployeePage {
 		lstStatus.select(strName);
 	}
 	
+	/**
+	 * This method clicks 'Update Employee' on the 'Edit General' modal popup
+	 * @author Andrew McGrail
+	 */
 	public void clickUpdateEmployee() {
 		btnTimeEntryCheckbox.scrollIntoView();
 		btnUpdateEmployee.syncVisible(2,true);
 		btnUpdateEmployee.click();
 	}
-	
+
+	/**
+	 * This method clicks 'close' on the 'Edit General' modal popup
+	 * @author Andrew McGrail
+	 */
 	public void clickClose() {
 		btnTimeEntryCheckbox.scrollIntoView();
 		btnClose.click();
 		btnClose.syncHidden(2,true);
+	}
+	
+	/**
+	 * This method returns the full name of the employee
+	 * @return String - The full name of the employee you are on the page for
+	 * @author Andrew McGrail
+	 */
+	
+	public String getFullName() {
+		return lblFullName.getText();
 	}
 	
 }

@@ -62,9 +62,9 @@ public class Header {
 	 * @author Paul
 	 */
 	public void navigateEmployees() {
-		lnkEmployees.syncVisible(1,true);
-		lnkEmployees.syncVisible(1,true);
-		lnkEmployees.syncInFrame(1,true);
+		lnkEmployees.syncVisible(2,true);
+		lnkEmployees.syncVisible(2,true);
+		lnkEmployees.syncInFrame(2,true);
 		lnkEmployees.click();
 	}
 	
