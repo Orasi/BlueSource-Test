@@ -21,13 +21,6 @@ public class EmployeePage {
 	@FindBy(xpath = "//*[@id=\'accordion\']/div/div[7]/button") Button btnEditGeneral;
 	@FindBy(partialLinkText = "Deactivate Employee") Button btnDeactivateEmployee;
 	@FindBy(partialLinkText = "Deactivate") Button btnDeactivate;
-	@FindBy(xpath = "//*[@id=\"modal_1\"]/div/div") Label lblModal;
-	@FindBy(xpath = "//*[@id=\'employee_require_nonbillable\']") Button btnTimeEntryCheckbox;
-	@FindBy(id = "employee_status") Listbox lstStatus;
-	@FindBy(xpath = "//*[@id=\"edit_employee_256\"]/div[25]/input") Button btnUpdateEmployee;
-	@FindBy(xpath = "//*[@id='edit_employee_2']/div[24]/button") Button btnClose;
-	
-
 	
 	/**Constructor**/
 	public EmployeePage(OrasiDriver driver){
@@ -73,8 +66,6 @@ public class EmployeePage {
 	}		
 	
 	public void clickDeactivateEmployee() {
-		lblModal.syncVisible(2, true);
-		btnTimeEntryCheckbox.scrollIntoView();
 		btnDeactivateEmployee.syncVisible(2, true);
 		btnDeactivateEmployee.click();
 	}
@@ -82,24 +73,6 @@ public class EmployeePage {
 	public void clickDeactivate(){
 		btnDeactivateEmployee.syncVisible(2, true);
 		btnDeactivate.click();
-	}
-	
-	public void selectStatus(String strName) {
-		btnTimeEntryCheckbox.scrollIntoView();
-		lstStatus.syncVisible(2,true);
-		lstStatus.select(strName);
-	}
-	
-	public void clickUpdateEmployee() {
-		btnTimeEntryCheckbox.scrollIntoView();
-		btnUpdateEmployee.syncVisible(2,true);
-		btnUpdateEmployee.click();
-	}
-	
-	public void clickClose() {
-	btnTimeEntryCheckbox.scrollIntoView();
-	btnClose.click();
-	btnClose.syncHidden(2,true);
 	}
 	
 }

@@ -38,10 +38,6 @@ public class Employees {
 	@FindBy(xpath = "//*[@id='accordion']/div/div[3]/h4/a") private Button btnManage;
 	@FindBy(xpath = "//div//input[@id='search-bar']") private Textbox txtEmployeeSearch;
 	@FindBy(xpath = "//*[@id=\"employee_account_permission\"]") private Listbox lstAccountPermission;
-	@FindBy(xpath = "//*[@id=\'employee_status\']") private Listbox lstManager;
-	@FindBy(xpath = "//*[@id=\"resource-content\"]/div[1]/table/tbody/tr[2]/td[1]/a") Button btnFirstName;
-	@FindBy(linkText = "account") Button btnSecondName;
-	@FindBy(xpath = "//*[@id=\'new_employee\']/div[24]/button") Button btnClose;
 	
 	/**Constructor**/
 	public Employees(OrasiDriver driver){
@@ -315,37 +311,7 @@ public class Employees {
 		catch (OptionNotInListboxException e){
 			return false;
 		}
+		
 	}
 	
-	public boolean checkManagerOption(String strOption) {
-		try{
-			lstManager.select(strOption);
-			return true;
-		}
-		catch (OptionNotInListboxException e){
-			return false;
-		}
-	}
-	
-	public void clickFirstName() {
-		tblEmployees.syncVisible(5,true);
-		btnFirstName.syncVisible(5,true);
-		btnFirstName.click();
-	}
-	
-	public void scrollTo1stManager() {
-		lstManager.scrollIntoView();
-	}
-	
-
-	public void clickClose() {
-	btnClose.click();
-	btnClose.syncHidden(1,true);
-	}
-	
-	public void clickSecondName() {
-		tblEmployees.syncVisible(2,true);
-		btnSecondName.syncVisible(2, true);
-		btnSecondName.click();
-	}
 }
