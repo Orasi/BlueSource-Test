@@ -6,7 +6,9 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.FindBy;
 
 import com.orasi.web.OrasiDriver;
+import com.orasi.web.webelements.Button;
 import com.orasi.web.webelements.Link;
+import com.orasi.web.webelements.Listbox;
 import com.orasi.web.webelements.impl.internal.ElementFactory;
 
 public class Header {
@@ -18,6 +20,8 @@ public class Header {
 	@FindBy(xpath = "//li[contains(.,'Employees')]/a") private Link lnkEmployees;
 	@FindBy(xpath = "//a[contains(text(),'Project')]") private Link lnkProjemployees;
 	@FindBy(xpath = "//a[contains(text(),'Project')]//..//..//..//following-sibling::a") private Link lnkEmployeeSelector;
+	@FindBy(xpath = "/html/body/header/div/nav/ul/li[2]/a") private Button btnAdminBox;
+	@FindBy(xpath = "/html/body/header/div/nav/ul/li[2]/ul/li/a[3]") private Link lnkIndustries;
 	
 	/**Constructor**/
 	public Header(OrasiDriver driver){
@@ -62,9 +66,12 @@ public class Header {
 	 * @author Paul
 	 */
 	public void navigateEmployees() {
-		MessageCenter messageCenter = new MessageCenter(driver);
-		messageCenter.closeMessageCenter();
-		lnkEmployees.click();		
+		lnkEmployees.syncVisible(2,true);
+	//	MessageCenter messageCenter = new MessageCenter(driver);
+	//	messageCenter.closeMessageCenter();
+		lnkEmployees.syncVisible(2,true);
+		lnkEmployees.syncInFrame(2,true);
+		lnkEmployees.click();
 	}
 	
 	public void navigateProjectEmployees() {
@@ -79,6 +86,13 @@ public class Header {
 		MessageCenter messageCenter = new MessageCenter(driver);
 		messageCenter.closeMessageCenter();
 		lnkLogout.click();		
+	}
+	
+	public void navigateIndustries() {
+		btnAdminBox.syncVisible(2,true);
+		btnAdminBox.click();
+		lnkIndustries.syncVisible(2,true);
+		lnkIndustries.click();
 	}
 
 }

@@ -13,7 +13,9 @@
 	
 	<test name="In Progress test" parallel="methods" thread-count="20">
 		<classes>
-			<class name="com.bluesource.accounts.CreateAccount" />
+			<class name="com.bluesource.industry.DuplicateCreationAttemptGeneratesSuccessMessage" />
+			<class name="com.bluesource.industry.IntermediaryScreenToBeRemovedWhenEditing" />
+			<class name="com.bluesource.industry.UnsuccessfulEditAttemptFormControlFieldRemoval" />
 		</classes>
 	</test>
 
