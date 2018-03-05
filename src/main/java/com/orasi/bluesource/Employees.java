@@ -38,6 +38,10 @@ public class Employees {
 	@FindBy(xpath = "//*[@id='accordion']/div/div[3]/h4/a") private Button btnManage;
 	@FindBy(xpath = "//div//input[@id='search-bar']") private Textbox txtEmployeeSearch;
 	@FindBy(xpath = "//*[@id=\"employee_account_permission\"]") private Listbox lstAccountPermission;
+	@FindBy(xpath = "//*[@id=\'employee_status\']") private Listbox lstManager;
+	@FindBy(xpath = "//*[@id=\"resource-content\"]/div[1]/table/tbody/tr[2]/td[1]/a") Button btnFirstName;
+	@FindBy(linkText = "account") Button btnSecondName;
+	@FindBy(xpath = "//*[@id=\'new_employee\']/div[24]/button") Button btnClose;
 	
 	/**Constructor**/
 	public Employees(OrasiDriver driver){
@@ -55,8 +59,10 @@ public class Employees {
 	 * @author Paul
 	 */
 	public void clickAddEmployee() {
-		btnAdd.syncEnabled(5,true);
-		btnAdd.click();		
+		btnAdd.syncVisible(2,true);
+		btnAdd.syncEnabled(2,true);
+		btnAdd.syncInFrame(2,true);
+		btnAdd.click();
 	}
 	
 	/**
@@ -309,7 +315,95 @@ public class Employees {
 		catch (OptionNotInListboxException e){
 			return false;
 		}
-			
 	}
+	
+	public boolean checkManagerOption(String strOption) {
+		try{
+			lstManager.select(strOption);
+			return true;
+		}
+		catch (OptionNotInListboxException e){
+			return false;
+		}
+	}
+	
+	public void clickFirstName() {
+		tblEmployees.syncVisible(5,true);
+		btnFirstName.syncVisible(5,true);
+		btnFirstName.click();
+	}
+	
+	public void scrollTo1stManager() {
+		lstManager.scrollIntoView();
+	}
+	
 
+	public void clickClose() {
+		btnClose.click();
+		btnClose.syncHidden(1,true);
+	}
+	
+	public void clickSecondName() {
+		tblEmployees.syncVisible(2,true);
+		btnSecondName.syncVisible(2, true);
+		btnSecondName.click();
+	}
+	
+	/* This method returns the string of the success message
+	 * 
+	 * @return The success message in a String
+	 * @author Andrew McGrail
+	 */
+	public String getSuccessMessage() {
+		return driver.findElement(By.xpath("//*[@id='notification-area']/div")).getText().substring(2,35);
+	}
+	
+	/* This method finds the row number of the first Inactive employee
+	 * 
+	 * @returns int - row number of inactive employee
+	 * @author Andrew McGrail 
+	 */
+	public int findFirstInactiveInTable(){
+		Integer intRow = null;
+		
+		//tblEmployees.getRowCount()
+		for (int i = 1; i < 50; i++) {
+			if (tblEmployees.getCellData(i, 12).equalsIgnoreCase("Inactive")) {
+				intRow = i;
+				break;
+			}
+		}
+		return intRow;
+	}
+	
+	/* This method finds the row number of the first Active employee
+	 * 
+	 * @returns int - row number of active employee
+	 * @author Andrew McGrail 
+	 */
+	public int findFirstActiveInTable(){
+		Integer intRow = null;
+		tblEmployees.syncVisible(2,true);
+		
+		//tblEmployees.getRowCount()
+		for (int i = 1; i < 50; i++) {
+			if (tblEmployees.getCellData(i, 12).equalsIgnoreCase("Permanent") | tblEmployees.getCellData(i, 12).equalsIgnoreCase("Contractor")) {
+				intRow = i;
+				break;
+			}
+		}
+		return intRow;
+	}
+	
+	/* This method selects the link of the first name for a given row
+	 * and column for the employee webtable
+	 * 
+	 * @param rowNum - The row number
+	 * @param columnNum - The column number
+	 * @author Andrew McGrail 
+	 */
+	public void selectEmployeeFirstname(int rowNum, int columnNum) {
+		driver.findLink(By.xpath("//*[@id=\"resource-content\"]/div[1]/table/tbody/tr["+rowNum+"]/td["+columnNum+"]/a")).click();
+	}
+	
 }
