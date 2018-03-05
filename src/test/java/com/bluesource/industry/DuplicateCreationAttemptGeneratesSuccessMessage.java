@@ -3,27 +3,22 @@
  * create an industry with the same name as one already created.
  * @author Andrew McGrail
  */
-package com.bluesource;
+package com.bluesource.industry;
 
-import org.openqa.selenium.NoSuchElementException;
 import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import com.orasi.bluesource.Accounts;
 import com.orasi.bluesource.Header;
 import com.orasi.bluesource.Industries;
 import com.orasi.bluesource.LoginPage;
-import com.orasi.bluesource.MessageCenter;
 import com.orasi.utils.TestReporter;
-import com.orasi.utils.dataProviders.ExcelDataProvider;
 import com.orasi.web.WebBaseTest;
 
-public class IndustriesDuplicateCreationAttemptGeneratesSuccessMessage extends WebBaseTest{
+public class DuplicateCreationAttemptGeneratesSuccessMessage extends WebBaseTest{
 	
 	@BeforeMethod
     @Parameters({ "runLocation", "browserUnderTest", "browserVersion",
@@ -46,7 +41,7 @@ public class IndustriesDuplicateCreationAttemptGeneratesSuccessMessage extends W
     }
 	
     @Test
-    public void testIndustriesDuplicateCreationAttemptGeneratesSuccessMessage()
+    public void testDuplicateCreationAttemptGeneratesSuccessMessage()
     {
     	String industryName=null;
     	
