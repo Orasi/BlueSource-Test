@@ -1,6 +1,6 @@
 /**
- * This class tests Issue 888 - Create BurnDown report w/o summary
- * Creates an Accounts BurnDown Report and ensures its validity
+ * This class tests Issue 887 - Project Reports Summary - Reports - Include Full Project Name in Burn Down Reports
+ * Creates a Project BurnDown Report and ensures its validity
  * @author Andrew McGrail
  */
 package com.bluesource;
@@ -16,7 +16,7 @@ import com.orasi.bluesource.Reporting;
 import com.orasi.utils.TestReporter;
 import com.orasi.web.WebBaseTest;
 
-public class CreateBurnDownReportNoSummary extends WebBaseTest {
+public class ProjectReportsSummaryReportsIncludeFullProjectName extends WebBaseTest {
 
 	@BeforeMethod
     @Parameters({ "runLocation", "browserUnderTest", "browserVersion",
@@ -39,7 +39,7 @@ public class CreateBurnDownReportNoSummary extends WebBaseTest {
     }
     
     @Test
-    public void testCreateBurnDownReportNoSummary() {
+    public void testProjectReportsSummaryReportsIncludeFullProjectName() {
     	String FirstAccountName=null;
     	String FirstReportName=null;
     	
@@ -53,23 +53,23 @@ public class CreateBurnDownReportNoSummary extends WebBaseTest {
     	reporting.navigateReports();
     	reporting.adminLogin();
     	TestReporter.logStep("Logged into 'http://10.238.243.127:8080/reporting/login' as Admin");
-    	// Step 6 Click 'Account Reports' dropdown
-    	reporting.clickAccountReports();
-    	// Step 7 Click 'Burn Down Data'
-    	reporting.clickBurnDownData();
-    	TestReporter.logStep("Opened Accounts - BurnDown Data Report modal");
-    	// Step 8 Select the 'project' raido button if not already selected
-    	reporting.clickProjectButton();
+    	// Step 6 Click 'Projects Reports' dropdown
+    	reporting.clickProjectsReports();
+    	// Step 7 Click 'Burn Down'
+    	reporting.clickBurnDown();
+    	TestReporter.logStep("Opened Projects - BurnDown Report modal");
+    	// Step 8 Select the 'summary' raido button if not already selected
+    	reporting.clickSummary();
     	// Step 9 Select an account that has a project with a long name
-    	reporting.clickFirstAccountName();
-    	FirstAccountName=reporting.getFirstAccountName();
-    	// Step 10 Click 'Generate report'
-    	reporting.clickGenerateReport();
-    	TestReporter.logStep("Generated BurnDown Report");
-    	// Step 11 Verify there is 1 line pr full project name and information displays correctly in the report
-    	FirstReportName=reporting.getReportAccountName();
+    	// Step 10 Select Project
+    	FirstAccountName=reporting.chooseAccount();
+    	TestReporter.logStep("Chose the Account: "+FirstAccountName);
+    	// Step 11 Click 'Generate report'
+    	reporting.clickProjectsGenerateReport();
+    	// Step 12 	Verify the full project name displays in the report
+    	FirstReportName=reporting.getReportProjectAccountName();
     	TestReporter.assertEquals(FirstAccountName, FirstReportName, "Verifying the Account name's for the report and the requested are the same");
-    	// Step 12 	Click on the 'Welcome' located at the top right of page
+    	//Step 13 Click on the 'Welcome' located at the top right of page
     	reporting.logout();
     }
 }
