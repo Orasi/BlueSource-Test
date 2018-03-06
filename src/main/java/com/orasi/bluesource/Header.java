@@ -1,13 +1,10 @@
 package com.orasi.bluesource;
 
-import javax.wsdl.Message;
-
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.support.FindBy;
-
 import com.orasi.web.OrasiDriver;
 import com.orasi.web.webelements.Link;
 import com.orasi.web.webelements.impl.internal.ElementFactory;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.support.FindBy;
 
 public class Header {
 	private OrasiDriver driver = null;
@@ -18,6 +15,7 @@ public class Header {
 	@FindBy(xpath = "//li[contains(.,'Employees')]/a") private Link lnkEmployees;
 	@FindBy(xpath = "//a[contains(text(),'Project')]") private Link lnkProjemployees;
 	@FindBy(xpath = "//a[contains(text(),'Project')]//..//..//..//following-sibling::a") private Link lnkEmployeeSelector;
+
 	
 	/**Constructor**/
 	public Header(OrasiDriver driver){
@@ -26,6 +24,10 @@ public class Header {
 	}
 	
 	/**Page Interactions**/
+
+	public void navigateReporting(){
+		driver.get("http://10.238.243.127:8080/reporting/login");
+	}
 
 	/**
 	 * This method navigates to Accounts page
