@@ -13,7 +13,10 @@
 	
 	<test name="In Progress test" parallel="methods" thread-count="20">
 		<classes>
-			<class name="com.bluesource.accounts.CreateAccount" />
+			<class name="com.bluesource.CreateBurnDownReportNoSummary" /> 
+			<class name="com.bluesource.ProjectReportsDetailReportsIncludeFullProjectName" />
+			<class name="com.bluesource.ProjectReportsSummaryReportsIncludeFullProjectName" />
+			<class name="com.bluesource.AccountReportsIncludeFullProjectName" />
 		</classes>
 	</test>
 

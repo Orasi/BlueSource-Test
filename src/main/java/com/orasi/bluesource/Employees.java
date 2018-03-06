@@ -55,8 +55,10 @@ public class Employees {
 	 * @author Paul
 	 */
 	public void clickAddEmployee() {
-		btnAdd.syncEnabled(5,true);
-		btnAdd.click();		
+		btnAdd.syncVisible(2,true);
+		btnAdd.syncEnabled(2,true);
+		btnAdd.syncInFrame(2,true);
+		btnAdd.click();
 	}
 	
 	/**
@@ -309,7 +311,7 @@ public class Employees {
 		catch (OptionNotInListboxException e){
 			return false;
 		}
-			
+		
 	}
-
+	
 }
