@@ -2,6 +2,8 @@ package com.orasi.bluesource;
 
 import java.util.ResourceBundle;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.support.FindBy;
 
 import com.orasi.utils.Constants;
@@ -30,6 +32,9 @@ public class LoginPage {
 	@FindBy(xpath = "//img[@class = 'img-responsive brand']") private Element elmLogo;
 	@FindBy(xpath  ="(//table[@class='table'])[3]") private Webtable wtbDetails;
 	@FindBy(xpath = "//*[@id='content']/div[2]/div/h3") private Label lblBadLogin;
+	@FindBy(xpath = "//*[@id='time-entry-table']/tbody/tr[2]/td[1]/span/span[1]/span/span[2]") private Button btnTimesheetDropdown;
+	@FindBy(xpath = "/html/body/span/span/span[1]/input") private Textbox txtTimesheetDropdown;
+	@FindBy(xpath = "//*[@id='employee_reported_times___date_hours_hours']") private Webtable wtHoursTable;
 	
 	/**Constructor**/
 	public LoginPage(OrasiDriver driver){
@@ -103,4 +108,46 @@ public class LoginPage {
 		System.out.println("User not logged in or found.. \n" + "Output from the current page: " + innerText);
 	}
 	
+	/**
+	 * This method determines if the hours entered into the timesheet are shown
+	 * @return boolean - If the input hours and displayed hours match
+	 * @author Andrew McGrail
+	 */
+	public boolean checkTimesheetHours() {
+		String whatWeSet=null;
+		String whatIsShown=null;
+		boolean answer=true;
+		
+		for(int i=1;i<7;i++) {
+			whatWeSet = driver.findTextbox(By.xpath("(//*[@id='employee_reported_times___date_hours_hours'])["+i+"]")).getText();
+			whatIsShown=driver.findLabel(By.xpath("//tr[6]/td["+(i+1)+"]")).getText();
+			if(!(whatWeSet.equals(whatIsShown)))
+				answer=false;
+		}
+		return answer;
+	}
+	
+	/**
+	 * This method sets the "Non-billable type" for the Current Timesheet
+	 * @param type - The non-billable type
+	 * @author Andrew McGrail
+	 */
+	public void setTimesheetDropdown(String type) {
+		txtTimesheetDropdown.sendKeys(type+Keys.RETURN);
+	}
+	
+	/**
+	 * This method sets the hours for the timesheet
+	 * @author Andrew McGrail
+	 */
+	public void setTimesheetHours() {
+		for(int i=1;i<8;i++) {
+			driver.findTextbox(By.xpath("(//*[@id='employee_reported_times___date_hours_hours'])["+i+"]")).set(String.valueOf(i*2));
+		}
+	}
+	
+	public void clickTimesheetDropdown() {
+		btnTimesheetDropdown.syncVisible(2,true);
+		btnTimesheetDropdown.click();
+	}	
 }
