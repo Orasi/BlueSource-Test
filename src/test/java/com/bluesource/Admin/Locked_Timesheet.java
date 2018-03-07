@@ -26,7 +26,7 @@ public class Locked_Timesheet extends WebBaseTest {
 				setRunLocation(runLocation);
 				setEnvironment(environment);
 				setThreadDriver(true);
-				testStart("Create_Basic_Employee");
+				testStart("Test Locked Timesheet");
 		}
 
 		@AfterMethod
@@ -47,25 +47,40 @@ public class Locked_Timesheet extends WebBaseTest {
 			LoginPage loginPage = new LoginPage(getDriver());
 			LockedTimesheet lockedTimesheet = new LockedTimesheet(getDriver());
 			
+			TestReporter.assertTrue(loginPage.verifyPageIsLoaded(), "Page Loaded");
+			
+			//admin login
 			loginPage.LoginWithCredentials("company.admin", "anything");
-			lockedTimesheet.openLockedTimesheet();
-			lockedTimesheet.createLockedTimesheet("February");
-			lockedTimesheet.verifySuccessAlert();
+			
+			TestReporter.assertTrue(lockedTimesheet.clickTimesheetLocks(), "Timesheet Locks link clicked");
+			TestReporter.assertTrue(lockedTimesheet.createLockedTimesheet("February"), "Lock Timesheet");
+			TestReporter.assertTrue(lockedTimesheet.verifySuccessAlert(), "Timesheet Locked Successfully");
 			lockedTimesheet.logout();
-			loginPage.verifyPageIsLoaded();
-			loginPage.LoginWithCredentials("bbbb", "anything");
-			lockedTimesheet.clickManageButton();
-			lockedTimesheet.selectMonthWithLockedTimesheet("February");
+			TestReporter.assertTrue(loginPage.verifyPageIsLoaded(), "Successfully logged out");
+			
+			//employee login
+			loginPage.LoginWithCredentials("wwww", "anything");
+			TestReporter.assertTrue(lockedTimesheet.clickManageButton(), "Manage button clicked");
+			TestReporter.assertTrue(lockedTimesheet.selectMonthWithLockedTimesheet("February"), "Month Selected");
 			lockedTimesheet.addNewTimesheet("Bench");
-			lockedTimesheet.verifySecondSuccessAlert();
+			TestReporter.assertTrue(lockedTimesheet.verifySecondSuccessAlert(), "Locked timesheet created");
 			lockedTimesheet.logout();
+			
+			//Employee reports
 			lockedTimesheet.newLogin(getDriver());
 			loginPage.LoginWithCredentials("company.admin", "anything");
-			lockedTimesheet.checkTimeByProjectTab("bbbb bbbb", "02/05/2018", "02/11/2018");
-			lockedTimesheet.checkTimeByRoleTab("bbbb bbbb", "02/05/2018", "02/11/2018");
-			lockedTimesheet.checkTimeByTimeSheetTab("bbbb bbbb", "02/05/2018", "02/11/2018");
-			lockedTimesheet.checkBillingByProjectTab("bbbb bbbb", "02/05/2018", "02/11/2018");
-			lockedTimesheet.checkBillingByRoleTab("bbbb bbbb", "02/05/2018", "02/11/2018");
-			lockedTimesheet.checkCombinedTotalHoursTab("bbbb bbbb", "02/05/2018", "02/11/2018");
+			
+			lockedTimesheet.checkTimeByProjectTab("wwww bbbb", "02/05/2018", "02/11/2018");
+			TestReporter.assertTrue(lockedTimesheet.noReportsMsgDisplayed(), "No results are displayed");
+			lockedTimesheet.checkTimeByRoleTab("wwww bbbb", "02/05/2018", "02/11/2018");
+			TestReporter.assertTrue(lockedTimesheet.noReportsMsgDisplayed(), "No results are displayed");
+			lockedTimesheet.checkTimeByTimeSheetTab("wwww bbbb", "02/05/2018", "02/11/2018");
+			TestReporter.assertTrue(lockedTimesheet.noReportsMsgDisplayed(), "No results are displayed");
+			lockedTimesheet.checkBillingByProjectTab("wwww bbbb", "02/05/2018", "02/11/2018");
+			TestReporter.assertTrue(lockedTimesheet.noReportsMsgDisplayed(), "No results are displayed");
+			lockedTimesheet.checkBillingByRoleTab("wwww bbbb", "02/05/2018", "02/11/2018");
+			TestReporter.assertTrue(lockedTimesheet.noReportsMsgDisplayed(), "No results are displayed");
+			lockedTimesheet.checkCombinedTotalHoursTab("wwww bbbb", "02/05/2018", "02/11/2018");
+			TestReporter.assertTrue(lockedTimesheet.totalHoursTableDisplayed(), "Table is displayed");
 		}
 }

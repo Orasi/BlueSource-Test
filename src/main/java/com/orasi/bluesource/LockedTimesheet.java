@@ -16,7 +16,7 @@ import com.orasi.web.webelements.impl.internal.ElementFactory;
 public class LockedTimesheet {
 
 	private OrasiDriver driver = null;
-	
+
 	/**Page Elements**/
 	@FindBy(linkText = "Admin") private Link lnkAdminTab;
 	@FindBy(linkText = "Timesheet Locks") private Link lnkTimesheetLocks;
@@ -39,144 +39,154 @@ public class LockedTimesheet {
 	@FindBy(xpath = "//*[@id='reportTable']//*[text()='No results returned by this report']") private Label lblEmployeeReport;	
 	@FindBy(id = "select_date_range") private Button btnGo;
 	@FindBy(name = "commit") private Button btnGenerateReport;
-	@FindBy(xpath = "//*[@class=\"time-summary-table table\"]/tbody/tr[4]/td/a") private Button btnAdd;
+	@FindBy(xpath = "//table[@class='time-summary-table table']/tbody/tr[4]/td/a") private Button btnAdd;
 	@FindBy(xpath = "//input[@type='submit' and @value='Submit']") private Button submitTimesheet;
 	@FindBy(id = "start_date") private Textbox startDateSelector;
 	@FindBy(id = "end_date") private Textbox endDateSelector;
 	@FindBy(id = "DataTables_Table_0") private Webtable tblTimesheet;
-	
-	
+
+
 	/**Constructor**/
 	public LockedTimesheet(OrasiDriver driver){
 		this.driver = driver;
 		ElementFactory.initElements(driver, this);
 	}
-	
-	/*
-	 * Click on accounts tab and then click on timesheet locks
-	 * author: Shahrukh Rehman
-	 */
-	public void openLockedTimesheet() {
 
-		if (lnkAdminTab.isDisplayed() == true)
+	/**
+	 * Click on accounts tab and then click on timesheet locks
+	 * @author shahrukh.rehman
+	 */
+	public boolean clickTimesheetLocks() {
+
+		if (lnkAdminTab.syncVisible(10))
 		{
 			lnkAdminTab.click();
 			lnkTimesheetLocks.click();
+			return true;
+		}
+		else {
+			return false;
 		}
 	}
-	
-	/*
-	 * Create a locked timesheet
-	 * author: Shahrukh Rehman
-	 */
-	public void createLockedTimesheet(String month) {
 
-		listMonths.syncVisible(5);
-		listMonths.select(month);
-		btnCreateLock.click();		
+	/**
+	 * Create a locked timesheet
+	 * @author shahrukh.rehman
+	 */
+	public boolean createLockedTimesheet(String month) {
+
+		if (listMonths.syncVisible(5))
+		{
+			listMonths.select(month);
+			btnCreateLock.click();	
+			return true;
+		}
+		else {
+			return false;
+		}
+
 	}
 
-	/*
+	/**
 	 * Verify successful timesheet lock
-	 * author: Shahrukh Rehman
+	 * @author shahrukh.rehman
 	 */
 	public boolean verifySuccessAlert() {
 
 		driver.switchTo().alert().accept();
 
-		Boolean visible = true;
-
-		lblSuccessAlert.syncVisible(10);
-
-		if (lblSuccessAlert.isDisplayed()== visible) {
-			System.out.println("Timesheet Locked");
+		if (lblSuccessAlert.syncVisible(10)) {
+			return true;
 		}
 		else {
-			visible = false;
+			return false;
 		}
-
-		return visible;
 	}
-	
-	/*
+
+	/**
 	 * Click on logout tab
-	 * author: Shahrukh Rehman
+	 * @author shahrukh.rehman
 	 */
 	public void logout() {
 		lnkLogout.syncVisible(10);
 		lnkLogout.click();
 	}
-	
-	public void clickManageButton() {
-		lnkManage.syncVisible(5);
-		lnkManage.jsClick();
-	}
-	
-	public void selectMonthWithLockedTimesheet(String month) {
-		listMonths.syncVisible(5);
-		listMonths.select(month);
-		btnGo.click();		
 
+	public boolean clickManageButton() {
+		if (lnkManage.syncVisible(5)) {
+			lnkManage.jsClick();
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
-	
-	/*
+
+	public boolean selectMonthWithLockedTimesheet(String month) {
+		if (listMonths.syncVisible(5)) {
+			listMonths.select(month);
+			btnGo.click();		
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	/**
 	 * Add new timesheet for the employee
-	 * author: Shahrukh Rehman
+	 * @param billingType {@link String}
+	 * @author shahrukh.rehman
 	 */
 	public void addNewTimesheet(String billingType) {
 
-		btnAdd.syncVisible(10);
+		if (btnAdd.syncVisible(10)) {
 		btnAdd.click();
-
-		listBillingType.syncVisible(10);
+		}
+		if (listBillingType.syncVisible(10)) {
 		listBillingType.select(billingType);
-
+		}
+		
 		for (int i = 2; i < 7; i++) {
 			WebElement cellText = driver.findElement(By.xpath("//*[@class=\"time-row\"]/td[" + i + "]/div/input[2]"));
 			cellText.click();
 			cellText.sendKeys("8");
 		}
-		
+
 		submitTimesheet.click();
 	}
-	
-	/*
+
+	/**
 	 * Verify timesheet is created
-	 * author: Shahrukh Rehman
+	 * @author shahrukh.rehman
 	 */
 	public boolean verifySecondSuccessAlert() {
 
-		Boolean visible = true;
-
-		lblSuccessAlert.syncVisible(10);
-
-		if (lblSuccessAlert.isDisplayed()== visible) {
-			System.out.println("Timesheet Submitted");
+		if (lblSuccessAlert.syncVisible(10)) {
+			return true;
 		}
 		else {
-			visible = false;
+			return false;
 		}
-
-		return visible;
 	}
-	
-	/*
+
+	/**
 	 * Different Login
-	 * author: Shahrukh Rehman
+	 * @author shahrukh.rehman
 	 */
 	public void newLogin (OrasiDriver driver){
 		driver.get("http://10.238.243.127:8080/reporting/login");
 	}
-	
+
 	public void clickEmployeeReportsTab() {
 
 		lnkEmployeeReports.syncVisible(10);
 		lnkEmployeeReports.click();
 	}
-	
-	/*
+
+	/**
 	 * Check time by project
-	 * author: Shahrukh Rehman
+	 * @author shahrukh.rehman
 	 */
 	public void checkTimeByProjectTab(String employeeFullName, String startDate, String endDate) {
 		clickEmployeeReportsTab();
@@ -184,10 +194,10 @@ public class LockedTimesheet {
 		lnkTimeByProject.click();
 		generateReport(employeeFullName, startDate, endDate);
 	}
-	
-	/*
+
+	/**
 	 * Check time by Role
-	 * author: Shahrukh Rehman
+	 * @author shahrukh.rehman
 	 */
 	public void checkTimeByRoleTab(String employeeFullName, String startDate, String endDate) {
 		clickEmployeeReportsTab();
@@ -195,10 +205,10 @@ public class LockedTimesheet {
 		lnkTimeByRole.click();
 		generateReport(employeeFullName, startDate, endDate);
 	}
-	
-	/*
+
+	/**
 	 * Check time by Timesheet
-	 * author: Shahrukh Rehman
+	 * @author shahrukh.rehman
 	 */
 	public void checkTimeByTimeSheetTab(String employeeFullName, String startDate, String endDate) {
 		clickEmployeeReportsTab();
@@ -206,10 +216,10 @@ public class LockedTimesheet {
 		lnkTimeByTimeSheet.click();
 		generateReport(employeeFullName, startDate, endDate);
 	}
-	
-	/*
+
+	/**
 	 * Check billing by project
-	 * author: Shahrukh Rehman
+	 * @author shahrukh.rehman
 	 */
 	public void checkBillingByProjectTab(String employeeFullName, String startDate, String endDate) {
 		clickEmployeeReportsTab();
@@ -217,10 +227,10 @@ public class LockedTimesheet {
 		lnkBillingByProject.click();
 		generateReport(employeeFullName, startDate, endDate);
 	}
-	
-	/*
+
+	/**
 	 * Check billing by role
-	 * author: Shahrukh Rehman
+	 * @author shahrukh.rehman
 	 */
 	public void checkBillingByRoleTab(String employeeFullName, String startDate, String endDate) {
 		clickEmployeeReportsTab();
@@ -228,52 +238,75 @@ public class LockedTimesheet {
 		lnkBillingByRole.click();
 		generateReport(employeeFullName, startDate, endDate);
 	}
-	
-	/*
+
+	/**
 	 * Check combined total hours
-	 * author: Shahrukh Rehman
+	 * @author shahrukh.rehman
 	 */
 	public void checkCombinedTotalHoursTab(String employeeFullName, String startDate, String endDate) {
 		clickEmployeeReportsTab();
 		lnkCombinedTotalHours.syncVisible(10);
 		lnkCombinedTotalHours.click();
-		
+
 		btnDownArrow.syncVisible(10);
 		btnDownArrow.click();
-		
+
 		txtEmployee.set(employeeFullName);
 		txtEmployee.sendKeys(Keys.RETURN);
-		
+
 		startDateSelector.set(startDate);
 
 		endDateSelector.set(endDate);
-		
+
 		btnGenerateReport.click();
-		
-		tblTimesheet.syncVisible(10);
+
 	}
 	
-	/*
+	/**
+	 * Total hours table displayed
+	 * @author shahrukh.rehman
+	 */
+	public boolean totalHoursTableDisplayed() {
+		if (tblTimesheet.syncVisible(10)) {
+
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	/**
 	 * Generate reports for each selection
-	 * author: Shahrukh Rehman
+	 * @author shahrukh.rehman
 	 */
 	public void generateReport(String employeeFullName, String startDate, String endDate) {
 
 		btnDownArrow.syncVisible(10);
 		btnDownArrow.click();
-		
+
 		txtEmployee.set(employeeFullName);
 		txtEmployee.sendKeys(Keys.RETURN);
-		
+
 		startDateSelector.set(startDate);
 
 		endDateSelector.set(endDate);
-		
+
 		btnGenerateReport.click();
-		
-		lblEmployeeReport.syncVisible(10);
-		
-		System.out.println("No reports found");
+	}
+	
+	/**
+	 * No results are displayed
+	 * @author shahrukh.rehman
+	 */
+	public boolean noReportsMsgDisplayed() {
+		if (lblEmployeeReport.syncVisible(10)) {
+
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 }
