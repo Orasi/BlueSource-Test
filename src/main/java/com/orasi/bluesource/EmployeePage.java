@@ -3,6 +3,7 @@ package com.orasi.bluesource;
 import org.openqa.selenium.support.FindBy;
 
 import com.orasi.web.OrasiDriver;
+import com.orasi.web.PageLoaded;
 import com.orasi.web.webelements.Button;
 import com.orasi.web.webelements.Label;
 import com.orasi.web.webelements.Listbox;
@@ -16,13 +17,13 @@ public class EmployeePage {
 	@FindBy(xpath = "//tr[1]//a[@class='glyphicon glyphicon-pencil']") Button btnEditFirstProject;
 	@FindBy(xpath = "//div[@id='panel_body_1']//table") Webtable tblProjectInfo;
 	@FindBy(xpath = "//*[@id=\'accordion\']/div/div[7]/button") Button btnEditGeneral;
-	@FindBy(partialLinkText = "Deactivate Employee") Button btnDeactivateEmployee;
+	@FindBy(xpath = "(//div/a)[2]") Button btnDeactivateEmployee;
 	@FindBy(partialLinkText = "Deactivate") Button btnDeactivate;
 	@FindBy(xpath = "//*[@id=\"modal_1\"]/div/div") Label lblModal;
 	@FindBy(xpath = "//*[@id=\'employee_require_nonbillable\']") Button btnTimeEntryCheckbox;
 	@FindBy(id = "employee_status") Listbox lstStatus;
-	@FindBy(xpath = "//form/div[25]/input") Button btnUpdateEmployee;
-	@FindBy(xpath = "//form/div[25]/button") Button btnClose;
+	@FindBy(xpath = "(//input[@name='commit'])[1]") Button btnUpdateEmployee;
+	@FindBy(xpath = "(//button[@data-dismiss='modal'])[2]") Button btnClose;
 	@FindBy(xpath = "//*[@id='content']/h1") Label lblFullName;
 	
 
@@ -34,6 +35,11 @@ public class EmployeePage {
 	}
 
 	/**Page Interactions**/
+	
+	public boolean verifyPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(), driver, btnEditGeneral);	
+	}
+	
 	public void clickFirstEditProjectButton(){
 		btnEditFirstProject.click();
 	}
@@ -78,7 +84,7 @@ public class EmployeePage {
 	}
 	
 	public void clickDeactivate(){
-		btnDeactivateEmployee.syncVisible(2, true);
+		btnDeactivate.syncVisible(2, true);
 		btnDeactivate.click();
 	}
 	
@@ -116,6 +122,26 @@ public class EmployeePage {
 	
 	public String getFullName() {
 		return lblFullName.getText();
+	}
+	
+	/**
+	 * This method returns if a modal is onscreen using syncVisible before
+	 * @return True if a Modal is currently on screen False otherwise
+	 * @author Andrew McGrail
+	 */
+	public boolean verifyModalPopup() {
+		lblModal.syncVisible(2,true);
+		return lblModal.isDisplayed();
+	}
+	
+	/**
+	 * This method returns if a modal is onscreen, use this method if checking
+	 *  that the modal is not there
+	 * @return True if a Modal is currently on screen False otherwise
+	 * @author Andrew McGrail
+	 */
+	public boolean verifyModalPopupGone() {
+		return lblModal.isDisplayed();
 	}
 	
 }

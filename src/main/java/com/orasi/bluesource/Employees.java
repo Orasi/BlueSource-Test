@@ -10,6 +10,7 @@ import com.orasi.utils.Sleeper;
 import com.orasi.utils.TestReporter;
 import com.orasi.utils.dataHelpers.personFactory.Person;
 import com.orasi.web.OrasiDriver;
+import com.orasi.web.PageLoaded;
 import com.orasi.web.exceptions.OptionNotInListboxException;
 import com.orasi.web.webelements.Button;
 import com.orasi.web.webelements.Label;
@@ -25,7 +26,7 @@ public class Employees {
 	private ResourceBundle userCredentialRepo = ResourceBundle.getBundle(Constants.USER_CREDENTIALS_PATH);
 	
 	/**Page Elements**/
-	@FindBy(xpath = "//button[@data-target='#modal_1']") private Button btnAdd;
+	@FindBy(xpath = "//button[@data-toggle='modal']") private Button btnAdd;
 	@FindBy(xpath = "//input[@value='Create Employee']") private Button btnCreateEmployee;
 	@FindBy(id = "employee_username") private Textbox txtEmployeeUsername;
 	@FindBy(id = "employee_first_name") private Textbox txtEmployeeFirst;
@@ -38,7 +39,9 @@ public class Employees {
 	@FindBy(xpath = "//*[@id=\'employee_status\']") private Listbox lstManager;
 	@FindBy(xpath = "//*[@id=\"resource-content\"]/div[1]/table/tbody/tr[2]/td[1]/a") Button btnFirstName;
 	@FindBy(linkText = "account") Button btnSecondName;
-	@FindBy(xpath = "//*[@id='new_employee']/div[24]/button") Button btnClose;
+	@FindBy(xpath = "(//button[@data-dismiss='modal'])[3]") Button btnClose;
+	@FindBy(xpath = "//div[@class='loading-overlay']") Label lblLoadingModal;
+	@FindBy(xpath = "//*[@id=\"modal_1\"]/div/div") Label lblAddEmployeeModal;
 	
 	/**Constructor**/
 	public Employees(OrasiDriver driver){
@@ -47,6 +50,11 @@ public class Employees {
 	}
 
 	/**Page Interactions**/
+	
+	public boolean verifyPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(), driver, btnAdd);	
+	}
+	
 	public void employeeSearch(String strSearch){
 		txtEmployeeSearch.set(strSearch);
 	}
@@ -56,9 +64,8 @@ public class Employees {
 	 * @author Paul
 	 */
 	public void clickAddEmployee() {
-		btnAdd.syncVisible(2,true);
+		lblLoadingModal.syncDisabled(2,true);
 		btnAdd.syncEnabled(2,true);
-		btnAdd.syncInFrame(2,true);
 		btnAdd.click();
 	}
 	
@@ -355,7 +362,7 @@ public class Employees {
 		
 		//tblEmployees.getRowCount()
 		for (int i = 1; i < 50; i++) {
-			if (tblEmployees.getCellData(i, 12).equalsIgnoreCase("Permanent") | tblEmployees.getCellData(i, 12).equalsIgnoreCase("Contractor")) {
+			if (tblEmployees.getCellData(i, 12).equalsIgnoreCase("Permanent") || tblEmployees.getCellData(i, 12).equalsIgnoreCase("Contractor")) {
 				intRow = i;
 				break;
 			}
@@ -375,15 +382,13 @@ public class Employees {
 	}
 	
 	/**
-	 * This method clicks the first name in the employees webtable
+	 * This method clicks the link of a given first name from the employee list
+	 * @param firstName - The first name of the employee
 	 * @author Andrew McGrail
 	 */
-
-	public void clickFirstName() {
-		btnFirstName.syncVisible(2,true);
-		tblEmployees.syncVisible(2,true);
-		btnFirstName.syncVisible(2,true);
-		btnFirstName.click();
+	public void selectEmployeeByFirstname(String firstName) {
+		int rowNum = tblEmployees.getRowWithCellText(firstName, 1);
+		tblEmployees.getCell(rowNum, 1).findElement(By.linkText(firstName)).click();
 	}
 	
 	public void scrollTo1stManager() {
@@ -407,5 +412,25 @@ public class Employees {
 		tblEmployees.syncVisible(2,true);
 		btnSecondName.syncVisible(2, true);
 		btnSecondName.click();
+	}
+	
+	/**
+	 * This method returns if a modal is onscreen using syncVisible before
+	 * @return True if a Modal is currently on screen False otherwise
+	 * @author Andrew McGrail
+	 */
+	public boolean verifyModalPopup() {
+		lblAddEmployeeModal.syncVisible(2,true);
+		return lblAddEmployeeModal.isDisplayed();
+	}
+	
+	/**
+	 * This method returns if a modal is onscreen, use this method if checking
+	 *  that the modal is not there
+	 * @return True if a Modal is currently on screen False otherwise
+	 * @author Andrew McGrail
+	 */
+	public boolean verifyModalPopupGone() {
+		return lblAddEmployeeModal.isDisplayed();
 	}
 }
