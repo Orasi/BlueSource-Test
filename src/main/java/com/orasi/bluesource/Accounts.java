@@ -106,7 +106,7 @@ public class Accounts {
 	}
 
 	/**
-	 * Clicks the Notes button to bring up the create note form
+	 * Clicks the Notes button/icon to bring up the create note form
 	 * @author David Grayson
 	 */
 	public void clickCreateNote(){

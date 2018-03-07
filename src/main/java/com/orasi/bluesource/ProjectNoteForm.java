@@ -30,31 +30,47 @@ public class ProjectNoteForm {
 
 	/**Page Interactions**/
 
+	/**
+	 * Clicks the add note button
+	 * @author David Grayson
+	 */
 	public void clickAddNote(){
 		btnAddNote.syncEnabled(3);
 		btnAddNote.click();
 	}
 
+	/**
+	 * sets the Note text
+	 * @author David Grayson
+	 */
 	public void setNoteText(String strNote){
 		txtNoteField.syncEnabled(3);
 		txtNoteField.clear();
 		txtNoteField.set(strNote);
 	}
 
+	/**
+	 * clicks the create note element
+	 * @author David Grayson
+	 */
 	public void clickCreateNote(){
 		elmCreateNote.click();
 	}
 
+	/**
+	 * Gets the note text
+	 * @author David Grayson
+	 */
 	public String getNoteText(){
 		elmNoteText.syncVisible(3);
 		TestReporter.log("Note Text = [" + elmNoteText.getText() + "]");
 		return elmNoteText.getText();
 	}
 
-	public void testSetNote(){
-		setNoteText("test\ntest test");
-	}
-
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the form is loaded, <code>false</code> otherwise.
+	 */
 	public boolean verifyFormIsLoaded() {
 		return PageLoaded.isElementLoaded(this.getClass(),driver,txtNoteField,5) &&
 				PageLoaded.isElementLoaded(this.getClass(),driver,elmCreateNote,5) &&
