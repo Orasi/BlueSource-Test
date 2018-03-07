@@ -44,21 +44,21 @@ public class Accounts {
 	@FindBy(xpath = "//input[@id='account_name']") private Textbox txtAccountName;
 	@FindBy(xpath = "//select[@id='account_industry_id']") private Listbox lstIndustry;
 	@FindBy(xpath = "//input[@value='Create Account']") private Button btnCreateAccount;
-	@FindBy(xpath = "//*[@id=\"accordion\"]/div/div[5]/div/button[2]") private Button btnEditAccount;
+	@FindBy(xpath = "//*[@id='accordion']/div/div[5]/div/button[2]") private Button btnEditAccount;
 	@FindBy(css = "div.btn.btn-secondary.btn-xs.quick-nav") private Button btnQuickNav;
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
-	@FindBy(xpath = "//*[@id=\'panel_body_1\']/div/table/tbody/tr[1]/td[1]/a") private Link lnkFirstProject;
-	@FindBy(xpath = "//*[@id=\'panel_body_3\']/div/div/table/tbody/tr/td[1]/a") private Link lnkFirstRole;
-	@FindBy(xpath = "//*[@id=\'panel_body_2\']/div/table/tbody/tr/td[8]/span[1]/a") private Button btnEditFirstRate;
-	@FindBy(xpath = "//form[@class=\"edit_role_budget\"]/div/input[@id=\"role_budget_inherit_start_date\"]") private Checkbox cbStartDate;
+	@FindBy(xpath = "//*[@id='panel_body_1']/div/table/tbody/tr[1]/td[1]/a") private Link lnkFirstProject;
+	@FindBy(xpath = "(//*[@id='panel_body_3']/div/div/table/tbody/tr/td[1]/a)[1]") private Link lnkFirstRole;
+	@FindBy(xpath = "//*[@id='panel_body_2']/div/table/tbody/tr/td[8]/span[1]/a") private Button btnEditFirstRate;
+	@FindBy(xpath = "//form[@class='edit_role_budget']/div/input[@id='role_budget_inherit_start_date']") private Checkbox cbStartDate;
 	@FindBy(xpath = "//form[@class='edit_role_budget']/div/input[@id='role_budget_start_date']") private Textbox txtStartDate;
-	@FindBy(xpath = "//form[@class=\"edit_role_budget\"]/div/input[@id=\"role_budget_inherit_end_date\"]") private Checkbox cbEndDate;
-	@FindBy(xpath = "//form[@class=\"edit_role_budget\"]/div/input[@id=\"role_budget_end_date\"]") private Textbox txtEndDate;
-	@FindBy(xpath = "//form[@class=\"edit_role_budget\"]/div/input[@id=\"role_budget_rate\"]") private Textbox txtRate;
-	@FindBy(xpath = "//*[@id=\"rate_comments\"]") private Textbox txtComment;
-	@FindBy(xpath = "//*[@id=\"edit_role_budget_233\"]/div[6]/input") private Button btnUpdateComment;
-	@FindBy(xpath = "//*[@id=\"notification-area\"]/div") private Label lblError;
+	@FindBy(xpath = "//form[@class='edit_role_budget']/div/input[@id='role_budget_inherit_end_date']") private Checkbox cbEndDate;
+	@FindBy(xpath = "//form[@class='edit_role_budget']/div/input[@id='role_budget_end_date']") private Textbox txtEndDate;
+	@FindBy(xpath = "//form[@class='edit_role_budget']/div/input[@id='role_budget_rate']") private Textbox txtRate;
+	@FindBy(xpath = "//*[@id='rate_comments']") private Textbox txtComment;
+	@FindBy(xpath = "//input[@value='Update Role budget']") private Button btnUpdateComment;
+	@FindBy(xpath = "//*[@id='notification-area']/div") private Label lblError;
 	
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
@@ -67,6 +67,10 @@ public class Accounts {
 	}
 	
 	/**Page Interactions**/
+	
+	public boolean verifyPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(), driver, tblAccounts);	
+	}
 
 	/*
 	 * Click on accounts tab 
@@ -411,7 +415,11 @@ public class Accounts {
 			cbStartDate.uncheck();
 		}
 	}
-	// Enters the param to the start date of the role
+
+	/**
+	 * This method sends the Start Date box the date passed
+	 * @param dateKeys - MMDDYYYY to be entered into Start Date
+	 */
 	public void enterStartDate(String dateKeys) {
 		txtStartDate.syncEnabled(1,true);
 		txtStartDate.sendKeys(dateKeys);
@@ -423,18 +431,30 @@ public class Accounts {
 			cbEndDate.uncheck();
 		}
 	}
-	// Enters the param to the end date of the role
+
+	/**
+	 * This method sends the End Date box the date passed
+	 * @param dateKeys - MMDDYYYY to be entered into End Date
+	 */
 	public void enterEndDate(String dateKeys) {
 		txtEndDate.syncEnabled(2,true);
 		txtEndDate.sendKeys(dateKeys);
 	}
 	
+	/**
+	 * This method enters a passed rate into the role rate
+	 * @param rateKeys - Rate to be entered without "$"
+	 */
 	public void enterRate(String rateKeys) {
 		txtRate.click();
 		txtRate.clear();
 		txtRate.sendKeys(rateKeys);
 	}
 	
+	/**
+	 * This method enters a passed comment to the role comment
+	 * @param comment - Comment to be entered
+	 */
 	public void enterComment(String comment) {
 		txtComment.click();
 		txtComment.sendKeys(comment);
@@ -444,15 +464,57 @@ public class Accounts {
 		btnUpdateComment.click();
 	}
 	
-	/*Parses the error message from attempting to enter out of bounds dates for
-	 * an employee role.
-	 * 
+	/**
+	 * Parses the error message from attempting to enter out of bounds dates for
+	 *  an employee role.
 	 * @Author Andrew McGrail
 	 */	
 	public String checkError(){
 		String parseThis = lblError.getText().toString();
-		String parsedString = parseThis.substring(2, 94); //92
+		String parsedString = parseThis.substring(2, 94);
 		return parsedString;
+	}
+	
+	public boolean verifyAccountPage() {
+		return btnEditAccount.syncVisible(2,true);
+	}
+	
+	public boolean verifyProjectPage() {
+		return lnkFirstRole.syncVisible(2,true);
+	}
+	
+	public boolean verifyRolePage() {
+		return btnEditFirstRate.syncVisible(2,true);
+	}
+	
+	public boolean verifyRoleEditModal() {
+		return cbStartDate.syncVisible(2,true);
+	}
+	
+	public boolean verifyStartDateEditable() {
+		return txtStartDate.syncVisible(2,true);
+	}
+	
+	public boolean verifyStartDateContent(String date) {
+		String parsedDate = date.substring(4)+"-"+date.substring(0, 2)+"-"+date.substring(2,4);
+		return txtStartDate.getText().equalsIgnoreCase(parsedDate);
+	}
+	
+	public boolean verifyEndDateEditable() {
+		return txtEndDate.syncVisible(2,true);
+	}
+	
+	public boolean verifyEndDateContent(String date) {
+		String parsedDate = date.substring(4)+"-"+date.substring(0, 2)+"-"+date.substring(2,4);
+		return txtEndDate.getText().equalsIgnoreCase(parsedDate);
+	}
+	
+	public boolean verifyRate(String rate) {
+		return txtRate.getText().substring(2).equalsIgnoreCase(rate);
+	}
+	
+	public boolean verifyTextCommentContent(String comment) {
+		return txtComment.getText().equalsIgnoreCase(comment);
 	}
 }
 
