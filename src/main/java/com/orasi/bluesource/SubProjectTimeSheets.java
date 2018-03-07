@@ -24,8 +24,8 @@ public class SubProjectTimeSheets {
 
 	/**Page Interactions**/
 	/**
-	 * Returns true if there are timesheet rows in the table
-	 * @author david.grayson
+	 * Returns true if there are time sheet rows in the table
+	 * @author David Grayson
 	 * @return <code>true</code> if there are time sheets, <code>false</code> if not.
 	 */
 	public boolean hasTimeSheet(){
@@ -33,8 +33,8 @@ public class SubProjectTimeSheets {
 	}
 
 	/**
-	 * goes back one month on timesheets page
-	 * @author david.grayson
+	 * goes back one month on time sheets page
+	 * @author David Grayson
 	 */
 	public void goBackOneMonth(){
 		PageLoaded.isDomComplete(driver);
@@ -42,8 +42,8 @@ public class SubProjectTimeSheets {
 	}
 
 	/**
-	 * goes forward one month on timesheets page
-	 * @author david.grayson
+	 * goes forward one month on time sheets page
+	 * @author David Grayson
 	 */
 	public void goForwardOneMonth(){
 		lnkOneMonthForward.syncEnabled(3);
@@ -51,8 +51,8 @@ public class SubProjectTimeSheets {
 	}
 
 	/**
-	 * Gets the SOW of the timesheet on the page
-	 * @author david.grayson
+	 * Gets the SOW of the time sheet on the page
+	 * @author David Grayson
 	 * @return returns the SOW on the time sheet as a String
 	 */
 	public String getSOW(){

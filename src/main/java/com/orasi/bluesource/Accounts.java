@@ -34,6 +34,8 @@ public class Accounts {
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
 	@FindBy(xpath = "//span[@class='sow_info']") private Element elmSOWNumber;
 	@FindBy(xpath = "//h4[contains(text(),'Project Info')]/div/button") private Button btnProjectMenu;
+	@FindBy(xpath = "//h4[@class='panel-title' and contains(text(),'Project Info')]") private Element elmProjectInfoPanelHeader;
+
 
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
@@ -44,8 +46,49 @@ public class Accounts {
 	/**Page Interactions**/
 
 	/**
+	 * @author David Grayson
+	 * @param subProject {@link String} Name of sub project
+	 * @return {@link Boolean} Returns <code>true</code> if link is clickable, <code>false</code> otherwise
+	 */
+	public boolean verifySubProjectLink(String subProject){
+		return driver.findLink(By.linkText(subProject)).syncEnabled(5,false) &&
+				driver.findLink(By.linkText(subProject)).syncVisible(5,false);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the Accounts table is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountsPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblAccounts,5);
+	}
+
+	/**
+	 * would use the {@link #verifyProjectLink(String)} but it doesn't do what it's name implies
+	 * @author David Grayson
+	 * @param project {@link String} name of Project
+	 * @return {@link Boolean} Returns <code>true</code> if the link is clickable within 5 seconds, <code>false</code> otherwise.
+	 */
+	public boolean verifyProjectLinkValid(String project){
+		return driver.findLink(By.linkText(project)).syncEnabled(5,false) &&
+				driver.findLink(By.linkText(project)).syncVisible(5,false);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Projects parent account
+	 * @param strProject {@link String} name of project
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Projects page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyProjectPageIsLoaded(String strAccount, String strProject){
+		return PageLoaded.isElementLoaded(this.getClass(),driver, elmProjectInfoPanelHeader,5)
+				&& driver.findElement(By.xpath("//div[@class='breadcrumbs']")).getText()
+				.equals("Accounts - " + strAccount + " - " + strProject);
+	}
+
+	/**
 	 * Clicks the "project time sheets" option in the project menu
-	 * @author david.grayson
+	 * @author David Grayson
 	 */
 	public void clickProjectTimeSheets(){
 		btnProjectMenu.syncEnabled(3);
@@ -55,8 +98,8 @@ public class Accounts {
 
 	/**
 	 * Gets a projects SOW number
-	 * @author david.grayson
-	 * @return a String of the projects SOW number
+	 * @author David Grayson
+	 * @return {@link String}Returns the projects SOW number
 	 */
 	public String getProjectSOW(){
 		return elmSOWNumber.getText().replace('-',' ').trim();

@@ -9,7 +9,7 @@ import com.orasi.web.WebBaseTest;
 import org.testng.ITestContext;
 import org.testng.annotations.*;
 
-public class Add_QSF_Number_to_Timesheets_for_Sub_Projects extends WebBaseTest {
+public class AddQSFNumberToTimesheetsForSubProjects extends WebBaseTest {
 	@BeforeMethod
 	@Parameters({ "runLocation", "browserUnderTest", "browserVersion",
 			"operatingSystem", "environment" })
@@ -31,7 +31,7 @@ public class Add_QSF_Number_to_Timesheets_for_Sub_Projects extends WebBaseTest {
 	}
 
 	@Test
-	public void add_QSF_Number_to_Timesheets_for_Sub_Projects(){
+	public void addQSFNumberToTimeSheetsForSubProjects(){
 		/**Test Variables**/
 		String strAccount = "AccountOnlySubs1";
 		String strProject = "Project1";
@@ -44,25 +44,37 @@ public class Add_QSF_Number_to_Timesheets_for_Sub_Projects extends WebBaseTest {
 		Accounts accounts = new Accounts(getDriver());
 		SubProjectTimeSheets subProjectTimeSheets = new SubProjectTimeSheets(getDriver());
 
+		TestReporter.assertTrue(loginPage.verifyPageIsLoaded(),"Verifying login page is loaded");
+
 		TestReporter.logStep("Logging in as Admin");
 		loginPage.AdminLogin();
 
 		TestReporter.logStep("Navigating to Accounts");
 		header.navigateAccounts();
 
+		TestReporter.assertTrue(accounts.verifyAccountsPageIsLoaded(),"Verifying the Accounts page is loaded");
+
+		TestReporter.assertTrue(accounts.verifyAccountLink(strAccount),"Verifying [" + strAccount + "] link");
+
 		TestReporter.logStep("Clicking " + strAccount + " account link");
 		accounts.clickAccountLink(strAccount);
+
+		TestReporter.assertTrue(accounts.verifyProjectLinkValid(strProject),"Verifying [" + strProject + "] link");
 
 		TestReporter.logStep("Click " + strProject + " project link");
 		accounts.clickProjectLink(strProject);
 
+		TestReporter.assertTrue(accounts.verifyProjectPageIsLoaded(strAccount,strProject),"Verifying [" + strProject + "] page is loaded");
+
 		TestReporter.logStep("Getting Project SOW");
 		strSOW = accounts.getProjectSOW();
+
+		TestReporter.assertTrue(accounts.verifySubProjectLink(strSubProject),"Verifying [" + strSubProject + "] link");
 
 		TestReporter.logStep("Clicking " + strSubProject + " sub project link");
 		accounts.clickSubprojectLink(strSubProject);
 
-		TestReporter.logStep("Click sub project timesheets");
+		TestReporter.logStep("Click sub project time sheets");
 		accounts.clickProjectTimeSheets();
 
 		while(!subProjectTimeSheets.hasTimeSheet()){
@@ -70,6 +82,6 @@ public class Add_QSF_Number_to_Timesheets_for_Sub_Projects extends WebBaseTest {
 			subProjectTimeSheets.goBackOneMonth();
 		}
 
-		TestReporter.assertEquals(strSOW, subProjectTimeSheets.getSOW(), "Verifying sub project timesheet SOW matches sub projects");
+		TestReporter.assertEquals(strSOW, subProjectTimeSheets.getSOW(), "Verifying sub project time sheet SOW matches sub projects");
 	}
 }
