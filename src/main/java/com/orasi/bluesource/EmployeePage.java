@@ -17,9 +17,9 @@ public class EmployeePage {
 	/**Page Elements**/
 	@FindBy(xpath = "//tr[1]//a[@class='glyphicon glyphicon-pencil']") Button btnEditFirstProject;
 	@FindBy(xpath = "//div[@id='panel_body_1']//table") Webtable tblProjectInfo;
-	@FindBy(xpath = "//button[@data-target='#modal_1']") Button btnEditGeneral;
-	@FindBy(xpath = "//div//a[contains(text(),'Deactivate Employee')]") Button btnDeactivateEmployee;
-	@FindBy(xpath = "//div[@class='panel-heading']//a[contains(text(),'Deactivate')]") Button btnDeactivate;
+	@FindBy(xpath = "//*[@id=\'accordion\']/div/div[7]/button") Button btnEditGeneral;
+	@FindBy(partialLinkText = "Deactivate Employee") Button btnDeactivateEmployee;
+	@FindBy(partialLinkText = "Deactivate") Button btnDeactivate;
 	
 	/**Constructor**/
 	public EmployeePage(OrasiDriver driver){
@@ -64,11 +64,11 @@ public class EmployeePage {
 	}		
 	
 	public void clickDeactivateEmployee() {
+		btnDeactivateEmployee.syncVisible(2, true);
 		btnDeactivateEmployee.click();
 	}
 	
 	public void clickDeactivate(){
 		btnDeactivate.click();
 	}
-	
 }
