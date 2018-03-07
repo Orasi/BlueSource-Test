@@ -2,6 +2,7 @@ package com.orasi.bluesource;
 
 import com.orasi.utils.TestReporter;
 import com.orasi.web.OrasiDriver;
+import com.orasi.web.PageLoaded;
 import com.orasi.web.webelements.Button;
 import com.orasi.web.webelements.Element;
 import com.orasi.web.webelements.Textbox;
@@ -10,7 +11,7 @@ import org.openqa.selenium.support.FindBy;
 
 /**
  * Page driver for the Create Notes Form on the project page
- * @author david.grayson
+ * @author David Grayson
  */
 public class ProjectNoteForm {
 	private OrasiDriver driver = null;
@@ -52,5 +53,11 @@ public class ProjectNoteForm {
 
 	public void testSetNote(){
 		setNoteText("test\ntest test");
+	}
+
+	public boolean verifyFormIsLoaded() {
+		return PageLoaded.isElementLoaded(this.getClass(),driver,txtNoteField,5) &&
+				PageLoaded.isElementLoaded(this.getClass(),driver,elmCreateNote,5) &&
+				PageLoaded.isElementLoaded(this.getClass(),driver,btnAddNote,5);
 	}
 }

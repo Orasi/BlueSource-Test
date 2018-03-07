@@ -34,6 +34,8 @@ public class Accounts {
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
 	@FindBy(xpath = "//button[@class='contents btn btn-link']") private Button btnCreateProjectNote;
 	@FindBy(xpath = "//span[@class='badge badge-notify']") private Element elmNotesBadge;
+	@FindBy(xpath = "//h4[@class='panel-title' and contains(text(),'Project Info')]") private Element elmProjectInfoPanelHeader;
+
 
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
@@ -44,9 +46,51 @@ public class Accounts {
 	/**Page Interactions**/
 
 	/**
+	 * would use the {@link #verifyProjectLink(String)} but it doesn't do what it's name implies
+	 * @author David Grayson
+	 * @param project {@link String} name of Project
+	 * @return {@link Boolean} Returns <code>true</code> if the link is clickable within 5 seconds, <code>false</code> otherwise.
+	 */
+	public boolean verifyProjectLinkValid(String project){
+		return driver.findLink(By.linkText(project)).syncEnabled(5,false) &&
+				driver.findLink(By.linkText(project)).syncVisible(5,false);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the Accounts table is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountsPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblAccounts,5);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Projects parent account
+	 * @param strProject {@link String} name of project
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Projects page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyProjectPageIsLoaded(String strAccount, String strProject){
+		return PageLoaded.isElementLoaded(this.getClass(),driver, elmProjectInfoPanelHeader,5)
+				&& driver.findElement(By.xpath("//div[@class='breadcrumbs']")).getText()
+				.equals("Accounts - " + strAccount + " - " + strProject);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Account
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Accounts page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountPageIsLoaded(String strAccount){
+		String xpath = "//div[@class='breadcrumbs']/a[contains(text(),'" + strAccount + "')]";
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblProjects,5)
+				&& driver.findLink(By.xpath(xpath)).syncVisible(5,false);
+	}
+
+	/**
 	 * Checks the notes badge to get the current number of note associated with the project
-	 * @author david.grayson
-	 * @return number of notes associated with the project
+	 * @author David Grayson
+	 * @return {@link Integer}Returns the number of notes associated with the project
 	 */
 	public int getNumberOfNotes(){
 		return Integer.parseInt(elmNotesBadge.getText());
@@ -54,8 +98,8 @@ public class Accounts {
 
 	/**
 	 * Checks that the badge with the number of notes is displayed
-	 * @author david.grayson
-	 * @return <code>true</code> if notes are associated with project, <code>false</code> if not.
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if notes are associated with project, <code>false</code> if not.
 	 */
 	public boolean verifyNoteCreated(){
 		return elmNotesBadge.isDisplayed();
@@ -63,7 +107,7 @@ public class Accounts {
 
 	/**
 	 * Clicks the Notes button to bring up the create note form
-	 * @author david.grayson
+	 * @author David Grayson
 	 */
 	public void clickCreateNote(){
 		btnCreateProjectNote.click();

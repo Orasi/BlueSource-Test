@@ -44,17 +44,29 @@ public class Preserve_New_Lines_in_Project_Notes extends WebBaseTest {
 		Accounts accounts = new Accounts(getDriver());
 		ProjectNoteForm projectNoteForm = new ProjectNoteForm(getDriver());
 
+		TestReporter.assertTrue(loginPage.verifyPageIsLoaded(),"Verifying login page is loaded");
+
 		TestReporter.logStep("Logging in as Admin");
 		loginPage.AdminLogin();
 
 		TestReporter.logStep("Navigating to Accounts page");
 		header.navigateAccounts();
 
+		TestReporter.assertTrue(accounts.verifyAccountsPageIsLoaded(),"Verifying Accounts page is loaded");
+
+		TestReporter.assertTrue(accounts.verifyAccountLink(strAccount),"Verifying [" + strAccount + "] link");
+
 		TestReporter.logStep("Clicking " + strAccount + " account link");
 		accounts.clickAccountLink(strAccount);
 
+		TestReporter.assertTrue(accounts.verifyAccountPageIsLoaded(strAccount),"Verifying [" + strAccount + "] page is loaded");
+
+		TestReporter.assertTrue(accounts.verifyProjectLinkValid(strProject),"Verifying [" + strProject + "] link");
+
 		TestReporter.logStep("Clicking " + strProject + " project link");
 		accounts.clickProjectLink(strProject);
+
+		TestReporter.assertTrue(accounts.verifyProjectPageIsLoaded(strAccount,strProject),"Verifying [" + strProject + "] page is loaded");
 
 		TestReporter.logStep("Checking if the project already has notes");
 		if (accounts.verifyNoteCreated()){
@@ -66,6 +78,8 @@ public class Preserve_New_Lines_in_Project_Notes extends WebBaseTest {
 
 		TestReporter.logStep("Clicking the Note button");
 		accounts.clickCreateNote();
+
+		TestReporter.assertTrue(projectNoteForm.verifyFormIsLoaded(),"Verifying Create Note Form loaded");
 
 		TestReporter.logStep("Clicking the Add Note Button");
 		projectNoteForm.clickAddNote();
@@ -83,6 +97,8 @@ public class Preserve_New_Lines_in_Project_Notes extends WebBaseTest {
 
 		TestReporter.logStep("Clicking the Note button");
 		accounts.clickCreateNote();
+
+		TestReporter.assertTrue(projectNoteForm.verifyFormIsLoaded(),"Verifying Create Note Form loaded");
 
 		TestReporter.assertEquals("test\ntest test",projectNoteForm.getNoteText(),"Verifying that the stored note is equal to the original");
 	}
