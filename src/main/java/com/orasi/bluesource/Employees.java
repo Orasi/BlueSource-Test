@@ -3,7 +3,6 @@ package com.orasi.bluesource;
 import java.util.ResourceBundle;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.support.FindBy;
 
 import com.orasi.utils.Constants;
@@ -14,7 +13,6 @@ import com.orasi.web.OrasiDriver;
 import com.orasi.web.PageLoaded;
 import com.orasi.web.exceptions.OptionNotInListboxException;
 import com.orasi.web.webelements.Button;
-import com.orasi.web.webelements.Element;
 import com.orasi.web.webelements.Label;
 import com.orasi.web.webelements.Link;
 import com.orasi.web.webelements.Listbox;
@@ -28,7 +26,7 @@ public class Employees {
 	private ResourceBundle userCredentialRepo = ResourceBundle.getBundle(Constants.USER_CREDENTIALS_PATH);
 	
 	/**Page Elements**/
-	@FindBy(xpath = "//button[@data-target='#modal_1']") private Button btnAdd;
+	@FindBy(xpath = "//button[@data-toggle='modal']") private Button btnAdd;
 	@FindBy(xpath = "//input[@value='Create Employee']") private Button btnCreateEmployee;
 	@FindBy(id = "employee_username") private Textbox txtEmployeeUsername;
 	@FindBy(id = "employee_first_name") private Textbox txtEmployeeFirst;
@@ -38,6 +36,12 @@ public class Employees {
 	@FindBy(xpath = "//*[@id='accordion']/div/div[3]/h4/a") private Button btnManage;
 	@FindBy(xpath = "//div//input[@id='search-bar']") private Textbox txtEmployeeSearch;
 	@FindBy(xpath = "//*[@id=\"employee_account_permission\"]") private Listbox lstAccountPermission;
+	@FindBy(xpath = "//*[@id=\'employee_status\']") private Listbox lstManager;
+	@FindBy(xpath = "//*[@id=\"resource-content\"]/div[1]/table/tbody/tr[2]/td[1]/a") Button btnFirstName;
+	@FindBy(linkText = "account") Button btnSecondName;
+	@FindBy(xpath = "(//button[@data-dismiss='modal'])[3]") Button btnClose;
+	@FindBy(xpath = "//div[@class='loading-overlay']") Label lblLoadingModal;
+	@FindBy(xpath = "//*[@id=\"modal_1\"]/div/div") Label lblAddEmployeeModal;
 	
 	/**Constructor**/
 	public Employees(OrasiDriver driver){
@@ -46,6 +50,11 @@ public class Employees {
 	}
 
 	/**Page Interactions**/
+	
+	public boolean verifyPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(), driver, btnAdd);	
+	}
+	
 	public void employeeSearch(String strSearch){
 		txtEmployeeSearch.set(strSearch);
 	}
@@ -55,8 +64,9 @@ public class Employees {
 	 * @author Paul
 	 */
 	public void clickAddEmployee() {
-		btnAdd.syncEnabled(5,true);
-		btnAdd.click();		
+		lblLoadingModal.syncDisabled(2,true);
+		btnAdd.syncEnabled(2,true);
+		btnAdd.click();
 	}
 	
 	/**
@@ -309,7 +319,118 @@ public class Employees {
 		catch (OptionNotInListboxException e){
 			return false;
 		}
-			
 	}
-
+	/**
+	 * Checks the manager dropdown for the employee name passed,
+	 * returns false when the name is not found and true when found
+	 * 
+	 * @param strOption the name of the employee you want to check for.
+	 * @return <code>true</code> if the name provided is available
+	 * in the dropdown, <code>false</code> otherwise.
+	 * @author Andrew McGrail
+	 */
+	
+	
+	public boolean checkManagerOption(String strOption) {
+		try{
+			lstManager.select(strOption);
+			return true;
+		}
+		catch (OptionNotInListboxException e){
+			return false;
+		}
+	}
+	
+	/**
+	 * This method returns the string of the success message
+	 * 
+	 * @return The success message in a String
+	 * @author Andrew McGrail
+	 */
+	public String getSuccessMessage() {
+		return driver.findElement(By.xpath("//*[@id='notification-area']/div")).getText().substring(2);
+	}
+	
+	/**
+	 * 
+	 * @return int - row number with the first non-Inactive User
+	 * @author Andrew McGrail
+	 */
+	public int findFirstActiveInTable(){
+		Integer intRow = null;
+		tblEmployees.syncVisible(2,true);
+		
+		//tblEmployees.getRowCount()
+		for (int i = 1; i < 50; i++) {
+			if (tblEmployees.getCellData(i, 12).equalsIgnoreCase("Permanent") || tblEmployees.getCellData(i, 12).equalsIgnoreCase("Contractor")) {
+				intRow = i;
+				break;
+			}
+		}
+		return intRow;
+	}
+	
+	/** 
+	 * This method selects the link of the first name for a given row
+	 * and column for the employee webtable
+	 * @param rowNum - The row number
+	 * @param columnNum - The column number
+	 * @author Andrew McGrail 
+	 */
+	public void selectEmployeeFirstname(int rowNum, int columnNum) {
+		driver.findLink(By.xpath("//*[@id=\"resource-content\"]/div[1]/table/tbody/tr["+rowNum+"]/td["+columnNum+"]/a")).click();
+	}
+	
+	/**
+	 * This method clicks the link of a given first name from the employee list
+	 * @param firstName - The first name of the employee
+	 * @author Andrew McGrail
+	 */
+	public void selectEmployeeByFirstname(String firstName) {
+		int rowNum = tblEmployees.getRowWithCellText(firstName, 1);
+		tblEmployees.getCell(rowNum, 1).findElement(By.linkText(firstName)).click();
+	}
+	
+	public void scrollTo1stManager() {
+		lstManager.scrollIntoView();
+	}
+	
+	/**
+	 * This method clicks the close button in the 'Add Employees' Modal
+	 * @author Andrew McGrail
+	 */
+	public void clickClose() {
+		btnClose.click();
+		btnClose.syncHidden(2,true);
+	}
+	
+	/**
+	 * This method clicks the second name in the employees webtable
+	 * @author Andrew McGrail
+	 */
+	public void clickSecondName() {
+		tblEmployees.syncVisible(2,true);
+		btnSecondName.syncVisible(2, true);
+		btnSecondName.click();
+	}
+	
+	/**
+	 * This method returns if a modal is onscreen using syncVisible before
+	 * @return True if a Modal is currently on screen False otherwise
+	 * @author Andrew McGrail
+	 */
+	public boolean verifyModalPopup() {
+		lblAddEmployeeModal.syncVisible(2,true);
+		return lblAddEmployeeModal.isDisplayed();
+	}
+	
+	/**
+	 * This method returns if a modal is onscreen, use this method if checking
+	 *  that the modal is not there
+	 * @return True if a Modal is currently on screen False otherwise
+	 * @author Andrew McGrail
+	 */
+	public boolean verifyModalPopupGone() {
+		return lblAddEmployeeModal.isDisplayed();
+	}
 }

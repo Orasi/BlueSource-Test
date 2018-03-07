@@ -64,9 +64,8 @@ public class Header {
 	 * @author Paul
 	 */
 	public void navigateEmployees() {
-		MessageCenter messageCenter = new MessageCenter(driver);
-		messageCenter.closeMessageCenter();
-		lnkEmployees.click();		
+		lnkEmployees.syncEnabled(2,true);
+		lnkEmployees.click();
 	}
 	
 	public void navigateProjectEmployees() {
