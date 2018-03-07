@@ -348,7 +348,7 @@ public class Employees {
 	 * @author Andrew McGrail
 	 */
 	public String getSuccessMessage() {
-		return driver.findElement(By.xpath("//*[@id='notification-area']/div")).getText().substring(2,35);
+		return driver.findElement(By.xpath("//*[@id='notification-area']/div")).getText().substring(2);
 	}
 	
 	/**
