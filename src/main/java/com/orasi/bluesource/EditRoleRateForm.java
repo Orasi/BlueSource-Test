@@ -1,6 +1,7 @@
 package com.orasi.bluesource;
 
 import com.orasi.web.OrasiDriver;
+import com.orasi.web.PageLoaded;
 import com.orasi.web.webelements.Button;
 import com.orasi.web.webelements.Checkbox;
 import com.orasi.web.webelements.Element;
@@ -10,7 +11,7 @@ import org.openqa.selenium.support.FindBy;
 
 /**
  * This class is for manipulating the form shown when editing the rate of a role in a project.
- * @author david.grayson
+ * @author David Grayson
  */
 public class EditRoleRateForm {
 	private OrasiDriver driver = null;
@@ -32,10 +33,16 @@ public class EditRoleRateForm {
 
 	//**Page Interactions**//
 
+	public boolean verifyEditRateFormIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,txtRate,5) &&
+				PageLoaded.isElementLoaded(this.getClass(),driver,txtComments,5) &&
+				PageLoaded.isElementLoaded(this.getClass(),driver,btnSubmit);
+	}
+
 	/**
 	 * Checks if the Inherit Start Date checkbox is checked
-	 * @author david.grayson
-	 * @return returns <code>true</code> if Inherit Start Date checkbox is checked,
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if Inherit Start Date checkbox is checked,
 	 * <code>false</code> if not.
 	 */
 	public boolean doesInheritStartDate(){
@@ -44,8 +51,8 @@ public class EditRoleRateForm {
 
 	/**
 	 * Checks if the Inherit End Date checkbox is checked
-	 * @author david.grayson
-	 * @return <code>true</code> if Inherit End Date checkbox is checked,
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if Inherit End Date checkbox is checked,
 	 * <code>false</code> if not.
 	 */
 	public boolean doesInheritEndDate(){
@@ -54,7 +61,7 @@ public class EditRoleRateForm {
 
 	/**
 	 * Sets the Inherit Start Date checkbox to checked
-	 * @author david.grayson
+	 * @author David Grayson
 	 */
 	public void checkInheritStartDate(){
 		chkInheritStartDate.check();
@@ -62,7 +69,7 @@ public class EditRoleRateForm {
 
 	/**
 	 * Sets the Inherit End Date checkbox to checked
-	 * @author david.grayson
+	 * @author David Grayson
 	 */
 	public void checkInheritEndDate(){
 		chkInheritEndDate.check();
@@ -70,7 +77,7 @@ public class EditRoleRateForm {
 
 	/**
 	 * Sets the Inherit Start Date checkbox to unchecked
-	 * @author david.grayson
+	 * @author David Grayson
 	 */
 	public void uncheckInheritStartDate(){
 		chkInheritStartDate.uncheck();
@@ -78,7 +85,7 @@ public class EditRoleRateForm {
 
 	/**
 	 * Sets the Inherit End Date checkbox to unchecked
-	 * @author david.grayson
+	 * @author David Grayson
 	 */
 	public void uncheckInheritEndDate(){
 		chkInheritEndDate.uncheck();
@@ -86,7 +93,7 @@ public class EditRoleRateForm {
 
 	/**
 	 * Clicks the form submit button to update the role rate
-	 * @author david.grayson
+	 * @author David Grayson
 	 */
 	public void clickSubmit(){
 		btnSubmit.click();
@@ -94,8 +101,8 @@ public class EditRoleRateForm {
 
 	/**
 	 * Unchecks the Inherit Start Date checkbox, and tries to set the Start Date from String provided
-	 * @author david.grayson
-	 * @param strStartDate MMddYYY format
+	 * @author David Grayson
+	 * @param strStartDate {@link String} MMddYYY format
 	 */
 	public void setStartDate(String strStartDate){
 		uncheckInheritStartDate();
@@ -104,8 +111,8 @@ public class EditRoleRateForm {
 
 	/**
 	 * Unchecks the Inherit End Date checkbox, and tries to set the End Date from String provided
-	 * @author david.grayson
-	 * @param strEndDate MMddYYY format
+	 * @author David Grayson
+	 * @param strEndDate {@link String} MMddYYY format
 	 */
 	public void setEndDate(String strEndDate){
 		if (!doesInheritEndDate())
@@ -115,8 +122,8 @@ public class EditRoleRateForm {
 
 	/**
 	 * Waits for the Element to be visible then clears and sets the Rate text box
-	 * @author david.grayson
-	 * @param strRate new rate for role e.g. "71.0"
+	 * @author David Grayson
+	 * @param strRate {@link String} new rate for role e.g. "71.0"
 	 */
 	public void setRate(String strRate){
 		txtRate.syncVisible(3);
@@ -126,8 +133,8 @@ public class EditRoleRateForm {
 
 	/**
 	 * Waits for the Element to be visible then clears and sets the Comments textbox
-	 * @author david.grayson
-	 * @param strComments comments on the rate change
+	 * @author David Grayson
+	 * @param strComments {@link String} comments on the rate change
 	 */
 	public void setComments(String strComments){
 		txtComments.syncVisible(3);

@@ -32,6 +32,9 @@ public class Accounts {
 	@FindBy(css = "div.btn.btn-secondary.btn-xs.quick-nav") private Button btnQuickNav;
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
+	@FindBy(xpath = "//th[contains(text(),'Rate')]/../../..") private Webtable tblRole;
+	@FindBy(xpath = "//h4[@class='panel-title' and contains(text(),'Project Info')]") private Element elmProjectInfoPanelHeader;
+	@FindBy(xpath = "//h4[@class='panel-title' and contains(text(),'Role Information')]") private Element elmRoleInfoPanelHeader;
 
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
@@ -41,6 +44,10 @@ public class Accounts {
 	
 	/**Page Interactions**/
 
+	public boolean verifyRoleLink(String strRole) {
+		return driver.findLink(By.linkText(strRole)).syncVisible(5,false);
+	}
+
 
 	public void clickEditRoleRate(String roleRate) {
 		String xpath = "//td[contains(text(),'" + roleRate + "')]/../td/span[@class='actions actions-edit-time']/a";
@@ -48,10 +55,54 @@ public class Accounts {
 	}
 
 	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Roles parent account
+	 * @param strProject {@link String} name of Roles parent project
+	 * @param strRole {@link String} name of role
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Roles page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyRolePageIsLoaded(String strAccount, String strProject, String strRole){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,elmRoleInfoPanelHeader,5)
+				&& driver.findElement(By.xpath("//div[@class='breadcrumbs']")).getText()
+				.equals("Accounts - " + strAccount + " - " + strProject + " - " + strRole);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Projects parent account
+	 * @param strProject {@link String} name of project
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Projects page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyProjectPageIsLoaded(String strAccount, String strProject){
+		return PageLoaded.isElementLoaded(this.getClass(),driver, elmProjectInfoPanelHeader,5)
+				&& driver.findElement(By.xpath("//div[@class='breadcrumbs']")).getText()
+				.equals("Accounts - " + strAccount + " - " + strProject);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Account
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Accounts page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountPageIsLoaded(String strAccount){
+		String xpath = "//div[@class='breadcrumbs']/a[contains(text(),'" + strAccount + "')]";
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblProjects,5)
+				&& driver.findLink(By.xpath(xpath)).syncVisible(5,false);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the Accounts table is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountsPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblAccounts,5);
+	}
+
+	/**
 	 * Checks if the rate provided matches the rate field on the Role page
 	 * @author David Grayson
-	 * @return <code>true</code> if the rate field from the Rates table on a Project page
-	 * matches the rate on the Rates table on the Role page, <code>false</code> if not.
+	 * @param rate {@link String} Rate to check
+	 * @return {@link Boolean} Returns <code>true</code> if provided rate is in the table, <code>false</code> if not.
 	 */
 	public boolean verifyRoleRate(String rate) {
 		return driver.findWebtable(By.xpath("//th[contains(text(), 'Rate')]/../../..")).getRowWithCellText(rate, 5) != 0;
@@ -60,19 +111,15 @@ public class Accounts {
 	/**
 	 * Gets the rate field in the Role Table on a project page
 	 * @author David Grayson
-	 * @param role the name of the role to get the rate for
+	 * @param role {@link String} the name of the role
+	 * @return {@link String} Returns the Rate for the role provided or an empty {@link String} is something went wrong
 	 */
 	public String getRoleRateFromProjectPage(String role){
 		final int colPosition = 2;
-		try{
-			Webtable tblProjectRoles = driver.findWebtable(By.xpath("//th[contains(text(), 'Rate')]/../../.."));
-			int row = tblProjectRoles.getRowWithCellText(role);
-			return tblProjectRoles.getCell(row, colPosition).getText();
-		} catch (NoSuchElementException e){
-			System.out.println("No such exception, Role table on project page not found\n" + e.getLocalizedMessage());
-			e.printStackTrace();
-		}
-		return null;
+		if (tblRole.syncEnabled(5,false) && tblRole.syncVisible(5,false))
+			return tblRole.getCell(tblRole.getRowWithCellText(role),colPosition).getText();
+		else
+			return "";
 	}
 	/*
 	 * Click on accounts tab 
@@ -198,12 +245,12 @@ public class Accounts {
 	public Element verifyProjectLink(String strProject){
 		Integer intColumn = 1;
 		Integer intRow = tblProjects.getRowWithCellText(strProject, intColumn);
-		
+
 		tblProjects.findElement(By.linkText(strProject)).click();
 		Element eleProject = tblProjects.findElement(By.linkText(strProject));
-		
+
 		return eleProject;
-		
+
 	}
 	
 	public void clickSubprojectLink(String strSubProject){
