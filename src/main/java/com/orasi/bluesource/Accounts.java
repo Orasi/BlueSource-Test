@@ -46,7 +46,15 @@ public class Accounts {
 	@FindBy(css = "div.btn.btn-secondary.btn-xs.quick-nav") private Button btnQuickNav;
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
-
+	@FindBy(xpath = "//button[contains(text(),'New Role')]") private Button btnNewRole;
+	@FindBy(xpath = "//div[@data-toggle='toggle']") private Element elmBillToggle;
+	@FindBy(id = "role_role_type_id") private Listbox lstRoleType;
+	@FindBy(id = "role_max_resources") private Textbox txtMaxResources;
+	@FindBy(xpath = "//input[@value='Create Role']") private Button btnCreateRole;
+	@FindBy(xpath = "//*[@id=\"role_budget_rate\"]") private Textbox txtRate;
+	@FindBy(xpath = "//div[@class='rate-warning']") private Element elmLowRateAlert;
+	@FindBy(xpath = "//h4[contains(text(),'Basic Account - Test Project - Add Project Role')]/../button") private Button btnCloseAddRolePopup;
+	
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
 		this.driver = driver;
@@ -375,6 +383,106 @@ public class Accounts {
 		tblAccounts.clickCell(row, column);
 		PageLoaded.isDomComplete(driver, 1);
 	}
+
+	/**
+	 * Clicks the New Role button under a project
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void clickNewRole() {
+		btnNewRole.syncVisible(5,true);
+		btnNewRole.click();
+	}
 	
+	/**
+	 * Clicks the Billable/Non-Billable toggle
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void toggleBill() {
+		elmBillToggle.syncVisible(5);
+		elmBillToggle.click();
+	}
+	
+	/**
+	 * Checks state of Billable/Non-Billable toggle. Returns true if Billable is displayed, otherwise returns false.
+	 * 
+	 * @return Boolean 
+	 * @author Christopher Batts
+	 */
+	public boolean isBillOn() {
+		return elmBillToggle.getAttribute("class").contains("primary");
+	}
+	
+
+	/**
+	 * Clicks the +New Role button, fills out required fields, and submits the form.
+	 * 
+	 * @param roleType String, name of role to select from list
+	 * @param maxResources Integer, less than of equal to 30
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void createNonBillableRole(String roleType, int maxResources) {
+		clickNewRole();
+		if(isBillOn() == true) {
+			toggleBill();
+		}	
+		lstRoleType.syncVisible(5);
+		lstRoleType.select(roleType);
+		txtMaxResources.sendKeys(Integer.toString(maxResources));
+		btnCreateRole.click();
+	}
+	
+
+	/**
+	 * Clicks the +New Role button, fills out required fields, and submits the form.
+	 * 
+	 * @param roleType String, name of role to select from list
+	 * @param maxResources Integer, less than of equal to 30
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void createBillableRole(String roleType, int maxResources) {
+		clickNewRole();
+		if(isBillOn() == false) {
+			toggleBill();
+		}	
+		lstRoleType.syncVisible(5);
+		lstRoleType.select(roleType);
+		txtMaxResources.sendKeys(Integer.toString(maxResources));
+		btnCreateRole.click();
+	}
+	
+	
+	/**
+	 * Verifies an alert is present when entered rate is lower than base rate for a role type
+	 * 
+	 * @param roleType String, name of role to select from list
+	 * @param maxResources Integer less than or equal to 30
+	 * @return boolean, returns true if alert is present, returns false otherwise.
+	 */
+	public boolean verifyLowRateAlert(String roleType, int maxResources) {
+		clickNewRole();
+		Element role = driver.findElement(By.xpath("//option[contains(text(),'"+roleType+"')]"));
+		if(isBillOn() == false) {
+			toggleBill();
+		}
+		lstRoleType.syncVisible(5);
+		lstRoleType.select(roleType);
+		String r = role.getAttribute("data-baserate");
+		int rate = Integer.parseInt(r);
+			
+		int lowRate = (int) ((Math.random() * (rate-2))+ 1);
+		txtRate.clear();
+		txtRate.sendKeys(Integer.toString(lowRate));
+		txtMaxResources.sendKeys(Integer.toString(maxResources));
+		
+		return elmLowRateAlert.syncVisible(5,false);
+	}
+	
+	public void closeAddRolePopup() {
+		btnCloseAddRolePopup.click();
+	}
 }
 
