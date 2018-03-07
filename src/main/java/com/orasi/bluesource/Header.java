@@ -25,6 +25,10 @@ public class Header {
 	
 	/**Page Interactions**/
 
+	/**
+	 * This method navigates to the Reporting login page
+	 * @author David Grayson
+	 */
 	public void navigateReporting(){
 		driver.get("http://10.238.243.127:8080/reporting/login");
 	}

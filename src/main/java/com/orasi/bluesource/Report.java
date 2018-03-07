@@ -1,6 +1,8 @@
 package com.orasi.bluesource;
 
+import com.orasi.utils.TestReporter;
 import com.orasi.web.OrasiDriver;
+import com.orasi.web.PageLoaded;
 import com.orasi.web.webelements.Element;
 import com.orasi.web.webelements.Webtable;
 import com.orasi.web.webelements.impl.internal.ElementFactory;
@@ -21,6 +23,15 @@ public class Report {
 
 	/**Page Interactions**/
 
+	public boolean verifyReportIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,elmReportTitle,5) &&
+				PageLoaded.isElementLoaded(this.getClass(),driver,tblReport,5);
+	}
+
+	public String getTitle(){
+		return elmReportTitle.getText();
+	}
+
 	public boolean checkTotals(){
 		int runningTotal = 0;
 		int sectionTotal = 0;
@@ -36,22 +47,23 @@ public class Report {
 			}
 
 			for (int i=rowBeginSection; i<rowOfSectionTotal; i++){
+				if (tblReport.getCell(i,4).getText().isEmpty())
+					TestReporter.log(String.valueOf(i));
 				sectionTotal += Integer.parseInt(tblReport.getCell(i,4).getText());
 			}
 
 			if (tblReport.getCell(rowOfSectionTotal,4).getText().equals(String.valueOf(sectionTotal))){
-				rowBeginSection = ++rowOfSectionTotal;
+				rowBeginSection = rowOfSectionTotal += 2;
 				runningTotal += sectionTotal;
 				sectionTotal = 0;
 			}else {
+				TestReporter.log("rowBeginSection = " + rowBeginSection);
+				TestReporter.log("rowOfSectionTotal = " + rowOfSectionTotal);
 				return false;
 			}
 
 		} while(rowBeginSection < tblReport.getRowCount());
 
-		if (tblReport.getCell(tblReport.getRowCount()-1,4).getText().equals(String.valueOf(runningTotal)))
-			return true;
-		else
-			return false;
+		return tblReport.getCell(tblReport.getRowCount(), 4).getText().equals(String.valueOf(runningTotal));
 	}
 }
