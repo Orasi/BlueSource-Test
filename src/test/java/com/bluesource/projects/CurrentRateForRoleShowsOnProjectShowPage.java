@@ -63,7 +63,7 @@ public class CurrentRateForRoleShowsOnProjectShowPage extends WebBaseTest{
 
 		TestReporter.assertTrue(accounts.verifyAccountPageIsLoaded(strAccount),"Verifying [" + strAccount + "] page is loaded");
 
-		TestReporter.assertTrue(accounts.verifyProjectLink(strProject).isDisplayed(),"Verifying [" + strProject + "] link");
+		TestReporter.assertTrue(accounts.verifyProjectLinkValid(strProject),"Verifying [" + strProject + "] link");
 
 		TestReporter.logStep("Clicking [" + strProject + "] link");
 		accounts.clickProjectLink(strProject);

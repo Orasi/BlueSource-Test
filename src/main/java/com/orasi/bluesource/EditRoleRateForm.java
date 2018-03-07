@@ -33,6 +33,10 @@ public class EditRoleRateForm {
 
 	//**Page Interactions**//
 
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the Edit Rate Form is loaded, <code>false</code> otherwise.
+	 */
 	public boolean verifyEditRateFormIsLoaded(){
 		return PageLoaded.isElementLoaded(this.getClass(),driver,txtRate,5) &&
 				PageLoaded.isElementLoaded(this.getClass(),driver,txtComments,5) &&

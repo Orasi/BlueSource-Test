@@ -44,11 +44,31 @@ public class Accounts {
 	
 	/**Page Interactions**/
 
-	public boolean verifyRoleLink(String strRole) {
-		return driver.findLink(By.linkText(strRole)).syncVisible(5,false);
+	/**
+	 * would use the {@link #verifyProjectLink(String)} but it doesn't do what it's name implies
+	 * @author David Grayson
+	 * @param project {@link String} name of Project
+	 * @return {@link Boolean} Returns <code>true</code> if the link is clickable within 5 seconds, <code>false</code> otherwise.
+	 */
+	public boolean verifyProjectLinkValid(String project){
+		return driver.findLink(By.linkText(project)).syncEnabled(5,false) &&
+				driver.findLink(By.linkText(project)).syncVisible(5,false);
 	}
 
+	/**
+	 * @author David Grayson
+	 * @param strRole {@link String} The name of the Role
+	 * @return {@link Boolean} Returns <code>true</code> if the link is enabled and visible, <code>false</code> otherwise.
+	 */
+	public boolean verifyRoleLink(String strRole) {
+		return driver.findLink(By.linkText(strRole)).syncEnabled(5,false) &&
+				driver.findLink(By.linkText(strRole)).syncVisible(5,false);
+	}
 
+	/**
+	 * @author David Grayson
+	 * @param roleRate {@link String} The Rate to edit
+	 */
 	public void clickEditRoleRate(String roleRate) {
 		String xpath = "//td[contains(text(),'" + roleRate + "')]/../td/span[@class='actions actions-edit-time']/a";
 		driver.findElement(By.xpath(xpath)).click();
