@@ -36,6 +36,9 @@ public class Accounts {
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
 	@FindBy(xpath = "//div[@class='test']/table") private Webtable tblRoles;
 	@FindBy(xpath = "//th[contains(text(),'Project')]/../../..") private Webtable tblSubProjects;
+	@FindBy(xpath = "//h4[@class='panel-title' and contains(text(),'Project Info')]") private Element elmProjectInfoPanelHeader;
+	@FindBy(xpath = "//h4[@class='panel-title' and contains(text(),'Role Information')]") private Element elmRoleInfoPanelHeader;
+	@FindBy(xpath = "//div[@class='breadcrumbs']") private Element elmBreadcrumbs;
 
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
@@ -44,6 +47,27 @@ public class Accounts {
 	}
 	
 	/**Page Interactions**/
+
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of parent Account
+	 * @param strProject {@link String} name of parent Project
+	 * @param strSubProject {@link String} name of parent Sub Project
+	 * @param strSubProjectRole {@link String} name of Sub Project Role
+	 * @return {@link Boolean} Returns <code>true</code> if on the provided sub project roles page, <code>false</code> otherwise.
+	 */
+	public boolean verifySubProjectRolePageIsLoaded(String strAccount, String strProject, String strSubProject, String strSubProjectRole) {
+		return PageLoaded.isElementLoaded(this.getClass(),driver,elmRoleInfoPanelHeader,5) &&
+				elmBreadcrumbs.getText().equals("Accounts - "+strAccount+" - "+strProject+" - "+strSubProject+" - "+strSubProjectRole);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the Accounts table is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountsPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblAccounts,5);
+	}
 
 	/**
 	 * @author David Grayson
@@ -190,33 +214,43 @@ public class Accounts {
 	 * @param strSubProject {@link String} name of selected sub project
 	 * @return {@link Boolean} <code>true</code> if the page URL matches the quick nav link
 	 */
-	public boolean verifySubProjectPage(String strAccount, String strProject, String strSubProject){
-		String xpathExpression = buildQuickNavSubProjectXPath(strAccount, strProject, strSubProject);
-		PageLoaded.isDomComplete(driver);
-		return driver.getCurrentUrl().equals(driver.findLink(By.xpath(xpathExpression)).getURL());
+	public boolean verifySubProjectPageIsLoaded(String strAccount, String strProject, String strSubProject){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,elmProjectInfoPanelHeader,5) &&
+				elmBreadcrumbs.getText().equals("Accounts - "+strAccount+" - "+strProject+" - "+strSubProject);
 	}
 
 	/**
 	 * @author David Grayson
-	 * @param strAccount {@link String} name of parent account
-	 * @param strProject {@link String} name of parent project
-	 * @param strRole {@link String} name of selected role
-	 * @return {@link Boolean} <code>true</code> if the page URL matches the quick nav link
+	 * @param strAccount {@link String} name of Roles parent account
+	 * @param strProject {@link String} name of Roles parent project
+	 * @param strRole {@link String} name of role
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Roles page is loaded, <code>false</code> otherwise.
 	 */
-	public boolean verifyRolePage(String strAccount, String strProject, String strRole){
-		String xpathExpression = buildQuickNavProjectRoleXPath(strAccount, strProject, strRole);
-		PageLoaded.isDomComplete(driver);
-		return driver.getCurrentUrl().equals(driver.findLink(By.xpath(xpathExpression)).getURL());
+	public boolean verifyRolePageIsLoaded(String strAccount, String strProject, String strRole){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,elmRoleInfoPanelHeader,5)
+				&& elmBreadcrumbs.getText().equals("Accounts - " + strAccount + " - " + strProject + " - " + strRole);
 	}
 
 	/**
 	 * @author David Grayson
-	 * @param strAccount {@link String} name of selected account
-	 * @return {@link Boolean} <code>true</code> if the page URL matches the quick nav link
+	 * @param strAccount {@link String} name of Account
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Accounts page is loaded, <code>false</code> otherwise.
 	 */
-	public boolean verifyAccountPage(String strAccount){
-		PageLoaded.isDomComplete(driver);
-		return driver.getCurrentUrl().equals(driver.findLink(By.xpath("//a[text()='" + strAccount + "']")).getURL());
+	public boolean verifyAccountPageIsLoaded(String strAccount){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblProjects,5)
+				&& elmBreadcrumbs.getText().equals("Accounts - "+strAccount);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Projects parent account
+	 * @param strProject {@link String} name of project
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Projects page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyProjectPageIsLoaded(String strAccount, String strProject){
+		return PageLoaded.isElementLoaded(this.getClass(),driver, elmProjectInfoPanelHeader,5)
+				&& elmBreadcrumbs.getText()
+				.equals("Accounts - " + strAccount + " - " + strProject);
 	}
 
 	public void clickQuickNavSubProjectRole(String strAccount, String strProject, String strSubProject, String strSubProjectRole) {

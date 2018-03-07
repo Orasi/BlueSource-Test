@@ -43,11 +43,15 @@ public class UpdateAccountQuickNavToIncludeRoles extends WebBaseTest {
 		Header header = new Header(getDriver());
 		Accounts accounts = new Accounts(getDriver());
 
+		TestReporter.assertTrue(loginPage.verifyPageIsLoaded(),"Verifying login page is loaded");
+
 		TestReporter.logStep("Logging in as Admin");
 		loginPage.AdminLogin();
 
 		TestReporter.logStep("Navigating to Accounts");
 		header.navigateAccounts();
+
+		TestReporter.assertTrue(accounts.verifyAccountsPageIsLoaded(),"Verifying Accounts page is loaded");
 
 		TestReporter.logStep("Opening Quick Nav menu");
 		accounts.clickQuickNav();
@@ -55,7 +59,7 @@ public class UpdateAccountQuickNavToIncludeRoles extends WebBaseTest {
 		TestReporter.logStep("Clicking [" + strAccount + "] link in Quick Nav menu");
 		accounts.clickQuickNavAccount(strAccount);
 
-		TestReporter.assertTrue(accounts.verifyAccountPage(strAccount),"Verifying Account page");
+		TestReporter.assertTrue(accounts.verifyAccountPageIsLoaded(strAccount),"Verifying [" + strAccount + "] page is loaded");
 
 		TestReporter.logStep("Opening Quick Nav menu");
 		accounts.clickQuickNav();
@@ -68,6 +72,8 @@ public class UpdateAccountQuickNavToIncludeRoles extends WebBaseTest {
 
 		TestReporter.logStep("Clicking [" + strProject + "] in Quick Nav");
 		accounts.clickQuickNavProject(strAccount, strProject);
+
+		TestReporter.assertTrue(accounts.verifyProjectPageIsLoaded(strAccount,strProject),"Verifying [" + strProject + "] page is loaded");
 
 		TestReporter.logStep("Opening Quick Nav menu");
 		accounts.clickQuickNav();
@@ -84,7 +90,7 @@ public class UpdateAccountQuickNavToIncludeRoles extends WebBaseTest {
 		TestReporter.logStep("Clicking [" + strRole + "] in Quick Nav");
 		accounts.clickQuickNavRole(strAccount, strProject, strRole);
 
-		TestReporter.assertTrue(accounts.verifyRolePage(strAccount, strProject, strRole),"Verifying Role page");
+		TestReporter.assertTrue(accounts.verifyRolePageIsLoaded(strAccount, strProject, strRole),"Verifying [" + strRole + "] page is loaded");
 
 		TestReporter.logStep("Opening Quick Nav menu");
 		accounts.clickQuickNav();
@@ -101,10 +107,11 @@ public class UpdateAccountQuickNavToIncludeRoles extends WebBaseTest {
 		TestReporter.logStep("Clicking [" + strSubProject + "] in Quick Nav");
 		accounts.clickQuickNavSubProject(strAccount, strProject, strSubProject);
 
-		TestReporter.assertTrue(accounts.verifySubProjectPage(strAccount, strProject, strSubProject),"Verifying SubProject page");
-
+		TestReporter.assertTrue(accounts.verifySubProjectPageIsLoaded(strAccount, strProject, strSubProject),"Verifying [" + strSubProject +"] page is loaded");
 
 		accounts.clickQuickNavSubProjectRole(strAccount,strProject,strSubProject,strSubProjectRole);
+
+		TestReporter.assertTrue(accounts.verifySubProjectRolePageIsLoaded(strAccount,strProject,strSubProject,strSubProjectRole),"Verifying [" + strSubProjectRole + "] page is loaded");
 
 		double random = (Math.random()*100)%16;
 		int selector = (int) Math.round(random);
