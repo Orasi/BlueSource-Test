@@ -44,25 +44,41 @@ public class RoleStillOnProjectShowPageAfterDeletion extends WebBaseTest {
 		Accounts accounts = new Accounts(getDriver());
 		EditRoleForm editRoleForm = new EditRoleForm(getDriver());
 
+		TestReporter.assertTrue(loginPage.verifyPageIsLoaded(),"Verifying login page is loaded");
+
 		TestReporter.logStep("Logging in as Admin");
 		loginPage.AdminLogin();
 
 		TestReporter.logStep("Navigating to Accounts");
 		header.navigateAccounts();
 
+		TestReporter.assertTrue(accounts.verifyAccountsPageIsLoaded(),"Verifying Accounts page is loaded");
+
+		TestReporter.assertTrue(accounts.verifyAccountLink(strAccount), "Verifying [" + strAccount + "] link");
+
 		TestReporter.logStep("Clicking [" + strAccount + "] account link");
 		accounts.clickAccountLink(strAccount);
 
+		TestReporter.assertTrue(accounts.verifyAccountPageIsLoaded(strAccount), "Verifying [" + strAccount + "]  page is loaded");
+
+		TestReporter.assertTrue(accounts.verifyProjectLinkValid(strProject),"Verifying [" + strProject + "] link");
+
 		TestReporter.logStep("Clicking [" + strProject + "] project link");
 		accounts.clickProjectLink(strProject);
+
+		TestReporter.assertTrue(accounts.verifyProjectPageIsLoaded(strAccount,strProject),"Verifying [" + strProject + "] page is loaded");
 
 		TestReporter.logStep("Getting the number of [" + strRole + "] roles in the project");
 		numOfRole = accounts.getNumberOfRole(strRole);
 
 		TestReporter.assertGreaterThanZero(numOfRole);
 
+		TestReporter.assertTrue(accounts.verifyRoleLink(strRole),"Verifying [" + strRole + "] link");
+
 		TestReporter.logStep("Clicking [" + strRole + "] role link");
 		accounts.clickRoleLink(strRole);
+
+		TestReporter.assertTrue(accounts.verifyRolePageIsLoaded(strAccount,strProject,strRole),"Verifying [" + strRole + "] page loaded");
 
 		TestReporter.logStep("Clicking the Edit Role button");
 		accounts.clickEditRole();

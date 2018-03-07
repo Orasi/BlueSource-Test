@@ -32,6 +32,8 @@ public class Accounts {
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
 	@FindBy(xpath = "//button[contains(text(),'Edit Role')]") private Button btnEditRole;
+	@FindBy(xpath = "//h4[@class='panel-title' and contains(text(),'Project Info')]") private Element elmProjectInfoPanelHeader;
+	@FindBy(xpath = "//h4[@class='panel-title' and contains(text(),'Role Information')]") private Element elmRoleInfoPanelHeader;
 
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
@@ -42,11 +44,76 @@ public class Accounts {
 	/**Page Interactions**/
 
 	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Roles parent account
+	 * @param strProject {@link String} name of Roles parent project
+	 * @param strRole {@link String} name of role
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Roles page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyRolePageIsLoaded(String strAccount, String strProject, String strRole){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,elmRoleInfoPanelHeader,5)
+				&& driver.findElement(By.xpath("//div[@class='breadcrumbs']")).getText()
+				.equals("Accounts - " + strAccount + " - " + strProject + " - " + strRole);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strRole {@link String} The name of the Role
+	 * @return {@link Boolean} Returns <code>true</code> if the link is enabled and visible, <code>false</code> otherwise.
+	 */
+	public boolean verifyRoleLink(String strRole) {
+		return driver.findLink(By.linkText(strRole)).syncEnabled(5,false) &&
+				driver.findLink(By.linkText(strRole)).syncVisible(5,false);
+	}
+
+	/**
+	 * would use the {@link #verifyProjectLink(String)} but it doesn't do what it's name implies
+	 * @author David Grayson
+	 * @param project {@link String} name of Project
+	 * @return {@link Boolean} Returns <code>true</code> if the link is clickable within 5 seconds, <code>false</code> otherwise.
+	 */
+	public boolean verifyProjectLinkValid(String project){
+		return driver.findLink(By.linkText(project)).syncEnabled(5,false) &&
+				driver.findLink(By.linkText(project)).syncVisible(5,false);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Projects parent account
+	 * @param strProject {@link String} name of project
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Projects page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyProjectPageIsLoaded(String strAccount, String strProject){
+		return PageLoaded.isElementLoaded(this.getClass(),driver, elmProjectInfoPanelHeader,5)
+				&& driver.findElement(By.xpath("//div[@class='breadcrumbs']")).getText()
+				.equals("Accounts - " + strAccount + " - " + strProject);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the Accounts table is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountsPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblAccounts,5);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Account
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Accounts page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountPageIsLoaded(String strAccount){
+		String xpath = "//div[@class='breadcrumbs']/a[contains(text(),'" + strAccount + "')]";
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblProjects,5)
+				&& driver.findLink(By.xpath(xpath)).syncVisible(5,false);
+	}
+
+	/**
 	 * Checks that there is one less than what is provided
-	 * @author david.grayson
-	 * @param prevNumOfRole how many of the role were on the page before deletion
-	 * @param strRole name of the role to check
-	 * @return <code>true</code> if there is one less of the role on the project page, <code>false</code> for anything else.
+	 * @author David Grayson
+	 * @param prevNumOfRole {@link Integer} how many of the role were on the page before deletion
+	 * @param strRole {@link String}name of the role to check
+	 * @return {@link Boolean}Returns <code>true</code> if there is one less of the role on the project page, <code>false</code> for anything else.
 	 */
 	public boolean wasRoleDeleted(int prevNumOfRole, String strRole){
 		return (prevNumOfRole-1) == getNumberOfRole(strRole);
@@ -54,14 +121,18 @@ public class Accounts {
 
 	/**
 	 * Gets how many of a particular role is assigned to the project
-	 * @author david.grayson
-	 * @param strRole the name of the role to count as a String
-	 * @return how many of the role are assigned to the project
+	 * @author David Grayson
+	 * @param strRole {@link String} the name of the role to count
+	 * @return {@link Integer}Returns the number of the provided role assigned to the project
 	 */
 	public int getNumberOfRole(String strRole){
 		return driver.findElements(By.xpath("//td//a[contains(text(),'" + strRole + "')]")).size();
 	}
 
+	/**
+	 * Clicks the Edit Role button
+	 * @author David Grayson
+	 */
 	public void clickEditRole(){
 		btnEditRole.click();
 	}

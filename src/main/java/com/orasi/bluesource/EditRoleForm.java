@@ -19,6 +19,9 @@ public class EditRoleForm {
 
 	/**Page Interactions**/
 
+	/**
+	 * @author David Grayson
+	 */
 	public void clickDelete(){
 		btnDelete.syncEnabled(3);
 		btnDelete.click();
