@@ -22,28 +22,43 @@ public class AuditHistory {
 
 	/**Page Interactions**/
 
-	public boolean verifyName(String strName){
-		return tblFullAuditRecords.getRowWithCellText(strName,3) == 1;
+	/**
+	 * @author David Grayson
+	 * @return {@link String} Returns the Account name in the first row of the audit table
+	 */
+	public String getNewestName(){
+		return tblFullAuditRecords.getCell(1,3).getText();
 	}
 
-	public boolean verifyChangedBy(String strChangedBy){
-		return tblFullAuditRecords.getRowWithCellText(strChangedBy, 7) == 1;
+	/**
+	 * @author David Grayson
+	 * @return {@link String} Returns the newest "changed by" column
+	 */
+	public String getNewestChangedBy(){
+		return tblFullAuditRecords.getCell(1, 7).getText();
 	}
 
-	public boolean verifyAuditedChangeName(String oldName, String newName){
-		if (oldName.equals(newName)){
-			return false;
-		}
-
-		return  tblSpecificAuditRecords.getRowWithCellText("Name: From '" + oldName + "' to '" + newName + "'") != 0;
+	/**
+	 * @author David Grayson
+	 * @return {@link String} Returns the audited changes to the Accounts Name
+	 */
+	public String getNewestAuditedNameChange() {
+		return tblSpecificAuditRecords.getCell(1,1).getText();
 	}
 
-	public boolean verifyAuditedChangeIndustry(int oldIndustry, int newIndustry){
-		TestReporter.log("["+tblSpecificAuditRecords.getCell(2,1).getText()+"]");
-		TestReporter.log("[Industry: From '" + oldIndustry + "' to '" + newIndustry + "']");
-		return tblSpecificAuditRecords.getCell(2,1).getText().equals("Industry: From '" + oldIndustry + "' to '" + newIndustry + "'");
+	/**
+	 * @author David Grayson
+	 * @return {@link String} Returns the audited changes to the Accounts Industry
+	 */
+	public String getNewestAuditedIndustryChange(){
+		return tblSpecificAuditRecords.getCell(2,1).getText();
 	}
 
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if there are no gaps in the first row of the table
+	 * except column 4 and 6, <code>false</code> otherwise.
+	 */
 	public boolean verifyNoAuditRecordGaps(){
 		PageLoaded.isDomComplete(driver);
 		for (int i = 1; i < 9; i++) {
@@ -53,5 +68,13 @@ public class AuditHistory {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyPageIsLoaded() {
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblFullAuditRecords);
 	}
 }

@@ -13,7 +13,7 @@
 	
 	<test name="In Progress test" parallel="methods" thread-count="20">
 		<classes>
-			<class name="com.bluesource.accounts.Audit_Table_Has_Errors" />
+			<class name="com.bluesource.accounts.AuditTableHasErrors" />
 		</classes>
 	</test>
 

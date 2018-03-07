@@ -6,7 +6,7 @@ import com.orasi.web.WebBaseTest;
 import org.testng.ITestContext;
 import org.testng.annotations.*;
 
-public class Audit_Table_Has_Errors extends WebBaseTest {
+public class AuditTableHasErrors extends WebBaseTest {
 	@BeforeMethod
 	@Parameters({"runLocation", "browserUnderTest", "browserVersion",
 			"operatingSystem", "environment"})
@@ -28,7 +28,7 @@ public class Audit_Table_Has_Errors extends WebBaseTest {
 	}
 
 	@Test
-	public void audit_Table_Has_Errors() {
+	public void auditTableHasErrors() {
 		//Test Variables
 		String changedBy = "company admin";
 		String newAccountName;
@@ -43,20 +43,28 @@ public class Audit_Table_Has_Errors extends WebBaseTest {
 		EditAccountForm editAccountForm = new EditAccountForm(getDriver());
 		AuditHistory auditHistory = new AuditHistory(getDriver());
 
+		TestReporter.assertTrue(loginPage.verifyPageIsLoaded(), "Verifying login page is loaded");
+
 		TestReporter.logStep("Logging in as Admin");
 		loginPage.AdminLogin();
 
 		TestReporter.logStep("Navigating to Accounts");
 		header.navigateAccounts();
 
+		TestReporter.assertTrue(accounts.verifyAccountsPageIsLoaded(),"Verifying Accounts page loaded");
+
 		TestReporter.logStep("Clicking first Accounts link");
 		accounts.clickFirstAccountLink();
+
+		TestReporter.assertTrue(accounts.verifyFirstAccountPageIsLoaded(),"Verifying first account page is loaded");
 
 		TestReporter.logStep("Clicking 'Edit Account' button");
 		accounts.clickEditAccount();
 
 		TestReporter.logStep("Getting account name");
 		oldAccountName = editAccountForm.getAccountName();
+
+		TestReporter.assertNotEquals(oldAccountName,"","Verifying account name isn't empty");
 
 		TestReporter.logStep("Getting account industry");
 		oldIndustry = editAccountForm.getIndustry();
@@ -65,6 +73,8 @@ public class Audit_Table_Has_Errors extends WebBaseTest {
 
 		TestReporter.logStep("Renaming account");
 		newAccountName = editAccountForm.testRenameAccount();
+
+		TestReporter.assertNotEquals(newAccountName,"","Verifying new account name isn't empty");
 
 		TestReporter.logStep("Changing account industry");
 		newIndustry = editAccountForm.testChangeIndustry();
@@ -77,14 +87,19 @@ public class Audit_Table_Has_Errors extends WebBaseTest {
 		TestReporter.logStep("Clicking 'View All' link");
 		accounts.clickViewAllAudits();
 
+		TestReporter.assertTrue(auditHistory.verifyPageIsLoaded(),"Verifying Audit History page is loaded");
+
+		String auditedNameChange = "Name: From '" + oldAccountName + "' to '" + newAccountName + "'";
+		String auditedIndustryChange = "Industry: From '" + oldIndustry + "' to '" + newIndustry + "'";
+
 		TestReporter.assertTrue(auditHistory.verifyNoAuditRecordGaps(),"Verifying that the Audit table has no gaps");
 
-		TestReporter.assertTrue(auditHistory.verifyChangedBy(changedBy),"Verifying user that made the changes");
+		TestReporter.assertEquals(auditHistory.getNewestChangedBy(),changedBy,"Verifying user that made the changes");
 
-		TestReporter.assertTrue(auditHistory.verifyName(newAccountName),"Verifying new Account name");
+		TestReporter.assertEquals(auditHistory.getNewestName(),newAccountName,"Verifying new Account name");
 
-		TestReporter.assertTrue(auditHistory.verifyAuditedChangeName(oldAccountName,newAccountName),"Verifying Audited Changes to name are accurate");
+		TestReporter.assertEquals(auditHistory.getNewestAuditedNameChange(),auditedNameChange,"Verifying Audited Changes to name are accurate");
 
-		TestReporter.assertTrue(auditHistory.verifyAuditedChangeIndustry(oldIndustry, newIndustry),"Verifying Audited Changes to industry are accurate");
+		TestReporter.assertEquals(auditHistory.getNewestAuditedIndustryChange(),auditedIndustryChange,"Verifying Audited Changes to industry are accurate");
 	}
 }

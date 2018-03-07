@@ -14,6 +14,7 @@ import java.util.List;
 
 public class Accounts {
 	private OrasiDriver driver = null;
+	private String firstAccountName;
 	
 	
 	/**Page Elements**/
@@ -43,12 +44,35 @@ public class Accounts {
 	
 	/**Page Interactions**/
 
+	public boolean verifyFirstAccountPageIsLoaded(){
+		return !firstAccountName.isEmpty() && verifyAccountPageIsLoaded(firstAccountName);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the Accounts table is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountsPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblAccounts,5);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Account
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Accounts page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountPageIsLoaded(String strAccount){
+		String xpath = "//div[@class='breadcrumbs']/a[contains(text(),'" + strAccount + "')]";
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblProjects,5)
+				&& driver.findLink(By.xpath(xpath)).syncVisible(5,false);
+	}
+
 	/**
 	 * clicks the "Account Audit" collapsing panel and then clicks the "View All" link that is revealed.
-	 * @author david.grayson
+	 * @author David Graysom
 	 */
 	public void clickViewAllAudits(){
-		driver.findElement(By.xpath("//h4[contains(text(),'Account Audit')]/..")).click();
+		driver.findElement(By.xpath("//h4[contains(text(),'Account Audit')]/..")).click(); //expands the panel
 		lnkViewAllAudits.syncVisible(10);
 		lnkViewAllAudits.scrollIntoView();
 		lnkViewAllAudits.jsClick(); //regular click doesn't seem to work, gives ElementNotVisible exception
@@ -301,6 +325,7 @@ public class Accounts {
 	 */
 	public void clickFirstAccountLink() {
 		tblAccounts.syncVisible(3);
+		firstAccountName = tblAccounts.getCell(2,1).findElement(By.cssSelector("a[class='ng-binding']")).getText();
 		tblAccounts.getCell(2, 1).findElement(By.cssSelector("a[class='ng-binding']")).click();
 	}
 	

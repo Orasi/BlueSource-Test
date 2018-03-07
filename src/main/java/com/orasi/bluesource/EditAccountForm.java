@@ -1,5 +1,6 @@
 package com.orasi.bluesource;
 
+import com.orasi.utils.TestReporter;
 import com.orasi.web.OrasiDriver;
 import com.orasi.web.webelements.Element;
 import com.orasi.web.webelements.Textbox;
@@ -26,8 +27,8 @@ public class EditAccountForm {
 
 	/**
 	 * Automatically appends the current name with "test"
-	 * @author david.grayson
-	 * @return the new name of the account
+	 * @author David Grayson
+	 * @return {@link String} Returns the new name of the account
 	 */
 	public String testRenameAccount(){
 		String newName = txtAccountName.getText()+"test";
@@ -37,12 +38,12 @@ public class EditAccountForm {
 
 	/**
 	 * automatically changes the industry between 2 values for test purposes
-	 * @author david.grayson
-	 * @return the number associated with the Industry
+	 * @author David Grayson
+	 * @return {@link Integer} Returns the number internally associated with the newly selected Industry
 	 */
 	public int testChangeIndustry(){
 		int selectionNumber;
-		String selectionText;
+		String selectionText, selectionID;
 		elmIndustrySelect.syncEnabled(3);
 		elmIndustrySelect.click(); //opens the 'dropdown', elements don't exist if it isn't open
 		if (industryOptions.size()>0){
@@ -54,10 +55,13 @@ public class EditAccountForm {
 			return -1;
 		}
 		selectionText = industryOptions.get(selectionNumber).getText();
+		selectionID = industryOptions.get(selectionNumber).getAttribute("id");
 		elmIndustrySelect.click(); //closes the 'dropdown'
 		changeIndustry(selectionText);
 
-		return ++selectionNumber;
+		String[] split = selectionID.split("[-]");
+
+		return Integer.parseInt(split[split.length-1]);
 	}
 
 	/**Page Interactions**/
@@ -73,6 +77,7 @@ public class EditAccountForm {
 		elmIndustrySelect.click(); //opens the 'dropdown', elements don't exist if it isn't open
 		for (Element elm:industryOptions){
 			if (elm.getText().equals(strSelection) && elm.isDisplayed()){
+				TestReporter.log(elm.getText());
 				elm.click(); //selects the element
 				break;
 			}
@@ -88,16 +93,18 @@ public class EditAccountForm {
 	}
 
 	/**
-	 * @author david.grayson
-	 * @return the number associated with the currently selected industry
+	 * @author David Grayson
+	 * @return {@link Integer} Returns the number associated with the currently selected industry
 	 */
 	public int getIndustry(){
 		elmIndustrySelect.syncEnabled(3);
 		elmIndustrySelect.click(); //opens the 'dropdown', elements don't exist if it isn't open
-		for (int i=1;i<industryOptions.size();i++){
+		TestReporter.log(String.valueOf(industryOptions.size()));
+		for (int i = 1; i <= industryOptions.size(); i++){
 			if (industryOptions.get(i).getAttribute("aria-selected").equals("true")) {
+				String[] split = industryOptions.get(i).getAttribute("id").split("[-]");
 				elmIndustrySelect.click(); //closes the 'dropdown'
-				return ++i;
+				return Integer.parseInt(split[split.length-1]);
 			}
 		}
 		elmIndustrySelect.click(); //closes the 'dropdown'
