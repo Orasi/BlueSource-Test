@@ -41,7 +41,7 @@ public class LoginPage {
 	/**
 	 * This method logins to the application with provided credentials
 	 * @author
-	 * @param role {@link String} 
+	 * @param role {@link String}
 	 */
 	public boolean Login(String role){
 		txtUsername.set(userCredentialRepo.getString(role));

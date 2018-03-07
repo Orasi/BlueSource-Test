@@ -27,6 +27,11 @@ public class AccountTimeByTimeSheetForm {
 
 	/**Page Interactions**/
 
+	/**
+	 * This method checks that the Time by Time Sheet form is loaded
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the Form is loaded, <code>false</code> otherwise
+	 */
 	public boolean verifyAccountTimeByTimeSheetFormLoaded(){
 		return PageLoaded.isElementLoaded(this.getClass(),driver,lstAccountSelect,5) &&
 				PageLoaded.isElementLoaded(this.getClass(),driver,txtStartDate,5) &&
@@ -34,6 +39,11 @@ public class AccountTimeByTimeSheetForm {
 				PageLoaded.isElementLoaded(this.getClass(),driver,elmGenerateReport);
 	}
 
+	/**
+	 * This method selects an account by the name passed to it
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of the account
+	 */
 	public void selectAccount(String strAccount){
 		if (lstAccountSelect.syncEnabled(5) && lstAccountSelect.syncVisible(5)) {
 			lstAccountSelect.select(strAccount);
@@ -41,6 +51,7 @@ public class AccountTimeByTimeSheetForm {
 	}
 
 	/**
+	 * This method sets the Start Date field
 	 * @author David Grayson
 	 * @param strStartDate {@link String} mm/dd/yyyy format
 	 */
@@ -53,6 +64,7 @@ public class AccountTimeByTimeSheetForm {
 	}
 
 	/**
+	 * This method sets the End Date field
 	 * @author David Grayson
 	 * @param strEndDate {@link String} mm/dd/yyyy format
 	 */
@@ -65,6 +77,7 @@ public class AccountTimeByTimeSheetForm {
 	}
 
 	/**
+	 * This method clicks the Generate Report element
 	 * @author David Grayson
 	 */
 	public void clickGenerateReport(){

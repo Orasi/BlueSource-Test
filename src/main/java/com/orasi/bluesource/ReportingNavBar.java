@@ -21,16 +21,29 @@ public class ReportingNavBar {
 	}
 
 	/**Page Interactions**/
+
+	/**
+	 * This method clicks the Time by Time Sheet link in the Account Reports dropdown menu
+	 * @author David Grayson
+	 */
 	public void clickAccountTimeByTimeSheet(){
 		if (lnkAccountTimeByTimeSheet.syncEnabled(5) && lnkAccountTimeByTimeSheet.syncVisible(5))
 			lnkAccountTimeByTimeSheet.click();
 	}
 
+	/**
+	 * This method clicks the Account Reports Drop down
+	 * @author David Grayson
+	 */
 	public void clickAccountReportsDropdown(){
 		if (lnkAccountReportsDropdown.syncEnabled(5) && lnkAccountReportsDropdown.syncVisible(5))
 			lnkAccountReportsDropdown.click();
 	}
 
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if on the Reporting Home page.
+	 */
 	public boolean verifyHomePageIsDisplayed(){
 		return elmWelcome.syncVisible(5,false);
 	}
