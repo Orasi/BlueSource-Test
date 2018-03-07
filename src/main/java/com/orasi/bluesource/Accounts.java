@@ -1,6 +1,7 @@
 package com.orasi.bluesource;
 
 import java.lang.reflect.UndeclaredThrowableException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.lang.model.util.Elements;
@@ -26,7 +27,7 @@ import com.orasi.web.webelements.Textbox;
 import com.orasi.web.webelements.Webtable;
 import com.orasi.web.webelements.impl.internal.ElementFactory;
 
-public class Accounts {
+public class Accounts<E> {
 	private OrasiDriver driver = null;
 	
 	
@@ -36,7 +37,7 @@ public class Accounts {
 	@FindBy(id = "preference_resources_per_page") private Listbox lstAccountPerPage;
 	@FindBy(linkText = "Industry") private Link lnkIndustry;
 	@FindBy(linkText = "Accounts") private Link lnkAccountsTab;
-	@FindBy(xpath = "//button[@data-target='#modal_3']") private Button btnAssignEmployee;
+	@FindBy(xpath = "//button[contains(text(),'Assign Employee')]") private Button btnAssignEmployee;
 	@FindBy(xpath = "//div[@id='panel_body_1']//table") private Webtable tblProjects;
 	@FindBy(xpath = "//button[@data-target='#modal_1']") private Button btnAddAccount;
 	@FindBy(xpath = "//input[@id='account_name']") private Textbox txtAccountName;
@@ -46,7 +47,27 @@ public class Accounts {
 	@FindBy(css = "div.btn.btn-secondary.btn-xs.quick-nav") private Button btnQuickNav;
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
-
+	
+	
+	@FindBy(xpath = "//button[contains(text(),'New Project')]") private Button btnNewProject;
+	@FindBy(id = "project_name") private Textbox txtProjectName;
+	@FindBy(id = "project_start_date") private Textbox txtProjectStart;
+	@FindBy(id = "project_end_date") private Textbox txtProjectEnd;
+	@FindBy(xpath = "//input[@value=\"Create Project\"]") private Button btnCreateProject;
+	@FindBy(xpath = "//button[contains(text(),'New Role')]") private Button btnNewRole;
+	@FindBy(xpath = "//div[@data-off-label=\"Non-Billable\"]") private Button btnBill;
+	@FindBy(id = "role_role_type_id") private Listbox lstRoleType;
+	@FindBy(id = "role_name") private Textbox txtRoleName;
+	@FindBy(id = "role_max_resources") private Textbox txtMaxResources;
+	@FindBy(xpath = "//input[@value=\"Create Role\"]") private Button btnCreateRole;
+	@FindBy(xpath = "//th[contains(text(),'Role')]/../../..") private Webtable tblProjectRoles;
+	@FindBy(id = "filled_role_employee_id") private Listbox lstAssignEmployee;
+	@FindBy(xpath = "//input[@value=\"Create Filled role\"]") private Button btnCreateFilledRole;
+	@FindBy(xpath = "//ul[@class=\"list-group list-group-hover\"]") private Element elmQuickNavProjectList;
+	@FindBy(xpath = "//div[@class='fa fa-bars']/..") private Button btnProjectOptions;
+	@FindBy(xpath = "//span[@class='glyphicon glyphicon-pencil menu-icon']/../../..") private Element elmProjectOptionList;
+	@FindBy(linkText = "Close Project") private Link lnkCloseProject;
+	
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
 		this.driver = driver;
@@ -205,6 +226,7 @@ public class Accounts {
 	}
 	
 	public void clickAssignEmployee(){
+		PageLoaded.isDomComplete(driver, 5);
 		btnAssignEmployee.syncEnabled(5,true);
 		btnAssignEmployee.click();
 	}
@@ -339,6 +361,7 @@ public class Accounts {
 	 * @author Darryl Papke
 	 */
 	public void clickQuickNav() {
+		btnQuickNav.syncVisible(5);
 		btnQuickNav.click();
 	}
 
@@ -376,5 +399,149 @@ public class Accounts {
 		PageLoaded.isDomComplete(driver, 1);
 	}
 	
+	public String reformatDate(String oldDate) {
+		String year = oldDate.substring(0, 4);
+		String month = oldDate.substring(5, 7);
+		String day = oldDate.substring(8);
+				
+		String newDate = month+"/"+day+"/"+year;
+		return newDate;
+	}
+	
+	/**
+	 * Clicks on New Project, fills out required fields and submits form
+	 * 
+	 * 
+	 * @param projName
+	 * @param startDate String of 8 numerical characters (i.e. 04062018)
+	 * @param endDate String of 8 numerical characters (i.e. 04062018)
+	 * @author Christopher Batts
+	 */
+	public void addProject(String projName, String startDate, String endDate) {
+		btnNewProject.click();
+		txtProjectName.syncVisible(5);
+		txtProjectName.sendKeys(projName);
+		txtProjectStart.syncVisible(5);
+		txtProjectStart.sendKeys(startDate);
+		txtProjectEnd.syncVisible(5);
+		txtProjectEnd.sendKeys(endDate);
+		btnCreateProject.syncVisible(5);
+		btnCreateProject.click();
+	}
+	
+	/**
+	 * Clicks a project link in the projects table under an account.
+	 * 
+	 * @param String Name of project to select
+	 * @author Christopher Batts
+	 */
+	public void selectProject(String projName) {
+		PageLoaded.isDomComplete(driver, 5);
+		tblProjects.findElement(By.linkText(projName)).syncVisible(5);
+		tblProjects.findElement(By.linkText(projName)).click();
+	}
+	
+	/**
+	 * Clicks the New Role button under a project
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void clickNewRole() {
+		btnNewRole.syncVisible(5);
+		btnNewRole.click();
+	}
+	
+	/**
+	 * Clicks the Billable/Non-Billable toggle
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void toggleBill() {
+		btnBill.syncVisible(5);
+		btnBill.click();
+	}
+	
+	/**
+	 * Checks state of Billable/Non-Billable toggle. Returns true if Billable is displayed, otherwise returns false.
+	 * 
+	 * @return Boolean 
+	 * @author Christopher Batts
+	 */
+	public boolean isBillOn() {
+		return !(btnBill.getAttribute("class").contains("off"));
+	}
+	
+	/**
+	 * Clicks the +New Role button, fills out required fields, and submits the form.
+	 * 
+	 * @param roleType String, name of role to select from list
+	 * @param maxResources Integer, less than of equal to 30
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void createRole(String roleType, int maxResources) {
+		clickNewRole();
+		if(isBillOn() == true) {
+			toggleBill();
+		}	
+		lstRoleType.syncVisible(5);
+		lstRoleType.select(roleType);
+		txtMaxResources.sendKeys(Integer.toString(maxResources));
+		btnCreateRole.click();
+	}
+	
+	/**
+	 * Selects a role by link text from the Project Roles table
+	 * 
+	 * @param String Role name to be selected
+	 * @author Christopher Batts
+	 */
+	public void selectNewRole(String roleName) {
+		tblProjectRoles.findElement(By.linkText(roleName)).click();
+	}
+	
+	/**
+	 * Fills out employee assignment form and submits
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void assignEmployeeToProject() {
+		lstAssignEmployee.syncVisible(5);
+		lstAssignEmployee.select("test 123");
+		btnCreateFilledRole.click();
+	}
+	
+	public boolean verifyNewProjectIsDisplayed(String projectName) {
+		return elmQuickNavProjectList.findElement(By.linkText(projectName)).syncVisible(5,false);
+	}
+	/**
+	 * Clicks options drop down menu on a project page
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void clickProjectOptions() {
+		btnProjectOptions.syncVisible(5);
+		btnProjectOptions.click();
+	}
+	
+	/**
+	 * Clicks 'Edit Project' link
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void clickEditProject() {
+		elmProjectOptionList.findElement(By.partialLinkText("Edit Project")).syncVisible(5);
+		elmProjectOptionList.findElement(By.partialLinkText("Edit Project")).click();
+	}
+	
+	/**
+	 * Clicks 'Close Project' button
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void closeProject() {
+		lnkCloseProject.syncVisible(5);
+		lnkCloseProject.click();
+		driver.switchTo().alert().accept();
+	}
 }
-
