@@ -21,8 +21,6 @@ public class EmployeePage {
 	@FindBy(partialLinkText = "Deactivate Employee") Button btnDeactivateEmployee;
 	@FindBy(partialLinkText = "Deactivate") Button btnDeactivate;
 	
-
-	
 	/**Constructor**/
 	public EmployeePage(OrasiDriver driver){
 		this.driver = driver;
@@ -66,6 +64,7 @@ public class EmployeePage {
 	}		
 	
 	public void clickDeactivateEmployee() {
+		btnDeactivateEmployee.syncVisible(2, true);
 		btnDeactivateEmployee.click();
 	}
 	
