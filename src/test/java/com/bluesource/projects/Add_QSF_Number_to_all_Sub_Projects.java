@@ -44,20 +44,34 @@ public class Add_QSF_Number_to_all_Sub_Projects extends WebBaseTest {
 		Accounts accounts = new Accounts(getDriver());
 		EditProjectForm editProjectForm = new EditProjectForm(getDriver());
 
+		TestReporter.assertTrue(loginPage.verifyPageIsLoaded(),"Verifying login page is loaded");
+
 		TestReporter.logStep("Logging in as Admin");
 		loginPage.AdminLogin();
 
 		TestReporter.logStep("Navigating to Accounts");
 		header.navigateAccounts();
 
+		TestReporter.assertTrue(accounts.verifyAccountsPageIsLoaded(),"Verifying Accounts page is loaded");
+
+		TestReporter.assertTrue(accounts.verifyAccountLink(strAccount),"Verifying [" + strAccount + "] link");
+
 		TestReporter.logStep("Clicking " + strAccount + " link");
 		accounts.clickAccountLink(strAccount);
+
+		TestReporter.assertTrue(accounts.verifyAccountPageIsLoaded(strAccount),"Verifying [" + strAccount + "] page is loaded");
+
+		TestReporter.assertTrue(accounts.verifyProjectLinkValid(strProject),"Verifying [" + strProject + "] link");
 
 		TestReporter.logStep("Clicking " + strProject + " link");
 		accounts.clickProjectLink(strProject);
 
+		TestReporter.assertTrue(accounts.verifyProjectPageIsLoaded(strAccount,strProject),"Verifying [" + strProject + "] page is loaded");
+
 		TestReporter.logStep("Opening edit project form");
 		accounts.editProject();
+
+		TestReporter.assertTrue(editProjectForm.verifyFormLoaded(),"Verifying Edit Project Form loaded");
 
 		TestReporter.logStep("Editing Projects SOW Number");
 		editProjectForm.testEditSOWNumber();

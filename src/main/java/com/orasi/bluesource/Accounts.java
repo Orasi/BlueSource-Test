@@ -36,6 +36,7 @@ public class Accounts {
 	@FindBy(xpath = "//h4[contains(text(),'Project Info')]/div/button") private Button btnProjectMenu;
 	@FindBy(xpath = "//span[@class='sow_info']") private Element elmSOWNumber;
 	@FindBy(xpath = "//th[contains(text(),'Project')]/../../..") private Webtable tblSubProjects;
+	@FindBy(xpath = "//h4[@class='panel-title' and contains(text(),'Project Info')]") private Element elmProjectInfoPanelHeader;
 
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
@@ -44,6 +45,48 @@ public class Accounts {
 	}
 	
 	/**Page Interactions**/
+
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the Accounts table is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountsPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblAccounts,5);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Account
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Accounts page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountPageIsLoaded(String strAccount){
+		String xpath = "//div[@class='breadcrumbs']/a[contains(text(),'" + strAccount + "')]";
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblProjects,5)
+				&& driver.findLink(By.xpath(xpath)).syncVisible(5,false);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Projects parent account
+	 * @param strProject {@link String} name of project
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Projects page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyProjectPageIsLoaded(String strAccount, String strProject){
+		return PageLoaded.isElementLoaded(this.getClass(),driver, elmProjectInfoPanelHeader,5)
+				&& driver.findElement(By.xpath("//div[@class='breadcrumbs']")).getText()
+				.equals("Accounts - " + strAccount + " - " + strProject);
+	}
+
+	/**
+	 * would use the {@link #verifyProjectLink(String)} but it doesn't do what it's name implies
+	 * @author David Grayson
+	 * @param project {@link String} name of Project
+	 * @return {@link Boolean} Returns <code>true</code> if the link is clickable within 5 seconds, <code>false</code> otherwise.
+	 */
+	public boolean verifyProjectLinkValid(String project){
+		return driver.findLink(By.linkText(project)).syncEnabled(5,false) &&
+				driver.findLink(By.linkText(project)).syncVisible(5,false);
+	}
 
 	/**
 	 * Gets all of a projects sub project SOW numbers and returns them as a String
