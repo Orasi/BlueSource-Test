@@ -24,8 +24,8 @@ public class EmployeePage {
 	@FindBy(xpath = "//*[@id='modal_1']/div/div") Label lblModal;
 	@FindBy(xpath = "//*[@id='employee_require_nonbillable']") Checkbox cbTimeEntryCheckbox;
 	@FindBy(id = "employee_status") Listbox lstStatus;
-	@FindBy(xpath = "//div[24]/input") Button btnUpdateEmployee;
-	@FindBy(xpath = "//*[@id='edit_employee_2']/div[24]/button") Button btnClose;
+	@FindBy(xpath = "//input[@value='Update Employee']") Button btnUpdateEmployee;
+	@FindBy(xpath = "(//div[@class='form-group modal-footer']/button)[1]") Button btnClose;
 	@FindBy(xpath = "//div[2]/form/div//tbody/tr[2]/td[1]/span/span[1]/span/span[2]") Button btnNonbillable;
 	@FindBy(xpath = "/html/body/span/span/span[1]/input") Textbox txtTimeSheetRole;
 	@FindBy(xpath = "//td[@class=\"time-entry-cell\"][1]/div[@class=\"tooltop-container\"]/input[@id=\"employee_reported_times___date_hours_hours\"]") Textbox txtFirstHour;
@@ -143,15 +143,15 @@ public class EmployeePage {
 			return btnSubmitTimesheet.isDisplayed();
 	}
 	
-	/*Fills the nonbillable timesheet with a 50 hour work week doing Onboarding
+	/*Fills the nonbillable timesheet with a 40 hour work week doing Onboarding
 	 * @author Andrew McGrail
 	 */
 	public void fillTimesheet() {
-		txtFirstHour.set("10");
-		txtSecondHour.set("10");
-		txtThirdHour.set("10");
-		txtFourthHour.set("10");
-		txtFifthHour.set("10");
+		txtFirstHour.set("8");
+		txtSecondHour.set("8");
+		txtThirdHour.set("8");
+		txtFourthHour.set("8");
+		txtFifthHour.set("8");
 		txtSixthHour.set("0");
 		txtSeventhHour.set("0");
 		btnNonbillable.click();

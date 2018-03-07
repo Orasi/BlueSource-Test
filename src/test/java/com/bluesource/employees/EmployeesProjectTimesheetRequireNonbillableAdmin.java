@@ -11,18 +11,10 @@ import com.orasi.bluesource.EmployeePage;
 import com.orasi.bluesource.Employees;
 import com.orasi.bluesource.Header;
 import com.orasi.bluesource.LoginPage;
-import com.orasi.bluesource.MessageCenter;
 import com.orasi.utils.TestReporter;
 import com.orasi.web.WebBaseTest;
 
 public class EmployeesProjectTimesheetRequireNonbillableAdmin extends WebBaseTest{	
-	// ************* *
-	// Data Provider
-	// **************
-	/*@DataProvider(name = "login", parallel=true)
-	public Object[][] scenarios() {
-	return new ExcelDataProvider("/testdata/blueSource_Users.xlsx", "Sheet1").getTestData();
-	}*/
 			
 	@BeforeMethod
 	@Parameters({ "runLocation", "browserUnderTest", "browserVersion",
@@ -45,9 +37,11 @@ public class EmployeesProjectTimesheetRequireNonbillableAdmin extends WebBaseTes
 	    }
 	
 	 @Test//(dataProvider = "login")
-	 public void EmployeesProjectTimesheetRequireNonbillableAdmin()
+	 public void testEmployeesProjectTimesheetRequireNonbillableAdmin()
 	 {
 		 String confirmationMessage = "Reported Time for this week successfully logged.";
+		 String employeeName = "No Project";
+		 String employeePassword = "123";
 		 
 		 LoginPage loginPage = new LoginPage(getDriver());
 		 Header header = new Header(getDriver());
@@ -59,8 +53,9 @@ public class EmployeesProjectTimesheetRequireNonbillableAdmin extends WebBaseTes
 		 loginPage.AdminLogin();
 		 // Step 3 Click on 'Employees'.
 		 header.navigateEmployees();
+		 TestReporter.assertTrue(employees.verifyPageIsLoaded(), "Landed on Employees page");
 		 // Step 4 Click on an Employee from the list that is NOT on a project and who has not submitted a timesheet this week or last week.
-		 employees.employeeSearch("ThisTest WorksOnce");
+		 employees.employeeSearch(employeeName);
 		 employees.clickFirstName();
 		 // Step 5 Click on the 'Edit' button inside the 'General Info' pane's header.
 		 employeePage.editGeneralInfo();
@@ -73,7 +68,7 @@ public class EmployeesProjectTimesheetRequireNonbillableAdmin extends WebBaseTes
 		 header.navigateLogout();
 		 // Step 9 Log back in as the Employee who was just updated.
 		 loginPage.verifyPageIsLoaded();
-		 loginPage.LoginWithCredentials("ThisTest WorksOnce", "123");
+		 loginPage.LoginWithCredentials(employeeName, employeePassword);
 		 TestReporter.logStep("Logged in as employee without a timesheet for a week.");
 		 // Step 10 Verify the user has a nonbillable timesheet listed.
 		 TestReporter.assertTrue(employeePage.checkNonbillableRoles(), "Verifying nonbillable timesheet is shown");
@@ -87,7 +82,7 @@ public class EmployeesProjectTimesheetRequireNonbillableAdmin extends WebBaseTes
 		 TestReporter.logStep("Logged in as Company.admin");
 		 // Step 13 Navigate back to an Employee's page who is not on a project and who has not submitted a timesheet for this week or last week.
 		 header.navigateEmployees();
-		 employees.employeeSearch("ThisTest WorksOnce");
+		 employees.employeeSearch(employeeName);
 		 employees.clickFirstName();
 		 TestReporter.logStep("Landed on employee page who has not submitted a timesheet for a week.");
 		 // Step 14 Click the 'Edit' button inside the 'General Info' panel's header.
@@ -99,7 +94,7 @@ public class EmployeesProjectTimesheetRequireNonbillableAdmin extends WebBaseTes
 		 TestReporter.logStep("Employee has been changed to no longer require nonbillable timesheets.");
 		 // Step 17 Logout of Bluesource and log back in as the Employee who was just updated.
 		 header.navigateLogout();
-		 loginPage.LoginWithCredentials("no timesheet", "123");
+		 loginPage.LoginWithCredentials(employeeName, employeePassword);
 		 TestReporter.logStep("Logged in as employee without a timesheet for a week.");
 		 // Step 18 Verify the user does NOT see a nonbillable timesheet.
 		 TestReporter.assertFalse(employeePage.checkNonbillableRoles(), "Verifying nonbillable timesheet is not shown");
