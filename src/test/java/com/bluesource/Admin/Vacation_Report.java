@@ -12,6 +12,7 @@ import com.orasi.utils.TestReporter;
 import com.orasi.web.WebBaseTest;
 
 public class Vacation_Report extends WebBaseTest {
+	
 	@BeforeMethod
 	@Parameters({ "runLocation", "browserUnderTest", "browserVersion",
 	"operatingSystem", "environment" })
@@ -45,8 +46,16 @@ public class Vacation_Report extends WebBaseTest {
 		LoginPage loginPage = new LoginPage(getDriver());
 		VacationReport vacationReport = new VacationReport(getDriver());
 		
+		TestReporter.assertTrue(loginPage.verifyPageIsLoaded(), "Page Loaded");
+		
 		loginPage.LoginWithCredentials("company.admin", "anything");
 
-		vacationReport.checkVacationReport("bbbb bbbb", "03/05/2018", "03/07/2018");
+		TestReporter.assertTrue(vacationReport.clickEmployeeReportsTab(), "Employee Reports Tab is clicked");
+
+		TestReporter.assertTrue(vacationReport.clickVacationTab(), "Vacation Tab is clicked");
+		
+		vacationReport.generateReport("bbbb bbbb", "03/05/2018", "03/07/2018");
+		
+		TestReporter.assertTrue(vacationReport.vacationTimesheetTableVisible(), "Vacation Report is generated");
 	}
 }
