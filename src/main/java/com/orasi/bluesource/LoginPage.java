@@ -1,19 +1,14 @@
 package com.orasi.bluesource;
 
-import java.util.ResourceBundle;
-
-import org.openqa.selenium.support.FindBy;
-
 import com.orasi.utils.Constants;
 import com.orasi.utils.TestReporter;
 import com.orasi.web.OrasiDriver;
 import com.orasi.web.PageLoaded;
-import com.orasi.web.webelements.Button;
-import com.orasi.web.webelements.Element;
-import com.orasi.web.webelements.Label;
-import com.orasi.web.webelements.Textbox;
-import com.orasi.web.webelements.Webtable;
+import com.orasi.web.webelements.*;
 import com.orasi.web.webelements.impl.internal.ElementFactory;
+import org.openqa.selenium.support.FindBy;
+
+import java.util.ResourceBundle;
 
 
 public class LoginPage {
@@ -46,8 +41,7 @@ public class LoginPage {
 	/**
 	 * This method logins to the application with provided credentials
 	 * @author
-	 * @param username
-	 * @param password
+	 * @param role {@link String}
 	 */
 	public boolean Login(String role){
 		txtUsername.set(userCredentialRepo.getString(role));
@@ -75,7 +69,7 @@ public class LoginPage {
 		btnLogin.jsClick();
 	}
 	
-	/*
+	/**
 	 * Method checks that the label welcome is present on the screen
 	 * @author: Daniel Smith
 	 */
@@ -92,7 +86,7 @@ public class LoginPage {
 		}
 	}
 	
-	/*
+	/**
 	 * Method checks that invalid login name and password is handled
 	 * @author: Daniel Smith
 	 */
