@@ -38,6 +38,10 @@ public class Employees {
 	@FindBy(xpath = "//*[@id='accordion']/div/div[3]/h4/a") private Button btnManage;
 	@FindBy(xpath = "//div//input[@id='search-bar']") private Textbox txtEmployeeSearch;
 	@FindBy(xpath = "//*[@id=\"employee_account_permission\"]") private Listbox lstAccountPermission;
+	@FindBy(xpath = "//*[@id=\'employee_status\']") private Listbox lstManager;
+	@FindBy(xpath = "//tr[2]/td[1]/a") Button btnFirstName;
+	@FindBy(linkText = "account") Button btnSecondName;
+	@FindBy(xpath = "(//div[@class='form-group modal-footer']/button[@data-dismiss='modal'])[1]") Button btnClose;
 	
 	/**Constructor**/
 	public Employees(OrasiDriver driver){
@@ -46,8 +50,19 @@ public class Employees {
 	}
 
 	/**Page Interactions**/
+	
+	public boolean verifyPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(), driver, tblEmployees);	
+	}
+	
 	public void employeeSearch(String strSearch){
+		txtEmployeeSearch.syncVisible(2,true);
+		try {
 		txtEmployeeSearch.set(strSearch);
+		}
+		catch(org.openqa.selenium.StaleElementReferenceException e){
+			txtEmployeeSearch.set(strSearch);
+		}
 	}
 	
 	/**
@@ -55,8 +70,10 @@ public class Employees {
 	 * @author Paul
 	 */
 	public void clickAddEmployee() {
-		btnAdd.syncEnabled(5,true);
-		btnAdd.click();		
+		btnAdd.syncVisible(2,true);
+		btnAdd.syncEnabled(2,true);
+		btnAdd.syncInFrame(2,true);
+		btnAdd.click();
 	}
 	
 	/**
@@ -309,7 +326,52 @@ public class Employees {
 		catch (OptionNotInListboxException e){
 			return false;
 		}
-			
 	}
-
+	
+	public boolean checkManagerOption(String strOption) {
+		try{
+			lstManager.select(strOption);
+			return true;
+		}
+		catch (OptionNotInListboxException e){
+			return false;
+		}
+	}
+	
+	/**
+	 * Clicks the first name currently listed from Employees
+	 * @author Andrew McGrail
+	 */
+	public void clickFirstName() {
+		tblEmployees.syncVisible(5,true);
+		btnFirstName.syncVisible(5,true);
+		btnFirstName.click();
+	}
+	
+	public void scrollTo1stManager() {
+		lstManager.scrollIntoView();
+	}
+	
+	/**
+	 * Clicks the close button on the Add Employee modal
+	 * @author Andrew McGrail
+	 */
+	public void clickClose() {
+	btnClose.click();
+	btnClose.syncHidden(1,true);
+	}
+	
+	/**
+	 * Clicks the second name currently listed from Employees
+	 * @author Andrew McGrail
+	 */
+	public void clickSecondName() {
+		tblEmployees.syncVisible(2,true);
+		btnSecondName.syncVisible(2, true);
+		btnSecondName.click();
+	}
+	
+	public boolean verifyEmployeeSearchField(String name) {
+		return txtEmployeeSearch.getText().equalsIgnoreCase(name);
+	}
 }
