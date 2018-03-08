@@ -47,26 +47,34 @@ public class EmployeeReportsTimeByTimeSheet extends WebBaseTest {
 		EmployeeTimeByTimeSheetForm employeeTimeByTimeSheetForm = new EmployeeTimeByTimeSheetForm(getDriver());
 		Report report = new Report(getDriver());
 
+		TestReporter.logStep("Navigating to BlueSource Reporting login page");
 		header.navigateReporting();
 
 		TestReporter.assertTrue(loginPage.verifyPageIsLoaded(),"Verifying login page is loaded");
 
+		TestReporter.logStep("Logging in as Admin");
 		loginPage.AdminLogin();
 
 		TestReporter.assertTrue(reportingNavBar.verifyHomePageIsDisplayed(),"Verifying BlueSource Reporting home page is displayed");
 
+		TestReporter.logStep("Expanding 'Employee Reports' in side nav bar");
 		reportingNavBar.clickEmployeeReportsDropDown();
 
+		TestReporter.logStep("Clicking 'Time by Time Sheet' option under 'Employee Reports'");
 		reportingNavBar.clickEmployeeTimeByTimeSheet();
 
 		TestReporter.assertTrue(employeeTimeByTimeSheetForm.verifyFormLoaded(),"Verifying Employee Time by Time Sheet form is loaded");
 
+		TestReporter.logStep("Selecting Employee");
 		employeeTimeByTimeSheetForm.selectEmployee(employee);
 
+		TestReporter.logStep("Setting the Start Date");
 		employeeTimeByTimeSheetForm.setStartDate(startDate);
 
+		TestReporter.logStep("Setting the End Date");
 		employeeTimeByTimeSheetForm.setEndDate(endDate);
 
+		TestReporter.logStep("Clicking Generate Form");
 		employeeTimeByTimeSheetForm.clickGenerateReport();
 
 		TestReporter.assertTrue(report.verifyReportIsLoaded(),"Verifying Report is loaded");
@@ -75,6 +83,7 @@ public class EmployeeReportsTimeByTimeSheet extends WebBaseTest {
 
 		TestReporter.assertTrue(report.checkTotals(),"Verifying report totals");
 
+		TestReporter.logStep("Getting Employees listed in report");
 		employees = report.getEmployees();
 
 		employee = lastName + ", " + firstName; //refactoring for comparison

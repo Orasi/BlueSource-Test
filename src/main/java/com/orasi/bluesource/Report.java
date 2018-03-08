@@ -26,15 +26,27 @@ public class Report {
 
 	/**Page Interactions**/
 
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the report is loaded, <code>false</code> otherwise.
+	 */
 	public boolean verifyReportIsLoaded(){
 		return PageLoaded.isElementLoaded(this.getClass(),driver,elmReportTitle,5) &&
 				PageLoaded.isElementLoaded(this.getClass(),driver,tblReport,5);
 	}
 
+	/**
+	 * @author David Grayson
+	 * @return {@link String} Returns the title of the report
+	 */
 	public String getTitle(){
 		return elmReportTitle.getText();
 	}
 
+	/**
+	 * @author David Grayson
+	 * @return {@link List<String>} Returns all employees in the report
+	 */
 	public List<String> getEmployees(){
 		ArrayList<String> employees = new ArrayList<>();
 		for (int i = 1; i <= tblReport.getRowCount(); i++) {
@@ -47,13 +59,24 @@ public class Report {
 		return employees;
 	}
 
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if all the sub totals and the grand total are correct, <code>false</code> otherwise.
+	 */
 	public boolean checkTotals(){
 		int runningTotal = 0;
 		int sectionTotal = 0;
 		int rowBeginSection = 1;
 		int rowOfSectionTotal = 1;
 
+		/*
+		The do while loop iterates over a report of any size and checks all the sub totals and the grand total
+		to make sure they add up correctly.
+		 */
 		do {
+			/*
+			This for loop find the row with the "Total:" line to set the ned point for the next section
+			 */
 			for (int i=rowBeginSection; i<tblReport.getRowCount(); i++){
 				if (tblReport.getCell(i,2).getText().equals("Total:")){
 					rowOfSectionTotal = i;
@@ -61,12 +84,19 @@ public class Report {
 				}
 			}
 
+			/*
+			this for loop iterates over the section to check the total line at the end
+			 */
 			for (int i=rowBeginSection; i<rowOfSectionTotal; i++){
 				if (tblReport.getCell(i,4).getText().isEmpty())
 					TestReporter.log(String.valueOf(i));
 				sectionTotal += Integer.parseInt(tblReport.getCell(i,4).getText());
 			}
 
+			/*
+			if the total matches then it is added to the runningTotal and the row markers are moved to the next section
+			if not the the section is logged and false is returned
+			 */
 			if (tblReport.getCell(rowOfSectionTotal,4).getText().equals(String.valueOf(sectionTotal))){
 				rowBeginSection = rowOfSectionTotal += 2;
 				runningTotal += sectionTotal;

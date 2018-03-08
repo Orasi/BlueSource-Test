@@ -30,11 +30,19 @@ public class ReportingNavBar {
 		return elmWelcome.syncVisible(5,false);
 	}
 
+	/**
+	 * This method expands the Employee Reports drop down
+	 * @author David Grayson
+	 */
 	public void clickEmployeeReportsDropDown(){
 		if (lnkEmployeeReportsDropDown.syncEnabled(5) && lnkEmployeeReportsDropDown.syncVisible(5))
 			lnkEmployeeReportsDropDown.click();
 	}
 
+	/**
+	 * This method clicks on the "Time by Time Sheet" link in the Employee Reports dropdown
+	 * @author David Grayson
+	 */
 	public void clickEmployeeTimeByTimeSheet(){
 		if (lnkEmployeeTimeByTimeSheet.syncEnabled(5) && lnkEmployeeTimeByTimeSheet.syncVisible(5))
 			lnkEmployeeTimeByTimeSheet.click();

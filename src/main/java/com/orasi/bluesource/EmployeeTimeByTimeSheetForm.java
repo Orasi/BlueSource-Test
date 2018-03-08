@@ -31,33 +31,58 @@ public class EmployeeTimeByTimeSheetForm {
 
 	/**Page Interactions**/
 
+	/**
+	 * This method clicks the Generate Report element
+	 * @author David Grayson
+	 */
 	public void clickGenerateReport(){
-		if (canEnterText(elmGenerateReport)&& tblCalendarPopup.syncHidden(5))
+		if (canInteract(elmGenerateReport)&& tblCalendarPopup.syncHidden(5))
 			elmGenerateReport.click();
 	}
 
-	public void setEndDate(String endDate){
-		if (canEnterText(txtEndDate)){
+	/**
+	 * This method sets the End Date field
+	 * @author David Grayson
+	 * @param strEndDate {@link String} mm/dd/yyyy format
+	 */
+	public void setEndDate(String strEndDate){
+		if (canInteract(txtEndDate)){
 			txtEndDate.clear();
-			txtEndDate.sendKeys(endDate);
+			txtEndDate.sendKeys(strEndDate);
 			elmFormHeader.click();
 		}
 	}
 
-	public void setStartDate(String startDate){
-		if (canEnterText(txtStartDate)){
+	/**
+	 * This method sets the Start Date field
+	 * @author David Grayson
+	 * @param strStartDate {@link String} mm/dd/yyyy format
+	 */
+	public void setStartDate(String strStartDate){
+		if (canInteract(txtStartDate)){
 			txtStartDate.clear();
-			txtStartDate.sendKeys(startDate);
+			txtStartDate.sendKeys(strStartDate);
 			elmFormHeader.click(); //to make popups disappear
 		}
 	}
 
-	private boolean canEnterText(Element elm){
+	/**
+	 * This method provides standard checks that an element can be interacted with
+	 * @author David Grayson
+	 * @param elm {@link Element} Element to check
+	 * @return {@link Boolean} Returns <code>true</code> if the element is enabled and visible, <code>false</code> otherwise
+	 */
+	private boolean canInteract(Element elm){
 		return elm.syncEnabled(5) && elm.syncVisible(5);
 	}
 
+	/**
+	 * This method selects an employee from the list that appears
+	 * @author David Grayson
+	 * @param strEmployee {@link String} full name of employee to select
+	 */
 	public void selectEmployee(String strEmployee){
-		if (elmEmployeeSelect.syncEnabled(5) && elmEmployeeSelect.syncVisible(5)){
+		if (canInteract(elmEmployeeSelect)){
 			elmEmployeeSelect.click();
 			for (Element employee:employeeOptions){
 				if (employee.getText().equals(strEmployee)){
@@ -69,6 +94,11 @@ public class EmployeeTimeByTimeSheetForm {
 		}
 	}
 
+	/**
+	 * This method check that the elements essential to filling out the form are loaded
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the the form is loaded, <code>false</code> otherwise
+	 */
 	public boolean verifyFormLoaded() {
 		return PageLoaded.isElementLoaded(this.getClass(),driver,elmEmployeeSelect,5) &&
 				PageLoaded.isElementLoaded(this.getClass(),driver,txtEndDate,5) &&
