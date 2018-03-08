@@ -9,7 +9,7 @@ import com.orasi.web.WebBaseTest;
 import org.testng.ITestContext;
 import org.testng.annotations.*;
 
-public class Preserve_New_Lines_in_Project_Notes extends WebBaseTest {
+public class PreserveNewLinesInProjectNotes extends WebBaseTest {
 	@BeforeMethod
 	@Parameters({ "runLocation", "browserUnderTest", "browserVersion",
 			"operatingSystem", "environment" })
