@@ -5,11 +5,9 @@ import org.openqa.selenium.support.FindBy;
 
 import com.orasi.web.OrasiDriver;
 import com.orasi.web.webelements.Button;
-import com.orasi.web.webelements.Checkbox;
-import com.orasi.web.webelements.Element;
 import com.orasi.web.webelements.Label;
+import com.orasi.web.webelements.Link;
 import com.orasi.web.webelements.Listbox;
-import com.orasi.web.webelements.Textbox;
 import com.orasi.web.webelements.Webtable;
 import com.orasi.web.webelements.impl.internal.ElementFactory;
 
@@ -25,9 +23,10 @@ public class EmployeePage {
 	@FindBy(xpath = "//*[@id=\"modal_1\"]/div/div") Label lblModal;
 	@FindBy(xpath = "//*[@id=\'employee_require_nonbillable\']") Button btnTimeEntryCheckbox;
 	@FindBy(id = "employee_status") Listbox lstStatus;
-	@FindBy(xpath = "//*[@id=\"edit_employee_256\"]/div[25]/input") Button btnUpdateEmployee;
-	@FindBy(xpath = "//*[@id='edit_employee_2']/div[24]/button") Button btnClose;
-	@FindBy(xpath = "//div[@id='modal_1']/div/div/div/button") Button btnCloseModal;
+	@FindBy(xpath = "(//div[@class='form-group modal-footer']/input)[1]") Button btnUpdateEmployee;
+	@FindBy(xpath = "(//div[@class='form-group modal-footer']/button)[1]") Button btnClose;
+	@FindBy(xpath = "//div[@id='modal_1']/div/div/div/button[@class='close']") Button btnCloseModal;
+	@FindBy(xpath = "//a[@href='1']") Link lnkManager;
 	
 
 	
@@ -103,24 +102,35 @@ public class EmployeePage {
 		btnClose.syncHidden(2,true);
 	}
 	
-	/*Closes the edit general info modal and waits for the modal to fade.
-	 * 
+	/**
+	 * Closes the edit general info modal and waits for the modal to fade.
 	 * @author Andrew McGrail
 	 */
 	public void clickCloseModal() {
-		btnCloseModal.syncVisible(2,true);
 		lblModal.syncVisible(2,true);
-		btnCloseModal.syncVisible(2,true);
+		btnCloseModal.syncEnabled(2,true);
 		btnCloseModal.click();
 		lblModal.syncHidden(2,true);
 	}
 	
-	/* This method check if the edit button beside general info exists
-	 * 
+	/**
+	 * This method check if the edit button beside general info exists
 	 * @return boolean - If the edit button exists beside general info
 	 * @author Andrew McGrail
 	 */
-	public boolean checkEditButton() {
+	public boolean verifyEditButton() {
 		return driver.findElement(By.xpath("//*[@id='accordion']/div/div")).isDisplayed();
+	}
+	
+	public boolean verifyManager(String name) {
+		return lnkManager.getText().equalsIgnoreCase(name);
+	}
+	
+	public boolean verifyEditModal() {
+		return lblModal.syncVisible(2);
+	}
+	
+	public boolean verifyEditModalGone() {
+		return lblModal.isDisplayed();
 	}
 }

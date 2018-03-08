@@ -3,7 +3,6 @@ package com.orasi.bluesource;
 import java.util.ResourceBundle;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.support.FindBy;
 
 import com.orasi.utils.Constants;
@@ -14,7 +13,6 @@ import com.orasi.web.OrasiDriver;
 import com.orasi.web.PageLoaded;
 import com.orasi.web.exceptions.OptionNotInListboxException;
 import com.orasi.web.webelements.Button;
-import com.orasi.web.webelements.Element;
 import com.orasi.web.webelements.Label;
 import com.orasi.web.webelements.Link;
 import com.orasi.web.webelements.Listbox;
@@ -37,15 +35,16 @@ public class Employees {
 	@FindBy(tagName = "p") private Label lblAmountInTable;
 	@FindBy(xpath = "//*[@id='accordion']/div/div[3]/h4/a") private Button btnManage;
 	@FindBy(xpath = "//div//input[@id='search-bar']") private Textbox txtEmployeeSearch;
-	@FindBy(xpath = "//*[@id=\"employee_account_permission\"]") private Listbox lstAccountPermission;
-	@FindBy(xpath = "//*[@id=\'employee_status\']") private Listbox lstManager;
-	@FindBy(xpath = "//*[@id=\"resource-content\"]/div[1]/table/tbody/tr[2]/td[1]/a") Button btnFirstName;
-	@FindBy(xpath = "//*[@id=\"resource-content\"]/div[1]/table/tbody/tr[3]/td[1]/a") Button btnSecondName;
-	@FindBy(xpath = "//*[@id=\'new_employee\']/div[24]/button") Button btnClose;
-	@FindBy(xpath = "//*[@id=\"resource-content\"]/div[1]/table/tbody/tr[2]/td[4]/a") Link lnkFirstSupervisor;
-	@FindBy(xpath = "//*[@id=\"resource-content\"]/div[1]/table/tbody/tr[3]/td[4]/a") Link lnkSecondSupervisor;
-	@FindBy(xpath = "//*[@id=\"employee_employee_permission\"]") Listbox lstPTOPermission;
-	@FindBy(xpath = "//*[@id=\"notification-area\"]/div") Label lblSuccessMessage;
+	@FindBy(xpath = "//*[@id='employee_account_permission']") private Listbox lstAccountPermission;
+	@FindBy(xpath = "//*[@id='employee_status']") private Listbox lstManager;
+	@FindBy(xpath = "//tr[2]/td[1]/a") Button btnFirstName;
+	@FindBy(xpath = "//tr[3]/td[1]/a") Button btnSecondName;
+	@FindBy(xpath = "(//div[@class='form-group modal-footer']/button[@data-dismiss='modal'])[1]") Button btnClose;
+	@FindBy(xpath = "//tr[2]/td[4]/a") Link lnkFirstSupervisor;
+	@FindBy(xpath = "//tr[3]/td[4]/a") Link lnkSecondSupervisor;
+	@FindBy(xpath = "//*[@id='employee_employee_permission']") Listbox lstPTOPermission;
+	@FindBy(xpath = "//*[@id='notification-area']/div") Label lblSuccessMessage;
+	@FindBy(xpath = "//*[@id='modal_1']/div/div") Label lblModal;
 	
 	/**Constructor**/
 	public Employees(OrasiDriver driver){
@@ -54,8 +53,18 @@ public class Employees {
 	}
 
 	/**Page Interactions**/
+	
+	public boolean verifyPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(), driver, tblEmployees);	
+	}
+	
 	public void employeeSearch(String strSearch){
-		txtEmployeeSearch.set(strSearch);
+		try {
+			txtEmployeeSearch.set(strSearch);
+		}
+		catch(org.openqa.selenium.StaleElementReferenceException e) {
+			txtEmployeeSearch.set(strSearch);
+		}
 	}
 	
 	/**
@@ -353,9 +362,9 @@ public class Employees {
 		btnSecondName.click();
 	}
 	
-	/*This method checks the name of the supervisor for the first two
+	/**
+	 * This method checks the name of the supervisor for the first two
 	 * rows of employees currently on screen
-	 * 
 	 * @param String name - Name of the supervisor you want matched
 	 * @author Andrew McGrail
 	 */
@@ -365,8 +374,8 @@ public class Employees {
 		else if(lnkSecondSupervisor.getText().equals(name))
 			btnSecondName.click();
 	}
-	/*This method sets the "PTO Permission" to whatever you pass
-	 * 
+	/**
+	 * This method sets the "PTO Permission" to whatever you pass
 	 * @param String PTOPermission - The text of the permission you want to select
 	 * @author Andrew McGrail
 	 */
@@ -375,12 +384,20 @@ public class Employees {
 		lstPTOPermission.select(PTOPermission);
 	}
 	
-	/*This method returns the string of the success message at the top of the scren
-	 * 
+	/**
+	 * This method returns the string of the success message at the top of the screen
 	 * @return String of the success message
 	 * @author Andrew McGrail
 	 */
 	public String getSuccessMessage() {
 		return lblSuccessMessage.getText().substring(2, 31);
+	}
+	
+	public boolean verifyAddEmployeeModal() {
+		return lblModal.syncVisible(2);
+	}
+	
+	public boolean verifyEmployeeSearch(String name) {
+		return txtEmployeeSearch.getText().equalsIgnoreCase(name);
 	}
 }

@@ -1,3 +1,8 @@
+/**
+ * This test creates an employee using a chosen input with 
+ * a PTO Permission of 'Company View'
+ * @author Andrew McGrail
+ */
 package com.bluesource;
 
 import org.testng.ITestContext;
@@ -51,8 +56,9 @@ public class CreateRoleCompanyView extends WebBaseTest{
     	TestReporter.logStep("Successfully logged in as Admin to BlueSource QA");
     	//Step 6. Click the 'Add' button of the 'Employees Table' page
     	header.navigateEmployees();
+    	TestReporter.assertTrue(employee.verifyPageIsLoaded(), "Landed on the Employees Page");
     	employee.clickAddEmployee();
-    	TestReporter.logStep("Opened the new employee form");
+    	TestReporter.assertTrue(employee.verifyAddEmployeeModal(), "Opened the Add Employee modal");
     	//Step 7. Enter a username in the format of firstname.lastname into the 'username' textbox
     	//Step 8. Enter a string of text in the 'first name' textbox
     	//Step 9. Enter a string of text in the 'last name' textbox

@@ -1,3 +1,8 @@
+/**
+ * This test logs into a user with Company View permission then
+ * checks an employee to ensure no 'edit general' button is shown
+ * @author Andrew McGrail
+ */
 package com.bluesource;
 
 import org.testng.ITestContext;
@@ -51,10 +56,11 @@ public class CompanyViewViewAllNoEdit extends WebBaseTest{
     	TestReporter.logStep("Successfully logged in as "+username+" to BlueSource QA");
     	//Step 6. Click on the first or last name of an employee in the 'Employees Table'.
     	header.navigateEmployees();
+    	TestReporter.assertTrue(employee.verifyPageIsLoaded(), "Landed on employee page");
     	employee.clickFirstName();
     	TestReporter.logStep("Clicked the first name of the first employee listed.");
     	//Step 7. Verify there is no 'Edit' button present in the 'General Info' section
-    	TestReporter.assertFalse(employeePage.checkEditButton(), "Verifying the Edit button beside 'General Info' is not present.");
+    	TestReporter.assertFalse(employeePage.verifyEditButton(), "Verifying the Edit button beside 'General Info' is not present.");
     	//Step 8. Click 'Logout'
     	header.navigateLogout();
     	TestReporter.assertTrue(loginPage.verifyPageIsLoaded(), "Verified test has logged out of BlueSource QA");

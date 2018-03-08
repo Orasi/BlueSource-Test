@@ -1,3 +1,9 @@
+/**
+ * This test logs into a user who is the supervisor to another
+ * employee, then ensures the supervisor can edit the employees
+ * general information
+ * @author Andrew McGrail
+ */
 package com.bluesource;
 
 import org.testng.ITestContext;
@@ -51,17 +57,18 @@ public class CreateRoleCompanyViewEdit extends WebBaseTest{
     	TestReporter.logStep("Successfully logged in as Admin to BlueSource QA");
     	//Step 6. Type in the 'Logged in user name' in the 'Search here...' textbox
     	header.navigateEmployees();
+    	TestReporter.assertTrue(employee.verifyPageIsLoaded(), "Landed on employee page");
     	employee.employeeSearch(username);
-    	TestReporter.logStep("The name "+username+" has been searched");
+    	TestReporter.assertTrue(employee.verifyEmployeeSearch(username), "Successfully searched for "+username);
     	//Step 7. Click the first or last name of any employee that has the logged in username in the 'Supervisor' column of the Employee's Table.
     	employee.checkSupervisors(username);
-    	TestReporter.logStep("Accessing employee page who has "+username+" as a supervisor");
+    	TestReporter.assertTrue(employeePage.verifyManager(username), "Verified the chosen employee has "+username+" for a manager");
     	//Step 8. Click 'Edit' in the 'General Info'
     	employeePage.editGeneralInfo();
-    	TestReporter.logStep("Edit general info modal has been accessed");
+    	TestReporter.assertTrue(employeePage.verifyEditModal(), "Verified the Edit General modal is displayed");
     	//Step 9. Click the 'x' button in the top right corner of the modal
     	employeePage.clickCloseModal();
-    	TestReporter.logStep("Edit general info modal has been closed");
+    	TestReporter.assertFalse(employeePage.verifyEditModalGone(), "Verified the Edit General modal is no longer displayed");
     	//Step 10. Click 'Logout'
     	header.navigateLogout();
     	TestReporter.assertTrue(loginPage.verifyPageIsLoaded(), "Verified test has logged out of BlueSource QA");
