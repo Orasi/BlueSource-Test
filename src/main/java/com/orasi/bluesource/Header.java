@@ -28,6 +28,16 @@ public class Header {
 	/**Page Interactions**/
 
 	/**
+	 * This method navigates to the Reporting login page
+	 * @author David Grayson
+	 */
+	public void navigateReporting(){
+		MessageCenter messageCenter = new MessageCenter(driver);
+		messageCenter.closeMessageCenter();
+		driver.get("http://10.238.243.127:8080/reporting/login");
+	}
+
+	/**
 	 * This method navigates to Accounts page
 	 * @author Paul
 	 */
