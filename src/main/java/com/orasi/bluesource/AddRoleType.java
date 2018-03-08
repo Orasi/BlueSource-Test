@@ -1,11 +1,6 @@
 package com.orasi.bluesource;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.orasi.web.OrasiDriver;
 import com.orasi.web.webelements.Button;
 import com.orasi.web.webelements.Checkbox;
@@ -21,159 +16,172 @@ public class AddRoleType {
 
 	private OrasiDriver driver = null;
 
+	/**Page Elements**/
 	@FindBy(linkText = "Admin") private Link lnkAdminTab;
 	@FindBy(linkText = "Role Types") private Link lnkRoleTypes;
 	@FindBy(linkText = "Add New Role Type") private Link lnkAddNewRoleTypeButton;
+	@FindBy(xpath = "//*[@id='panel_body_1']/div/table/tbody/tr[1]/td[1]/a") private Link lnkFirstProject;
 	@FindBy(id = "role_type_name") private Textbox txtRoleName;
 	@FindBy(id = "role_type_billable") private Checkbox billableCheckBox;
+	@FindBy(name = "role_type[permission]") private Listbox listPermissionType;
 	@FindBy(name = "commit") private Button btnCreateRoleType;
-	@FindBy(css = "table.table-responsive.table-bordered") private Webtable rolesTable;
+	@FindBy(xpath = "//*[@id='content']/table[1]") private Webtable rolesTable;
 	@FindBy(xpath = "//*[@id=\'new_role\']/div[1]/div/div") private Element billingLbl;
 	@FindBy(css = "table.table-striped.table-hover") private Webtable projectsTable;
 	@FindBy(xpath = "//*[@id=\"accordion\"]/div/div[13]/div/div[1]/button[1]") private Button newRoleButton;
-	@FindBy(xpath = "//*[@id=\"new_role\"]/div[1]/div/div") private Label lblBilling;
+	@FindBy(xpath = "//*[@id='new_role']/div[1]/div/div") private Label lblBilling;
 	@FindBy(id = "role_role_type_id") private Listbox listRoleTypes;
-	@FindBy(xpath = "//input[@value='Create Role']") private Button btnAssignRoleType;
-	
+	@FindBy(xpath = "//*[@id='select2-role_role_type_id-container']") private Element newRoleTypeSelected;
+
 	private String newRoleTypeName;
 
+	/**Constructor**/
 	public AddRoleType(OrasiDriver driver){
 		this.driver = driver;
 		ElementFactory.initElements(driver, this);
 	}
 
-	public void openRoleType() {
+	/**
+	 * Opens Role Types page
+	 * @return true
+	 * @author shahrukh.rehman
+	 */
+	public boolean openRoleType() {
 
-		if (lnkAdminTab.isDisplayed() == true)
+		if (lnkAdminTab.syncVisible(10)) 
 		{
 			lnkAdminTab.click();
 			lnkRoleTypes.click();
-		}
-	}
-
-	public void click_AddNewRoleTypeButton() {
-
-		if (lnkAddNewRoleTypeButton.isDisplayed() == true)
-		{
-
-			lnkAddNewRoleTypeButton.click();
-		}
-	}
-
-	public void createNewRole(String roleType) {
-		
-		this.newRoleTypeName = roleType;
-
-		if (txtRoleName.isDisplayed()==true) {
-			txtRoleName.sendKeys(newRoleTypeName);
-			billableCheckBox.uncheck();
-
-			Select select = new Select(driver.findElement(By.name("role_type[permission]")));
-			select.selectByValue("View");
-
-			btnCreateRoleType.click();
-		}
-	}
-
-
-	public boolean verifyNewRole() {
-
-		Boolean verify = true;
-
-		if (rolesTable.isDisplayed() == verify) {
-
-			if (rolesTable.getRowWithCellText(newRoleTypeName) > 0) {		
-				System.out.println("New Role Type is created");
-			}
-			else {
-				System.out.println("New role type is not created");
-				verify = false;
-			}
-		}
-
-		return verify;
-	}
-
-	public int getProjectsTableRows() {
-		int rowCount = 0;
-		try
-		{
-			rowCount = projectsTable.getRowCount();
-		}
-		catch(NullPointerException e)
-		{
-			System.out.println("Null pointer exception, no accounts found  \n" + e.getLocalizedMessage());
-		}
-		return (rowCount);
-	}
-
-	public void openFirstProject() {
-		if (projectsTable.isDisplayed() == true) {
-
-			if (getProjectsTableRows() > 0) {
-				projectsTable.getCell(2, 1).findElement(
-						By.xpath("//*[@id=\'panel_body_1\']/div/table/tbody/tr[1]/td[1]/a")).click();
-			}
-			else {
-				System.out.println("Projects not found");
-			}
-		}
-	}
-
-	public void clickNewRole() {
-		if (newRoleButton.isDisplayed() == true) {
-			newRoleButton.click();
+			return true;
 		}
 		else {
-			System.out.println("New Role Button was not found");
+			return false;
 		}
 	}
 
-	public void toggleBilling() {
-		if (lblBilling.isEnabled() == true) {
-			String str = lblBilling.getAttribute("class");
-			if (str.contains("toggle btn btn-xs btn-primary")) {
-				lblBilling.jsClick();
-				System.out.println("New Label is : " + lblBilling.getAttribute("class"));
-			}
-			else {
-				System.out.println("No need to change because it is already: " 
-							+ lblBilling.getAttribute("class"));
-			}
+	/**
+	 * Clicks Add New Role Type Button
+	 * @return true
+	 * @author shahrukh.rehman
+	 */
+	public boolean clickAddNewRoleTypeButton() {
 
+		if (lnkAddNewRoleTypeButton.syncVisible(10))
+		{
+			lnkAddNewRoleTypeButton.click();
+			return true;
+		}
+
+		else {
+			return false;
 		}
 	}
-		
-	public void assignNewRole() {
-		
-		listRoleTypes.syncVisible(5);
-		
-		listRoleTypes.select(newRoleTypeName);
-		
-		btnAssignRoleType.click();
-		}
+
+	/**
+	 * Creates a new role
+	 * @param roleType {@link String}
+	 * @author shahrukh.rehman
+	 */
+	public void createNewRole(String roleType) {
+
+		txtRoleName.syncVisible(10);
+		txtRoleName.sendKeys(roleType);
+		billableCheckBox.uncheck();
+		listPermissionType.select("View");
+		btnCreateRoleType.click();
+	}
 	
+	/**
+	 * Checks to see if new role type is created
+	 * @param roleType {@link String}
+	 * @return true
+	 * @author shahrukh.rehman
+	 */
+	public boolean verifyNewRole(String roleType) {
 
+		rolesTable.syncVisible(10);
 
+		if (rolesTable.getRowWithCellText(roleType) > 0) {	
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Checks if Projects table contains projects and clicks on the first project link
+	 * @return true
+	 * @author shahrukh.rehman
+	 */
+	public boolean openFirstProject() {
 
+		projectsTable.syncVisible(10);
 
+		if (projectsTable.getRowCount() > 0) {
+			lnkFirstProject.click();
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Checks to see if new role type is created
+	 * @return true
+	 * @author shahrukh.rehman
+	 */
+	public boolean clickNewRole() {
+		if (newRoleButton.syncVisible(10)) {
+			newRoleButton.click();
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Selects billing type in the Project Role info box 
+	 * @author shahrukh.rehman
+	 */
+	public void toggleBilling() {
+		lblBilling.syncEnabled(10);
+		String str = lblBilling.getAttribute("class");
+		if (str.contains("toggle btn btn-xs btn-primary")) {
+			lblBilling.jsClick();
+		}
+	}
+	
+	/**
+	 * Selects the role from the drop-down list
+	 * @return true
+	 * @author shahrukh.rehman
+	 */
+	public boolean assignNewRole(String roleType) {
 
+		if (listRoleTypes.syncVisible(10)) {
+			listRoleTypes.select(roleType);
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Checks to see if the role type is selected
+	 * @return true
+	 * @author shahrukh.rehman
+	 */
+	public boolean newRoleSelected(String roleType) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		if (newRoleTypeSelected.syncAttributeContainsValue("title", roleType , 1)) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 }
