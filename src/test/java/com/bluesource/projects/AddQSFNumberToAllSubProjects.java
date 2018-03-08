@@ -9,7 +9,7 @@ import com.orasi.web.WebBaseTest;
 import org.testng.ITestContext;
 import org.testng.annotations.*;
 
-public class Add_QSF_Number_to_all_Sub_Projects extends WebBaseTest {
+public class AddQSFNumberToAllSubProjects extends WebBaseTest {
 	@BeforeMethod
 	@Parameters({ "runLocation", "browserUnderTest", "browserVersion",
 			"operatingSystem", "environment" })
@@ -31,7 +31,7 @@ public class Add_QSF_Number_to_all_Sub_Projects extends WebBaseTest {
 	}
 
 	@Test
-	public void add_QSF_Number_to_all_Sub_Projects(){
+	public void addQSFNumberToAllSubProjects(){
 		TestReporter.logStep(getTestName()+  " START");
 		//Test variables
 		String strAccount = "AccountOnlySubs1";
