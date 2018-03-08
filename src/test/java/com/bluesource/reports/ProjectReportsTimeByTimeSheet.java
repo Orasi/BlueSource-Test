@@ -28,7 +28,7 @@ public class ProjectReportsTimeByTimeSheet extends WebBaseTest {
 	}
 
 	@Test
-	public void ProjectReportsTimeByTimeSheet() {
+	public void projectReportsTimeByTimeSheet() {
 		//Test Variables
 		String strProject = "Project1";
 		String strStartDate = "10/01/2017";
