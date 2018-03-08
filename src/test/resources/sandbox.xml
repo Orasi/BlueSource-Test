@@ -14,7 +14,6 @@
 	<test name="In Progress test" parallel="methods" thread-count="20">
 		<classes>
 			<class name="com.bluesource.Admin.Add_Role_Type" />
-			
 		</classes>
 	</test>
 
