@@ -1,11 +1,10 @@
 package com.orasi.bluesource;
 
-import javax.wsdl.Message;
-
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.FindBy;
 
 import com.orasi.web.OrasiDriver;
+import com.orasi.web.webelements.Button;
 import com.orasi.web.webelements.Link;
 import com.orasi.web.webelements.impl.internal.ElementFactory;
 
@@ -18,6 +17,8 @@ public class Header {
 	@FindBy(xpath = "//li[contains(.,'Employees')]/a") private Link lnkEmployees;
 	@FindBy(xpath = "//a[contains(text(),'Project')]") private Link lnkProjemployees;
 	@FindBy(xpath = "//a[contains(text(),'Project')]//..//..//..//following-sibling::a") private Link lnkEmployeeSelector;
+	@FindBy(xpath = "/html/body/header/div/nav/ul/li[2]/a") private Button btnAdminMenu;
+	@FindBy(xpath = "//a[@href='/admin/lock-timesheets/2018']") private Link lnkTimesheetLocks;
 	@FindBy(linkText = "Admin") private Link lnkAdmin;
 	@FindBy(linkText = "Timesheet Locks") private Link lnkTimesheetLocks;
 	
@@ -64,9 +65,12 @@ public class Header {
 	 * @author Paul
 	 */
 	public void navigateEmployees() {
-		MessageCenter messageCenter = new MessageCenter(driver);
-		messageCenter.closeMessageCenter();
-		lnkEmployees.click();		
+		lnkEmployees.syncVisible(2,true);
+	//	MessageCenter messageCenter = new MessageCenter(driver);
+	//	messageCenter.closeMessageCenter();
+		lnkEmployees.syncVisible(2,true);
+		lnkEmployees.syncInFrame(2,true);
+		lnkEmployees.click();
 	}
 	
 	public void navigateProjectEmployees() {
@@ -81,6 +85,16 @@ public class Header {
 		MessageCenter messageCenter = new MessageCenter(driver);
 		messageCenter.closeMessageCenter();
 		lnkLogout.click();		
+	}
+	
+	/**
+	 * This method navigates to Admin/Timesheet lock page
+	 * @author Andrew McGrail
+	 */
+	public void navigateTimesheetLocks() {
+		btnAdminMenu.click();
+		lnkTimesheetLocks.syncVisible(2,true);
+		lnkTimesheetLocks.click();
 	}
 
 	public void navigateTimesheetLocks() {
