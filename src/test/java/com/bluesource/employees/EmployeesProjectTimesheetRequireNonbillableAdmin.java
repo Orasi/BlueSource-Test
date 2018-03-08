@@ -1,3 +1,9 @@
+/**
+ * Tests that an admin can require a nonbillable timesheet
+ * from an employee, and that the timesheet won't
+ * show up after unchecking the requirement
+ * @author Andrew McGrail
+ */
 package com.bluesource.employees;
 
 import org.testng.ITestContext;
@@ -39,6 +45,7 @@ public class EmployeesProjectTimesheetRequireNonbillableAdmin extends WebBaseTes
 	 @Test//(dataProvider = "login")
 	 public void testEmployeesProjectTimesheetRequireNonbillableAdmin()
 	 {
+		 String employeeUpdateMessage = "Employee updated successfully";
 		 String confirmationMessage = "Reported Time for this week successfully logged.";
 		 String employeeName = "No Project";
 		 String employeePassword = "123";
@@ -56,22 +63,25 @@ public class EmployeesProjectTimesheetRequireNonbillableAdmin extends WebBaseTes
 		 TestReporter.assertTrue(employees.verifyPageIsLoaded(), "Landed on Employees page");
 		 // Step 4 Click on an Employee from the list that is NOT on a project and who has not submitted a timesheet this week or last week.
 		 employees.employeeSearch(employeeName);
+		 TestReporter.assertTrue(employees.verifyEmployeeSearchField(employeeName), "Searched for the employee "+employeeName);
 		 employees.clickFirstName();
+		 TestReporter.assertTrue(employeePage.verifyEmployeeName(employeeName), "Landed on "+employeeName+"'s page");
 		 // Step 5 Click on the 'Edit' button inside the 'General Info' pane's header.
 		 employeePage.editGeneralInfo();
+		 TestReporter.assertTrue(employeePage.verifyEditButton(), "Edit General Modal has been brought up");
 		 // Step 6 Select the 'Require Nonbillable Time Entry' checkbox.
 		 employeePage.clickNonbillableTime();
 		 // Step 7 Click the 'Update Employee' button.
 		 employeePage.clickUpdateEmployee();
-		 TestReporter.logStep("Employee has been set to require nonbillable timesheets.");
+		 TestReporter.assertEquals(employeePage.checkSuccessMessage(), employeeUpdateMessage, "Employee was Updated to require Nonbillable Time Entry");
 		 // Step 8 Logout of Bluesource.
 		 header.navigateLogout();
+		 TestReporter.assertTrue(loginPage.verifyPageIsLoaded(), "Successfully logged out of Company.Admin");
 		 // Step 9 Log back in as the Employee who was just updated.
-		 loginPage.verifyPageIsLoaded();
 		 loginPage.LoginWithCredentials(employeeName, employeePassword);
-		 TestReporter.logStep("Logged in as employee without a timesheet for a week.");
+		 TestReporter.assertTrue(employeePage.verifyEmployeeName(employeeName), "Succefully logged in as "+employeeName);
 		 // Step 10 Verify the user has a nonbillable timesheet listed.
-		 TestReporter.assertTrue(employeePage.checkNonbillableRoles(), "Verifying nonbillable timesheet is shown");
+		 TestReporter.assertTrue(employeePage.verifySubmitTimesheetButton(), "Verifying nonbillable timesheet is shown");
 		 // Step 11 Verify the user is able to submit the timesheet.
 		 employeePage.fillTimesheet();
 		 employeePage.sendTimesheet();
@@ -79,24 +89,26 @@ public class EmployeesProjectTimesheetRequireNonbillableAdmin extends WebBaseTes
 		 // Step 12 Logout of Bluesource and log back in as company.admin.
 		 header.navigateLogout();
 		 loginPage.AdminLogin();
-		 TestReporter.logStep("Logged in as Company.admin");
 		 // Step 13 Navigate back to an Employee's page who is not on a project and who has not submitted a timesheet for this week or last week.
 		 header.navigateEmployees();
+		 TestReporter.assertTrue(employees.verifyPageIsLoaded(), "Landed on Employees page");
 		 employees.employeeSearch(employeeName);
+		 TestReporter.assertTrue(employees.verifyEmployeeSearchField(employeeName), "Searched for the employee "+employeeName);
 		 employees.clickFirstName();
-		 TestReporter.logStep("Landed on employee page who has not submitted a timesheet for a week.");
+		 TestReporter.assertTrue(employeePage.verifyEmployeeName(employeeName), "Landed on "+employeeName+"'s page");
 		 // Step 14 Click the 'Edit' button inside the 'General Info' panel's header.
 		 employeePage.editGeneralInfo();
+		 TestReporter.assertTrue(employeePage.verifyEditButton(), "Edit General Modal has been brought up");
 		 // Step 15 Click the 'Require Nonbillable Time Entry' checkbox.
 		 employeePage.unclickNonbillableTime();
 		 // Step 16 Click the 'Update Employee' button.
 		 employeePage.clickUpdateEmployee();
-		 TestReporter.logStep("Employee has been changed to no longer require nonbillable timesheets.");
+		 TestReporter.assertEquals(employeePage.checkSuccessMessage(), employeeUpdateMessage, "Employee was Updated to no longer require Nonbillable Time Entry");
 		 // Step 17 Logout of Bluesource and log back in as the Employee who was just updated.
 		 header.navigateLogout();
 		 loginPage.LoginWithCredentials(employeeName, employeePassword);
-		 TestReporter.logStep("Logged in as employee without a timesheet for a week.");
+		 TestReporter.assertTrue(employeePage.verifyEmployeeName(employeeName), "Succefully logged in as "+employeeName);
 		 // Step 18 Verify the user does NOT see a nonbillable timesheet.
-		 TestReporter.assertFalse(employeePage.checkNonbillableRoles(), "Verifying nonbillable timesheet is not shown");
+		 TestReporter.assertTrue(employeePage.verifyNoTimeSheets(), "Verifying nonbillable timesheet is not shown");
 	 }
 }

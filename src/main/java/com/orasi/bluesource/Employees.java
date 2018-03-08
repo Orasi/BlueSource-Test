@@ -39,9 +39,9 @@ public class Employees {
 	@FindBy(xpath = "//div//input[@id='search-bar']") private Textbox txtEmployeeSearch;
 	@FindBy(xpath = "//*[@id=\"employee_account_permission\"]") private Listbox lstAccountPermission;
 	@FindBy(xpath = "//*[@id=\'employee_status\']") private Listbox lstManager;
-	@FindBy(xpath = "//*[@id=\"resource-content\"]/div[1]/table/tbody/tr[2]/td[1]/a") Button btnFirstName;
+	@FindBy(xpath = "//tr[2]/td[1]/a") Button btnFirstName;
 	@FindBy(linkText = "account") Button btnSecondName;
-	@FindBy(xpath = "//*[@id=\'new_employee\']/div[24]/button") Button btnClose;
+	@FindBy(xpath = "(//div[@class='form-group modal-footer']/button[@data-dismiss='modal'])[1]") Button btnClose;
 	
 	/**Constructor**/
 	public Employees(OrasiDriver driver){
@@ -57,7 +57,12 @@ public class Employees {
 	
 	public void employeeSearch(String strSearch){
 		txtEmployeeSearch.syncVisible(2,true);
+		try {
 		txtEmployeeSearch.set(strSearch);
+		}
+		catch(org.openqa.selenium.StaleElementReferenceException e){
+			txtEmployeeSearch.set(strSearch);
+		}
 	}
 	
 	/**
@@ -333,7 +338,8 @@ public class Employees {
 		}
 	}
 	
-	/*Clicks the first name currently listed from Employees
+	/**
+	 * Clicks the first name currently listed from Employees
 	 * @author Andrew McGrail
 	 */
 	public void clickFirstName() {
@@ -346,7 +352,8 @@ public class Employees {
 		lstManager.scrollIntoView();
 	}
 	
-	/*Clicks the close button on the Add Employee modal
+	/**
+	 * Clicks the close button on the Add Employee modal
 	 * @author Andrew McGrail
 	 */
 	public void clickClose() {
@@ -354,12 +361,17 @@ public class Employees {
 	btnClose.syncHidden(1,true);
 	}
 	
-	/*Clicks the second name currently listed from Employees
+	/**
+	 * Clicks the second name currently listed from Employees
 	 * @author Andrew McGrail
 	 */
 	public void clickSecondName() {
 		tblEmployees.syncVisible(2,true);
 		btnSecondName.syncVisible(2, true);
 		btnSecondName.click();
+	}
+	
+	public boolean verifyEmployeeSearchField(String name) {
+		return txtEmployeeSearch.getText().equalsIgnoreCase(name);
 	}
 }
