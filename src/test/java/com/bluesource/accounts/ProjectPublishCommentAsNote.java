@@ -31,7 +31,7 @@ public class ProjectPublishCommentAsNote extends WebBaseTest {
 	}
 
 	@Test
-	public void ProjectPublishCommentAsNote() {
+	public void projectPublishCommentAsNote() {
 		//Test Variables
 		String strAccount = "Account1";
 		String strProject = "Project3";
