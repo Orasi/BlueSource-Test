@@ -19,6 +19,8 @@ public class Header {
 	@FindBy(xpath = "//a[contains(text(),'Project')]//..//..//..//following-sibling::a") private Link lnkEmployeeSelector;
 	@FindBy(xpath = "/html/body/header/div/nav/ul/li[2]/a") private Button btnAdminMenu;
 	@FindBy(xpath = "//a[@href='/admin/lock-timesheets/2018']") private Link lnkTimesheetLocks;
+	@FindBy(linkText = "Admin") private Link lnkAdmin;
+	@FindBy(linkText = "Timesheet Locks") private Link lnkTimesheetLocks;
 	
 	/**Constructor**/
 	public Header(OrasiDriver driver){
@@ -95,4 +97,10 @@ public class Header {
 		lnkTimesheetLocks.click();
 	}
 
+	public void navigateTimesheetLocks() {
+		MessageCenter messageCenter = new MessageCenter(driver);
+		messageCenter.closeMessageCenter();
+		lnkAdmin.click();
+		lnkTimesheetLocks.click();
+	}
 }
