@@ -19,8 +19,10 @@ public class EmployeePage {
 	@FindBy(xpath = "//tr[1]//a[@class='glyphicon glyphicon-pencil']") Button btnEditFirstProject;
 	@FindBy(xpath = "//div[@id='panel_body_1']//table") Webtable tblProjectInfo;
 	@FindBy(xpath = "//*[@id=\'accordion\']/div/div[7]/button") Button btnEditGeneral;
-	@FindBy(partialLinkText = "Deactivate Employee") Button btnDeactivateEmployee;
-	@FindBy(partialLinkText = "Deactivate") Button btnDeactivate;
+	@FindBy(xpath = "//*[@id='content']/h1") Label lblEmployeeName;
+	@FindBy(xpath = "//*[@id='modal_1']/div/div") Label lblEditGeneralModal;
+	@FindBy(xpath = "//a[contains(text(),'Deactivate Employee')]") Button btnDeactivateEmployee;
+	@FindBy(xpath = "//a[contains(text(),'Deactivate')]") Button btnDeactivate;
 	
 	/**Constructor**/
 	public EmployeePage(OrasiDriver driver){
@@ -73,6 +75,22 @@ public class EmployeePage {
 	public void clickDeactivate(){
 		btnDeactivateEmployee.syncVisible(2, true);
 		btnDeactivate.click();
+	}
+	
+	public boolean verifyEmployeeName(String employeeName) {
+		return lblEmployeeName.getText().equalsIgnoreCase(employeeName);
+	}
+	
+	public boolean verifyEditGeneralModal() {
+		return lblEditGeneralModal.syncVisible(2,true);
+	}
+	
+	public boolean verifyDeactivateEmployee() {
+		return btnDeactivateEmployee.syncEnabled(2,true);
+	}
+	
+	public boolean verifyDeactivate() {
+		return btnDeactivate.syncEnabled(2,true);
 	}
 	
 }

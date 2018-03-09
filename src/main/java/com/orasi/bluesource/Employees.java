@@ -46,7 +46,13 @@ public class Employees {
 	}
 
 	/**Page Interactions**/
+	
+	public boolean verifyPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(), driver, tblEmployees);	
+	}
+	
 	public void employeeSearch(String strSearch){
+		txtEmployeeSearch.syncEnabled(2,true);
 		txtEmployeeSearch.set(strSearch);
 	}
 	
