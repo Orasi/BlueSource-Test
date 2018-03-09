@@ -59,6 +59,7 @@ public class Report {
 			if (!accounts.contains(tblReport.getCell(i,1).getText()))
 				accounts.add(tblReport.getCell(i,1).getText());
 		}
+		TestReporter.log(accounts.toString());
 		return accounts;
 	}
 }

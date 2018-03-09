@@ -7,6 +7,7 @@ import org.testng.ITestContext;
 import org.testng.annotations.*;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class SelectAllForProjectsAndAccountsBlueSourceReports extends WebBaseTes
 		setRunLocation(runLocation);
 		setEnvironment(environment);
 		setThreadDriver(true);
-		testStart("");
+		testStart("Select all for Projects and Accounts BlueSource Reports");
 	}
 
 	@AfterMethod
@@ -37,6 +38,8 @@ public class SelectAllForProjectsAndAccountsBlueSourceReports extends WebBaseTes
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 		String reportTitle = "Account Burndown Data Report: " + sdf.format(new Date()); //comparison title with current date
 		List<String> allAccounts;
+		int columnBudget = 6;
+		int columnReported = 7;
 
 		//Page Models
 		LoginPage loginPage = new LoginPage(getDriver());
@@ -69,27 +72,51 @@ public class SelectAllForProjectsAndAccountsBlueSourceReports extends WebBaseTes
 
 		TestReporter.assertEquals(reportTitle,report.getTitle(),"Verifying report title");
 
-		TestReporter.assertFalse(report.doesColumnHaveEmptyValues(7),"Verifying 'Reported $' column has no empty values");
+		TestReporter.assertFalse(report.doesColumnHaveEmptyValues(columnReported),"Verifying 'Reported $' column has no empty values");
 
-		TestReporter.assertFalse(report.doesColumnHaveEmptyValues(6),"Verifying 'Budget $' column has no empty values");
+		TestReporter.assertFalse(report.doesColumnHaveEmptyValues(columnBudget),"Verifying 'Budget $' column has no empty values");
 
 		TestReporter.assertTrue(checkAccounts(allAccounts,report.getAllAccounts()),"Verifying all accounts are displayed");
 	}
 
 	private boolean checkAccounts(List<String> reference, List<String> displayed){
-		if (reference.size() == displayed.size()){
-			for (String s:reference){
-				if (!displayed.contains(s)){
-					TestReporter.log("displayed didn't contain: " + s);
-					return false;
-				}
+		ArrayList<String> missing = new ArrayList<>();
+		for (String s:reference){
+			if (!displayed.contains(s)){
+				TestReporter.log("displayed didn't contain: " + s);
+				missing.add(s);
 			}
-			return true;
-		} else {
-			TestReporter.log("The reference and displayed sizes are different");
-			TestReporter.log("reference size = " + reference.size());
-			TestReporter.log("displayed size = " + displayed.size());
-			return false;
 		}
+		return checkMissing(missing);
+	}
+
+	private boolean checkMissing(ArrayList<String> missing) {
+		TestReporter.logStep("Checking that missing Accounts don't have Projects");
+
+		Accounts accounts = goToBlueSource();
+
+		TestReporter.assertTrue(accounts.verifyAccountsPageIsLoaded(), "Verifying Accounts page is loaded");
+
+		for (String s:missing){
+			TestReporter.assertTrue(accounts.verifyAccountLink(s),"Verifying account ["+s+"] link");
+
+			TestReporter.assertFalse(accounts.doesAccountHaveActiveProjects(s),"Verifying account ["+s+"] doesn't have projects");
+		}
+
+		return true;
+	}
+
+	private Accounts goToBlueSource() {
+		getDriver().get("http://10.238.243.127/login");
+		LoginPage loginPage = new LoginPage(getDriver());
+		Header header = new Header(getDriver());
+
+		TestReporter.assertTrue(loginPage.verifyPageIsLoaded(),"Verifying BlueSource login page is loaded");
+
+		loginPage.AdminLogin();
+
+		header.navigateAccounts();
+
+		return new Accounts(getDriver());
 	}
 }
