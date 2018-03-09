@@ -37,7 +37,10 @@ public class Employees {
 	@FindBy(tagName = "p") private Label lblAmountInTable;
 	@FindBy(xpath = "//*[@id='accordion']/div/div[3]/h4/a") private Button btnManage;
 	@FindBy(xpath = "//div//input[@id='search-bar']") private Textbox txtEmployeeSearch;
-	@FindBy(xpath = "//*[@id=\"employee_account_permission\"]") private Listbox lstAccountPermission;
+	@FindBy(xpath = "//*[@id='employee_account_permission']") private Listbox lstAccountPermission;
+	@FindBy(xpath = "//*[@id='modal_1']/div/div") private Label lblAddEmployeeModal;
+	@FindBy(xpath = "//*[@id='notification-area']/div") private Label lblSuccessMessage;
+	@FindBy(xpath = "/html/body/div[1]") private Label lblLoadingOverlay;
 	
 	/**Constructor**/
 	public Employees(OrasiDriver driver){
@@ -55,6 +58,7 @@ public class Employees {
 	 * @author Paul
 	 */
 	public void clickAddEmployee() {
+		lblLoadingOverlay.syncHidden(2,true);
 		btnAdd.syncVisible(2,true);
 		btnAdd.syncEnabled(2,true);
 		btnAdd.syncInFrame(2,true);
@@ -72,6 +76,7 @@ public class Employees {
 		
 		//complete text fields
 		completeRequiredFields(username,firstname,lastname);
+		txtEmployeeUsername.set(username);
 		
 		//click Create Employee
 		clickCreateEmployee();
@@ -108,6 +113,7 @@ public class Employees {
 	 * @author Paul
 	 */
 	public void clickCreateEmployee() {
+		btnCreateEmployee.syncEnabled(2,true);
 		btnCreateEmployee.click();
 	}
 	
@@ -268,9 +274,8 @@ public class Employees {
 			System.out.println("Error finding the add button on the current page.");
 	}
 
-	public void VerifyProjectEmployeesPage() {
-		// TODO Auto-generated method stub
-		
+	public boolean verifyProjectEmployeesPage() {
+			return PageLoaded.isElementLoaded(this.getClass(), driver, tblEmployees);
 	}
 
 	public void CreateBasicUser(String strUserName, String strFirstName, String strLastName) {
@@ -311,7 +316,13 @@ public class Employees {
 		catch (OptionNotInListboxException e){
 			return false;
 		}
-		
 	}
 	
+	public boolean verifyAddEmployeeModal() {
+		return lblAddEmployeeModal.syncVisible(2,true);
+	}
+	
+	public boolean verifySuccessMessage(String message) {
+		return lblSuccessMessage.getText().substring(2).equalsIgnoreCase(message);
+	}
 }
