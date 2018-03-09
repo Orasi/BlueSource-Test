@@ -7,6 +7,7 @@ import javax.lang.model.util.Elements;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -20,6 +21,7 @@ import com.orasi.web.OrasiDriver;
 import com.orasi.web.PageLoaded;
 import com.orasi.web.webelements.Button;
 import com.orasi.web.webelements.Element;
+import com.orasi.web.webelements.Label;
 import com.orasi.web.webelements.Link;
 import com.orasi.web.webelements.Listbox;
 import com.orasi.web.webelements.Textbox;
@@ -46,6 +48,16 @@ public class Accounts {
 	@FindBy(css = "div.btn.btn-secondary.btn-xs.quick-nav") private Button btnQuickNav;
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
+	@FindBy(xpath = "//*[@id='accordion']/div/div[1]/div/a[2]") private Link lnkAccountName;
+	@FindBy(xpath = "//*[@id='panel_body_1']/div/table/tbody/tr/td[1]/a") private Link lnkFirstProjectListed;
+	@FindBy(xpath = "//*[@id='panel_body_3']/div/div/table/tbody/tr/td[1]/a") private Link lnkFirstRoleListed;
+	@FindBy(xpath = "//*[@id='modal_3']/div/div") private Label lblAssignEmployeeModal;
+	@FindBy(xpath = "//*[@id='search-bar']/input") private Textbox txtSearchAccounts;
+	@FindBy(xpath = "(//span[@class='select2-selection__arrow'])[2]") private Button btnAssignEmployeeArrow;
+	@FindBy(xpath = "//input[@class='select2-search__field']") private Textbox txtSelectEmployee;
+	@FindBy(xpath = "//input[@value='Create Filled role']") private Button btnCreateFilledRole;
+	@FindBy(xpath = "//*[@id='notification-area']/div") private Label lblSuccessMessage;
+	@FindBy(xpath = "//span[@class='actions actions-add-hours']/a") private Button btnAddHours;
 
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
@@ -54,6 +66,10 @@ public class Accounts {
 	}
 	
 	/**Page Interactions**/
+	
+	public boolean verifyAccountsPage() {
+		return PageLoaded.isElementLoaded(this.getClass(), driver, tblAccounts);
+	}
 
 	/*
 	 * Click on accounts tab 
@@ -205,7 +221,7 @@ public class Accounts {
 	}
 	
 	public void clickAssignEmployee(){
-		btnAssignEmployee.syncEnabled(5,true);
+		btnAddHours.syncVisible(1,true);
 		btnAssignEmployee.click();
 	}
 
@@ -229,6 +245,7 @@ public class Accounts {
 	}
 	
 	public void setAccountNameTextbox(String strAccountName){
+		txtAccountName.syncVisible(2,true);
 		txtAccountName.set(strAccountName);
 	}
 	
@@ -376,5 +393,48 @@ public class Accounts {
 		PageLoaded.isDomComplete(driver, 1);
 	}
 	
+	public void searchAccountName(String accountName) {
+		txtSearchAccounts.syncVisible(2,true);
+		txtSearchAccounts.set(accountName);
+	}
+	
+	public boolean verifyAccountName(String accountName) {
+		return lnkAccountName.getText().equalsIgnoreCase(accountName);
+	}
+	
+	public void clickFirstProject() {
+		lnkFirstProjectListed.click();
+	}
+	
+	public boolean verifyProjectPage() {
+		return lnkFirstRoleListed.syncVisible(2,true);
+	}
+	
+	public void clickFirstRole() {
+		lnkFirstRoleListed.syncEnabled(2,true);
+		lnkFirstRoleListed.click();
+	}
+	
+	public boolean verifyRolePage() {
+		return btnAssignEmployee.syncVisible(2,true);
+	}
+	
+	public boolean verifyAssignEmployee() {
+		return lblAssignEmployeeModal.syncVisible(2,true);
+	}
+	
+	public void assignEmployee(String employeeName) {
+		btnAssignEmployeeArrow.click();
+		txtSelectEmployee.sendKeys(employeeName+Keys.RETURN);
+		btnCreateFilledRole.click();
+	}
+	
+	public boolean verifySuccessMessage(String message) {
+		return lblSuccessMessage.getText().substring(2).equalsIgnoreCase(message);
+	}
+	
+	public void navigateMailCatcher() {
+		driver.get("http://10.238.243.127:1080");
+	}
 }
 

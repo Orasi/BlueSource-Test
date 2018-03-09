@@ -64,9 +64,12 @@ public class Header {
 	 * @author Paul
 	 */
 	public void navigateEmployees() {
-		MessageCenter messageCenter = new MessageCenter(driver);
-		messageCenter.closeMessageCenter();
-		lnkEmployees.click();		
+		lnkEmployees.syncVisible(2,true);
+	//	MessageCenter messageCenter = new MessageCenter(driver);
+	//	messageCenter.closeMessageCenter();
+		lnkEmployees.syncVisible(2,true);
+		lnkEmployees.syncInFrame(2,true);
+		lnkEmployees.click();
 	}
 	
 	public void navigateProjectEmployees() {
