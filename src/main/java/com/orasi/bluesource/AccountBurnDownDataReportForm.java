@@ -40,6 +40,12 @@ public class AccountBurnDownDataReportForm {
 		}
 	}
 
+	/**
+	 * This method provides standard checks that an element can be interacted with
+	 * @author David Grayson
+	 * @param elm {@link Element} Element to check
+	 * @return {@link Boolean} Returns <code>true</code> if the element is enabled and visible, <code>false</code> otherwise
+	 */
 	private boolean canInteract(Element elm){
 		return elm.syncEnabled(5) && elm.syncVisible(5);
 	}

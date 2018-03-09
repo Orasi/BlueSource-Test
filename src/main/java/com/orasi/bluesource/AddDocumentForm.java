@@ -24,6 +24,7 @@ public class AddDocumentForm {
 	@FindBy(xpath = "//input[@id='document_signed']") private Checkbox chkSigned;
 	@FindBy(xpath = "//input[@value='Create Document']") private Element elmCreateDocument;
 	@FindBy(xpath = "//form[@id='new_document']//span[@role='combobox']") private Element elmDocumentType;
+	@FindBy(xpath = "//input[@id='document_name']") private Textbox txtDocumentName;
 
 	/**
 	 * Constructor
@@ -39,16 +40,17 @@ public class AddDocumentForm {
 		return PageLoaded.isElementLoaded(this.getClass(),driver,elmAddDocumentForm,5);
 	}
 
+	/**
+	 * @author David Grayson
+	 * @param filePath {@link String} the complete path for the file to be uploaded
+	 */
 	public void setFile(String filePath){
 		if (canInteract(elmDocumentFile))
 			elmDocumentFile.sendKeys(filePath);
 	}
 
-	public String getFileName(){
-		if (canInteract(elmDocumentFile))
-			return elmDocumentFile.getText();
-		else
-			return "";
+	public String getDocumentName(){
+		return txtDocumentName.getText();
 	}
 
 	public void clickCreateDocument(){
@@ -87,6 +89,12 @@ public class AddDocumentForm {
 			chkSigned.check();
 	}
 
+	/**
+	 * This method provides standard checks that an element can be interacted with
+	 * @author David Grayson
+	 * @param elm {@link Element} Element to check
+	 * @return {@link Boolean} Returns <code>true</code> if the element is enabled and visible, <code>false</code> otherwise
+	 */
 	private boolean canInteract(Element elm){
 		return elm.syncEnabled(5) && elm.syncVisible(5);
 	}

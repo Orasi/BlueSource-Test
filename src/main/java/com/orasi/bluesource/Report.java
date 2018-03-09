@@ -41,6 +41,10 @@ public class Report {
 		return elmReportTitle.getText();
 	}
 
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns true if a report has a field with more than 2 decimals
+	 */
 	public boolean doesReportHaveLongDecimals(){
 		for (int i = 1; i <= tblReport.getRowCount(); i++){
 			for (int x = 1; x <= 7; x++){

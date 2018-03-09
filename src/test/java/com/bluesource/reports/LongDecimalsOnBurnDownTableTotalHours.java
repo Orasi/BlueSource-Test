@@ -1,6 +1,7 @@
 package com.bluesource.reports;
 
 import com.orasi.bluesource.*;
+import com.orasi.web.webelements.Textbox;
 import org.bouncycastle.jce.provider.symmetric.TEA;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -93,6 +94,9 @@ public class LongDecimalsOnBurnDownTableTotalHours extends WebBaseTest {
 
 		TestReporter.logStep("Setting Document Type");
 		addDocumentForm.selectDocumentType("SOW");
+
+		TestReporter.logStep("Getting Document Name");
+		docName = addDocumentForm.getDocumentName();
 
 		TestReporter.logStep("Setting Total Budget");
 		addDocumentForm.setTotalBudget(budget);

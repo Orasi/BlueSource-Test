@@ -48,6 +48,10 @@ public class Accounts {
 	
 	/**Page Interactions**/
 
+	/**
+	 * @author David Grayson
+	 * @param document {@link String} name of the document to edit
+	 */
 	public void clickEditDocument(String document){
 		if (canInteract(tblDocuments)){
 			int row = tblDocuments.getRowWithCellText(document);
@@ -55,15 +59,30 @@ public class Accounts {
 		}
 	}
 
+	/**
+	 * @author David Grayson
+	 * @param document {@link String} the name of the document to find
+	 * @return {@link Boolean} Returns true if a document of the name provided exists in the documents table
+	 */
 	public boolean verifyDocumentExists(String document){
 		return tblDocuments.getRowWithCellText(document) > 0;
 	}
 
+	/**
+	 * Clicks the add document button in Account or Project pages
+	 * @author David Grayson
+	 */
 	public void clickAddDocument(){
 		if (canInteract(btnProjectAddDocument))
 			btnProjectAddDocument.click();
 	}
 
+	/**
+	 * This method provides standard checks that an element can be interacted with
+	 * @author David Grayson
+	 * @param element {@link Element} Element to check
+	 * @return {@link Boolean} Returns <code>true</code> if the element is enabled and visible, <code>false</code> otherwise
+	 */
 	private boolean canInteract(Element element) {
 		return element.syncEnabled(5) && element.syncVisible(5);
 	}
