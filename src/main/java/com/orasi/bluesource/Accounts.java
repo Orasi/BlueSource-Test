@@ -37,6 +37,8 @@ public class Accounts {
 	@FindBy(xpath = "//th[contains(text(),'Rate')]/../../..") private Webtable tblRoleRates;
 	@FindBy(xpath = "//h4[@class='panel-title' and contains(text(),'Project Info')]") private Element elmProjectInfoPanelHeader;
 	@FindBy(xpath = "//h4[@class='panel-title' and contains(text(),'Role Information')]") private Element elmRoleInfoPanelHeader;
+	@FindBy(xpath = "//h4[@class='panel-title'and contains(text(),'Documents')]/../button") private Button btnProjectAddDocument;
+	@FindBy(xpath = "//th[contains(text(),'Document')]/../../..") private Webtable tblDocuments;
 
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
@@ -45,6 +47,26 @@ public class Accounts {
 	}
 	
 	/**Page Interactions**/
+
+	public void clickEditDocument(String document){
+		if (canInteract(tblDocuments)){
+			int row = tblDocuments.getRowWithCellText(document);
+			tblDocuments.findElement(By.xpath("//tr[" + row + "]//a[@class='glyphicon glyphicon-pencil']")).click();
+		}
+	}
+
+	public boolean verifyDocumentExists(String document){
+		return tblDocuments.getRowWithCellText(document) > 0;
+	}
+
+	public void clickAddDocument(){
+		if (canInteract(btnProjectAddDocument))
+			btnProjectAddDocument.click();
+	}
+
+	private boolean canInteract(Element element) {
+		return element.syncEnabled(5) && element.syncVisible(5);
+	}
 
 	/**
 	 * @author David Grayson
