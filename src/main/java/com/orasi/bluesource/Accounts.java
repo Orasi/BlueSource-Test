@@ -1,10 +1,12 @@
 package com.orasi.bluesource;
 
 import java.lang.reflect.UndeclaredThrowableException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.lang.model.util.Elements;
 
+import org.bouncycastle.jce.provider.symmetric.TEA;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
@@ -28,8 +30,7 @@ import com.orasi.web.webelements.impl.internal.ElementFactory;
 
 public class Accounts {
 	private OrasiDriver driver = null;
-	
-	
+
 	/**Page Elements**/
 	@FindBy(xpath = "//*[@id='resource-content']/div[2]/p") private Element elmNumberPages;
 	@FindBy(xpath = "//*[@id=\"resource-content\"]/div[1]/table/tbody") private Webtable tblAccounts;
@@ -46,6 +47,10 @@ public class Accounts {
 	@FindBy(css = "div.btn.btn-secondary.btn-xs.quick-nav") private Button btnQuickNav;
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
+	@FindBy(xpath = "//h3[contains(text(),'Hours')]/../table") private Webtable tblProjectHours;
+	@FindBy(xpath = "//h3[contains(text(),'Budget')]/../table") private Webtable tblProjectBudget;
+	@FindBy(xpath = "//th[contains(text(),'Project')]/../../..") private Webtable tblSubProjects;
+	@FindBy(xpath = "//span[@class='sow_info']") private Element elmSOW;
 
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
@@ -54,6 +59,116 @@ public class Accounts {
 	}
 	
 	/**Page Interactions**/
+
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the page has a SOW, <code>false</code> otherwise
+	 */
+	public boolean hasSOW(){
+		return driver.findElements(By.xpath("//span[@class='sow_info']")).size() == 1;
+	}
+
+	/**
+	 * @author David Grayson
+	 * @return {@link List<String>} Returns a List of a Projects Sub Projects
+	 */
+	public List<String> getAllSubProjects(){
+		ArrayList<String> subProjects = new ArrayList<>(tblSubProjects.getRowCount());
+		for (int i=1;i<=tblSubProjects.getRowCount();i++){
+			subProjects.add(tblSubProjects.getCell(i,1).getText());
+		}
+		return subProjects;
+	}
+
+	/**
+	 * This method should only be called when on a Project or Sub Project page
+	 * @author David Grayson
+	 * @return {@link String} Returns the Budget submitted by a Project or Sub Project
+	 */
+	public String getSubmittedBudget(){
+		int row = tblProjectBudget.getRowWithCellText("Submitted");
+
+		if(row > 0)
+			return driver.findElement(By.xpath("//h3[contains(text(),'Budget')]/../table/tbody/tr["+row+"]/td[1]")).getText();
+		else
+			return "$0.00";
+	}
+
+	/**
+	 * This method should only be called when on a Project or Sub Project page
+	 * @author David Grayson
+	 * @return {@link String} Returns the Budget allocated to a project or sub project as a whole number string
+	 */
+	public String getAllocatedBudget(){
+		int row = tblProjectBudget.getRowWithCellText("Allocated");
+
+		if (row > 0)
+			return driver.findElement(By.xpath("//h3[contains(text(),'Budget')]/../table/tbody/tr["+row+"]/td[1]")).getText();
+		else
+			return "$0.00";
+	}
+
+	/**
+	 * This method should only be called when on a Project or Sub Project page
+	 * @author David Grayson
+	 * @return {@link String} Returns the Hours submitted by a project or sub project as a whole number string
+	 */
+	public String getSubmittedHours(){
+		int row = tblProjectHours.getRowWithCellText("Submitted");
+
+		if (row > 0)
+			return driver.findElement(By.xpath("//h3[contains(text(),'Hours')]/../table/tbody/tr["+row+"]/td[1]")).getText().replace(".00","").trim();
+		else
+			return "";
+	}
+
+	/**
+	 * This method should only be called when on a Project or Sub Project page
+	 * @author David Grayson
+	 * @return {@link String} Returns the Hours allocated to a project or sub project as a whole number string
+	 */
+	public String getAllocatedHours(){
+		int row = tblProjectHours.getRowWithCellText("Allocated");
+
+		if (row > 0)
+			return driver.findElement(By.xpath("//h3[contains(text(),'Hours')]/../table/tbody/tr["+row+"]/td[1]")).getText().replace(".00","").trim();
+		else
+			return "";
+	}
+
+	/**
+	 * This method should be called when on the Project page, not the account page
+	 * @author David Grayson
+	 * @return {@link String} Returns the SOW if the project has one, an empty String if it doesn't
+	 */
+	public String getSOW(){
+		if (hasSOW())
+			return elmSOW.getText().replace(" - ","");
+		else
+			return "";
+	}
+
+	/**
+	 * This method should only be called from an accounts page
+	 * @author David Grayson
+	 * @return {@link List<String>} Returns a List of all of an accounts projects
+	 */
+	public List<String> getAllProject(){
+		ArrayList<String> projects = new ArrayList<>(tblProjects.getRowCount());
+		for (int i = 1; i <= tblProjects.getRowCount(); i++) {
+			if (!tblProjects.getCell(i,1).getText().isEmpty())
+				projects.add(tblProjects.getCell(i,1).getText());
+		}
+		return projects;
+	}
+
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the Accounts table is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountsPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblAccounts,5);
+	}
 
 	/*
 	 * Click on accounts tab 
