@@ -60,12 +60,18 @@ public class Accounts {
 	
 	/**Page Interactions**/
 
-
-
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the page has a SOW, <code>false</code> otherwise
+	 */
 	public boolean hasSOW(){
 		return driver.findElements(By.xpath("//span[@class='sow_info']")).size() == 1;
 	}
 
+	/**
+	 * @author David Grayson
+	 * @return {@link List<String>} Returns a List of a Projects Sub Projects
+	 */
 	public List<String> getAllSubProjects(){
 		ArrayList<String> subProjects = new ArrayList<>(tblSubProjects.getRowCount());
 		for (int i=1;i<=tblSubProjects.getRowCount();i++){
@@ -74,8 +80,13 @@ public class Accounts {
 		return subProjects;
 	}
 
+	/**
+	 * This method should only be called when on a Project or Sub Project page
+	 * @author David Grayson
+	 * @return {@link String} Returns the Budget submitted by a Project or Sub Project
+	 */
 	public String getSubmittedBudget(){
-		int row = driver.findWebtable(By.xpath("//h3[contains(text(),'Budget')]/../table")).getRowWithCellText("Submitted");
+		int row = tblProjectBudget.getRowWithCellText("Submitted");
 
 		if(row > 0)
 			return driver.findElement(By.xpath("//h3[contains(text(),'Budget')]/../table/tbody/tr["+row+"]/td[1]")).getText();
@@ -83,8 +94,13 @@ public class Accounts {
 			return "$0.00";
 	}
 
+	/**
+	 * This method should only be called when on a Project or Sub Project page
+	 * @author David Grayson
+	 * @return {@link String} Returns the Budget allocated to a project or sub project as a whole number string
+	 */
 	public String getAllocatedBudget(){
-		int row = driver.findWebtable(By.xpath("//h3[contains(text(),'Budget')]/../table")).getRowWithCellText("Allocated");
+		int row = tblProjectBudget.getRowWithCellText("Allocated");
 
 		if (row > 0)
 			return driver.findElement(By.xpath("//h3[contains(text(),'Budget')]/../table/tbody/tr["+row+"]/td[1]")).getText();
@@ -92,8 +108,13 @@ public class Accounts {
 			return "$0.00";
 	}
 
+	/**
+	 * This method should only be called when on a Project or Sub Project page
+	 * @author David Grayson
+	 * @return {@link String} Returns the Hours submitted by a project or sub project as a whole number string
+	 */
 	public String getSubmittedHours(){
-		int row = driver.findWebtable(By.xpath("//h3[contains(text(),'Hours')]/../table")).getRowWithCellText("Submitted");
+		int row = tblProjectHours.getRowWithCellText("Submitted");
 
 		if (row > 0)
 			return driver.findElement(By.xpath("//h3[contains(text(),'Hours')]/../table/tbody/tr["+row+"]/td[1]")).getText().replace(".00","").trim();
@@ -101,8 +122,13 @@ public class Accounts {
 			return "";
 	}
 
+	/**
+	 * This method should only be called when on a Project or Sub Project page
+	 * @author David Grayson
+	 * @return {@link String} Returns the Hours allocated to a project or sub project as a whole number string
+	 */
 	public String getAllocatedHours(){
-		int row = driver.findWebtable(By.xpath("//h3[contains(text(),'Hours')]/../table")).getRowWithCellText("Allocated");
+		int row = tblProjectHours.getRowWithCellText("Allocated");
 
 		if (row > 0)
 			return driver.findElement(By.xpath("//h3[contains(text(),'Hours')]/../table/tbody/tr["+row+"]/td[1]")).getText().replace(".00","").trim();
@@ -110,6 +136,11 @@ public class Accounts {
 			return "";
 	}
 
+	/**
+	 * This method should be called when on the Project page, not the account page
+	 * @author David Grayson
+	 * @return {@link String} Returns the SOW if the project has one, an empty String if it doesn't
+	 */
 	public String getSOW(){
 		if (hasSOW())
 			return elmSOW.getText().replace(" - ","");
@@ -117,13 +148,17 @@ public class Accounts {
 			return "";
 	}
 
+	/**
+	 * This method should only be called from an accounts page
+	 * @author David Grayson
+	 * @return {@link List<String>} Returns a List of all of an accounts projects
+	 */
 	public List<String> getAllProject(){
 		ArrayList<String> projects = new ArrayList<>(tblProjects.getRowCount());
 		for (int i = 1; i <= tblProjects.getRowCount(); i++) {
 			if (!tblProjects.getCell(i,1).getText().isEmpty())
 				projects.add(tblProjects.getCell(i,1).getText());
 		}
-		TestReporter.log(projects.toString());
 		return projects;
 	}
 

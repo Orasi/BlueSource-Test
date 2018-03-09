@@ -7,7 +7,7 @@ import com.orasi.web.webelements.Listbox;
 import com.orasi.web.webelements.impl.internal.ElementFactory;
 import org.openqa.selenium.support.FindBy;
 
-public class AccountBurndownDataReportForm {
+public class AccountBurnDownDataReportForm {
 	private OrasiDriver driver = null;
 
 	/**Page Elements**/
@@ -17,7 +17,7 @@ public class AccountBurndownDataReportForm {
 	/**
 	 * Constructor
 	 **/
-	public AccountBurndownDataReportForm(OrasiDriver driver) {
+	public AccountBurnDownDataReportForm(OrasiDriver driver) {
 		this.driver = driver;
 		ElementFactory.initElements(driver, this);
 	}
