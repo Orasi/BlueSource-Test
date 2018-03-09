@@ -55,6 +55,31 @@ public class Accounts {
 	
 	/**Page Interactions**/
 
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} The name of the account to check
+	 * @return {@link Boolean} Returns <code>true</code> if the Account passed has active projects, <code>false</code> otherwise
+	 */
+	public boolean doesAccountHaveActiveProjects(String strAccount){
+		clickAccountLink(strAccount);
+
+		if (tblProjects.getRowCount() == 0 || tblProjects.findElements(By.xpath("//tr[@class='closed-project']")).size() == tblProjects.getRowCount()){
+			driver.navigate().back();
+			return false;
+		} else {
+			driver.navigate().back();
+			return true;
+		}
+	}
+
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the Accounts table is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountsPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblAccounts,5);
+	}
+
 	/*
 	 * Click on accounts tab 
 	 * Make sure that the correct page loads
@@ -155,7 +180,7 @@ public class Accounts {
 	
 	public void clickAccountLink(String strAccount){
 		String xpathExpression;
-		xpathExpression = "//td//a[contains(text(),'" + strAccount + "')]";
+		xpathExpression = "//td//a[text()='" + strAccount + "']";
 		Link lnkAccount = driver.findLink(By.xpath(xpathExpression));
 		lnkAccount.click();
 	}
