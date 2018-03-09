@@ -3,6 +3,7 @@ package com.bluesource.reports;
 import com.orasi.bluesource.*;
 import com.orasi.utils.TestReporter;
 import com.orasi.web.WebBaseTest;
+import org.bouncycastle.jce.provider.symmetric.TEA;
 import org.testng.ITestContext;
 import org.testng.annotations.*;
 
@@ -48,24 +49,31 @@ public class SelectAllForProjectsAndAccountsBlueSourceReports extends WebBaseTes
 		AccountBurndownDataReportForm form = new AccountBurndownDataReportForm(getDriver());
 		Report report = new Report(getDriver());
 
+		TestReporter.logStep("Navigating to BlueSource Reporting");
 		header.navigateReporting();
 
 		TestReporter.assertTrue(loginPage.verifyPageIsLoaded(),"Verifying login page is loaded");
 
+		TestReporter.logStep("Logging in as Admin");
 		loginPage.AdminLogin();
 
 		TestReporter.assertTrue(reportingNavBar.verifyHomePageIsDisplayed(),"Verifying BlueSource Reporting home page is displayed");
 
+		TestReporter.logStep("Clicking 'Account Reports'");
 		reportingNavBar.clickAccountReports();
 
-		reportingNavBar.clickBurnDownData();
+		TestReporter.logStep("Clicking 'Burn Down Data'");
+		reportingNavBar.clickAccountBurnDownData();
 
 		TestReporter.assertTrue(form.verifyFormLoaded(),"Verifying Account Burndown Data Report form loaded");
 
+		TestReporter.logStep("Storing all selectable accounts");
 		allAccounts = form.getAllAccounts();
 
+		TestReporter.logStep("Clicking Select All");
 		form.clickSelectAll();
 
+		TestReporter.logStep("Clicking Generate Report");
 		form.clickGenerateReport();
 
 		TestReporter.assertTrue(report.verifyReportIsLoaded(),"Verifying report is loaded");
@@ -79,44 +87,55 @@ public class SelectAllForProjectsAndAccountsBlueSourceReports extends WebBaseTes
 		TestReporter.assertTrue(checkAccounts(allAccounts,report.getAllAccounts()),"Verifying all accounts are displayed");
 	}
 
-	private boolean checkAccounts(List<String> reference, List<String> displayed){
+	/**
+	 * @author David Grayson
+	 * @param reference {@link List<String>} The selectable accounts
+	 * @param displayed {@link List<String>} The account displayed in the report
+	 * @return {@link Boolean} Returns true if no accounts were missing from the report
+	 * OR if all the missing accounts don't have active projects
+	 */
+	private boolean checkAccounts(List<String> reference, List<String> displayed) {
 		ArrayList<String> missing = new ArrayList<>();
-		for (String s:reference){
-			if (!displayed.contains(s)){
+		for (String s : reference) {
+			if (!displayed.contains(s)) {
 				TestReporter.log("displayed didn't contain: " + s);
 				missing.add(s);
 			}
 		}
-		return checkMissing(missing);
+		return missing.size() <= 0 || checkMissing(missing);
 	}
 
+	/**
+	 * @author David Grayson
+	 * @param missing {@link ArrayList<String>} the Accounts that were selectable but not displayed in the burn down report
+	 * @return {@link Boolean} Returns true if the missing accounts don't have active projects
+	 */
 	private boolean checkMissing(ArrayList<String> missing) {
 		TestReporter.logStep("Checking that missing Accounts don't have Projects");
 
-		Accounts accounts = goToBlueSource();
+		//Page Models
+		LoginPage loginPage = new LoginPage(getDriver());
+		Header header = new Header(getDriver());
+		Accounts accounts = new Accounts(getDriver());
+
+		TestReporter.logStep("Navigating to BlueSource");
+		getDriver().get("http://10.238.243.127/login");
+
+		TestReporter.assertTrue(loginPage.verifyPageIsLoaded(),"Verifying BlueSource login page is loaded");
+
+		TestReporter.logStep("Logging in as Admin");
+		loginPage.AdminLogin();
+
+		TestReporter.logStep("Navigating to Accounts");
+		header.navigateAccounts();
 
 		TestReporter.assertTrue(accounts.verifyAccountsPageIsLoaded(), "Verifying Accounts page is loaded");
 
 		for (String s:missing){
 			TestReporter.assertTrue(accounts.verifyAccountLink(s),"Verifying account ["+s+"] link");
-
 			TestReporter.assertFalse(accounts.doesAccountHaveActiveProjects(s),"Verifying account ["+s+"] doesn't have projects");
 		}
 
 		return true;
-	}
-
-	private Accounts goToBlueSource() {
-		getDriver().get("http://10.238.243.127/login");
-		LoginPage loginPage = new LoginPage(getDriver());
-		Header header = new Header(getDriver());
-
-		TestReporter.assertTrue(loginPage.verifyPageIsLoaded(),"Verifying BlueSource login page is loaded");
-
-		loginPage.AdminLogin();
-
-		header.navigateAccounts();
-
-		return new Accounts(getDriver());
 	}
 }

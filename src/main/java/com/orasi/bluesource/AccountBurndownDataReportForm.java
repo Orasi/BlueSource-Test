@@ -29,6 +29,10 @@ public class AccountBurndownDataReportForm {
 
 	/**Page Interactions**/
 
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns true if key elements of the form are loaded
+	 */
 	public boolean verifyFormLoaded(){
 		return PageLoaded.isElementLoaded(this.getClass(),driver,elmGenerateReport,5) &&
 				PageLoaded.isElementLoaded(this.getClass(),driver,lstAccountSelect,5) &&
@@ -40,6 +44,10 @@ public class AccountBurndownDataReportForm {
 			elmGenerateReport.click();
 	}
 
+	/**
+	 * @author David Grayson
+	 * @return {@link List<String>} Returns a List of all the accounts that can be selected
+	 */
 	public List<String> getAllAccounts(){
 		ArrayList<String> allAccounts = new ArrayList<>();
 		if (canInteract(lstAccountSelect)){
@@ -55,6 +63,11 @@ public class AccountBurndownDataReportForm {
 			elmSelectAll.click();
 	}
 
+	/**
+	 * @author David Grayson
+	 * @param elm {@link Element} The element to check
+	 * @return {@link Boolean} Returns true if it can be interacted with, throws an error otherwise
+	 */
 	private boolean canInteract(Element elm){
 		return elm.syncEnabled(5) && elm.syncVisible(5);
 	}

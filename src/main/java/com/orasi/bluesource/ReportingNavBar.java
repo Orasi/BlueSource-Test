@@ -32,7 +32,11 @@ public class ReportingNavBar {
 		return elmWelcome.syncVisible(5,false);
 	}
 
-	public void clickBurnDownData(){
+	/**
+	 * This method clicks Burn Down Data link under the Account Reports drop down menu
+	 * @author David Grayson
+	 */
+	public void clickAccountBurnDownData(){
 		if (canInteract(lnkAccountReportsBurnDownData))
 			lnkAccountReportsBurnDownData.click();
 	}

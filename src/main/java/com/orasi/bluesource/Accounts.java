@@ -55,15 +55,19 @@ public class Accounts {
 	
 	/**Page Interactions**/
 
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} The name of the account to check
+	 * @return {@link Boolean} Returns <code>true</code> if the Account passed has active projects, <code>false</code> otherwise
+	 */
 	public boolean doesAccountHaveActiveProjects(String strAccount){
 		clickAccountLink(strAccount);
 
-		if (PageLoaded.isDomComplete(driver) && tblProjects.getRowCount() == 0 || tblProjects.findElements(By.xpath("//tr[@class='closed-project']")).size() == tblProjects.getRowCount()){
+		if (tblProjects.getRowCount() == 0 || tblProjects.findElements(By.xpath("//tr[@class='closed-project']")).size() == tblProjects.getRowCount()){
 			driver.navigate().back();
 			return false;
 		} else {
 			driver.navigate().back();
-			PageLoaded.isDomComplete(driver);
 			return true;
 		}
 	}

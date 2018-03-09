@@ -45,6 +45,11 @@ public class Report {
 		return elmReportTitle.getText();
 	}
 
+	/**
+	 * @author David Grayson
+	 * @param column {@link Integer} the column to check
+	 * @return {@link Boolean} Returns true if the specified column has empty values, false otherwise
+	 */
 	public boolean doesColumnHaveEmptyValues(int column){
 		for (int i = 1; i <= tblReport.getRowCount(); i++){
 			if (tblReport.getCell(i,column).getText().isEmpty())
@@ -53,6 +58,10 @@ public class Report {
 		return false;
 	}
 
+	/**
+	 * @author David Grayson
+	 * @return {@link List<String>} Returns a List of all Accounts in the report
+	 */
 	public List<String> getAllAccounts(){
 		ArrayList<String> accounts = new ArrayList<>();
 		for (int i = 1; i <= tblReport.getRowCount(); i++){
