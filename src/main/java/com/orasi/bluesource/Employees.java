@@ -3,7 +3,6 @@ package com.orasi.bluesource;
 import java.util.ResourceBundle;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.support.FindBy;
 
 import com.orasi.utils.Constants;
@@ -14,7 +13,6 @@ import com.orasi.web.OrasiDriver;
 import com.orasi.web.PageLoaded;
 import com.orasi.web.exceptions.OptionNotInListboxException;
 import com.orasi.web.webelements.Button;
-import com.orasi.web.webelements.Element;
 import com.orasi.web.webelements.Label;
 import com.orasi.web.webelements.Link;
 import com.orasi.web.webelements.Listbox;
@@ -38,6 +36,7 @@ public class Employees {
 	@FindBy(xpath = "//*[@id='accordion']/div/div[3]/h4/a") private Button btnManage;
 	@FindBy(xpath = "//div//input[@id='search-bar']") private Textbox txtEmployeeSearch;
 	@FindBy(xpath = "//*[@id=\"employee_account_permission\"]") private Listbox lstAccountPermission;
+	@FindBy(xpath = "//*[@id='notification-area']/div") private Label lblSuccessMessage;
 	
 	/**Constructor**/
 	public Employees(OrasiDriver driver){
@@ -46,7 +45,13 @@ public class Employees {
 	}
 
 	/**Page Interactions**/
+	
+	public boolean verifyPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(), driver, tblEmployees);	
+	}
+	
 	public void employeeSearch(String strSearch){
+		txtEmployeeSearch.syncEnabled(2,true);
 		txtEmployeeSearch.set(strSearch);
 	}
 	
@@ -55,8 +60,10 @@ public class Employees {
 	 * @author Paul
 	 */
 	public void clickAddEmployee() {
-		btnAdd.syncEnabled(5,true);
-		btnAdd.click();		
+		btnAdd.syncVisible(2,true);
+		btnAdd.syncEnabled(2,true);
+		btnAdd.syncInFrame(2,true);
+		btnAdd.click();
 	}
 	
 	/**
@@ -309,7 +316,10 @@ public class Employees {
 		catch (OptionNotInListboxException e){
 			return false;
 		}
-			
+		
 	}
-
+	
+	public boolean verifySuccessMessage(String message) {
+		return lblSuccessMessage.getText().substring(2).equalsIgnoreCase(message);
+	}
 }

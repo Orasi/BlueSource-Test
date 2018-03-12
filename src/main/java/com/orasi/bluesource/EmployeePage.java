@@ -7,6 +7,7 @@ import com.orasi.web.webelements.Button;
 import com.orasi.web.webelements.Checkbox;
 import com.orasi.web.webelements.Element;
 import com.orasi.web.webelements.Label;
+import com.orasi.web.webelements.Listbox;
 import com.orasi.web.webelements.Textbox;
 import com.orasi.web.webelements.Webtable;
 import com.orasi.web.webelements.impl.internal.ElementFactory;
@@ -17,9 +18,14 @@ public class EmployeePage {
 	/**Page Elements**/
 	@FindBy(xpath = "//tr[1]//a[@class='glyphicon glyphicon-pencil']") Button btnEditFirstProject;
 	@FindBy(xpath = "//div[@id='panel_body_1']//table") Webtable tblProjectInfo;
-	@FindBy(xpath = "//button[@data-target='#modal_1']") Button btnEditGeneral;
-	@FindBy(xpath = "//div//a[contains(text(),'Deactivate Employee')]") Button btnDeactivateEmployee;
-	@FindBy(xpath = "//div[@class='panel-heading']//a[contains(text(),'Deactivate')]") Button btnDeactivate;
+	@FindBy(xpath = "//*[@id=\'accordion\']/div/div[7]/button") Button btnEditGeneral;
+	@FindBy(xpath = "//*[@id='content']/h1") Label lblEmployeeName;
+	@FindBy(xpath = "//*[@id='modal_1']/div/div") Label lblEditGeneralModal;
+	@FindBy(xpath = "//a[contains(text(),'Deactivate Employee')]") Button btnDeactivateEmployee;
+	@FindBy(xpath = "//a[contains(text(),'Deactivate')]") Button btnDeactivate;
+	@FindBy(xpath = "//*[@id='panel_body_1']/div/ul/li") Label lblDeactivateMessage;
+	@FindBy(xpath = "//td[contains(text(),'Status')]/../td[2]") Label lblEmployeeStatus;
+	@FindBy(xpath = "//*[@id='panel_body_1']/div/table/tbody/tr/td[5]") Label lblRoleEndDate;
 	
 	/**Constructor**/
 	public EmployeePage(OrasiDriver driver){
@@ -59,16 +65,46 @@ public class EmployeePage {
 	}
 
 	public void editGeneralInfo() {
+		btnEditGeneral.syncVisible(3, true);
 		btnEditGeneral.click();
 		
 	}		
 	
 	public void clickDeactivateEmployee() {
+		btnDeactivateEmployee.syncVisible(2, true);
 		btnDeactivateEmployee.click();
 	}
 	
 	public void clickDeactivate(){
+		btnDeactivate.syncVisible(2, true);
 		btnDeactivate.click();
 	}
 	
+	public boolean verifyEmployeeName(String employeeName) {
+		return lblEmployeeName.getText().equalsIgnoreCase(employeeName);
+	}
+	
+	public boolean verifyEditGeneralModal() {
+		return lblEditGeneralModal.syncVisible(2,true);
+	}
+	
+	public boolean verifyDeactivateEmployee() {
+		return btnDeactivateEmployee.syncEnabled(2,true);
+	}
+	
+	public boolean verifyDeactivate() {
+		return btnDeactivate.syncEnabled(2,true);
+	}
+	
+	public boolean verifyDeactivateMessage(String accountName, String projectName, String roleName, String currentDate) {
+		return lblDeactivateMessage.getText().equalsIgnoreCase(accountName+" - "+projectName+" - "+roleName+" will be set to end "+currentDate+".");
+	}
+	
+	public boolean verifyEmployeeStatus(String status) {
+		return lblEmployeeStatus.getText().equalsIgnoreCase(status);
+	}
+	
+	public boolean verifyFirstRoleEndDate(String date) {
+		return lblRoleEndDate.getText().equalsIgnoreCase(date);
+	}
 }
