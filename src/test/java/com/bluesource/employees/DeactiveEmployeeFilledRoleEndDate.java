@@ -1,7 +1,16 @@
+/**
+ * This tests Issue 491 Deactivate Employee_Filled Role End Date
+ * The test chooses a preidentified employee on a project who is Active,
+ *  verifies there is a warning message when deactivating the employee
+ *  then verifies the end date for the project role is updated.
+ *  @author Andrew McGrail
+ */
 package com.bluesource.employees;
 
 import com.orasi.utils.TestReporter;
-import com.orasi.utils.date.DateTimeConversion;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
@@ -37,12 +46,21 @@ public class DeactiveEmployeeFilledRoleEndDate extends WebBaseTest{
 	    	endTest("TestAlert", testResults);
 	    }
 	
-	 @Test//(dataProvider = "login")
+	 @Test
 	 public void testDeactiveEmployeeFilledRoleEndDate()
 	 {
+		 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+		 LocalDate localDate = LocalDate.now();
+		 String currentDate = dtf.format(localDate);
+		 
+		 // Variables to be Set
 		 String firstName = "Issue";
 		 String lastName = "491";
 		 String employeeName = firstName+" "+lastName;
+		 String deactiveMessage = "Employee successfully deactivated";
+		 String accountName = "Account for Testing";
+		 String projectName = "Project1";
+		 String roleName = "Project Manager Onsite";
 		 
 		 LoginPage loginPage = new LoginPage(getDriver());
 		 Employees employees = new Employees(getDriver());
@@ -71,13 +89,16 @@ public class DeactiveEmployeeFilledRoleEndDate extends WebBaseTest{
 		// Step 11 Verify the Deactivate button is displayed at the top right of the page.
 		 TestReporter.assertTrue(employeePage.verifyDeactivate(), "The Deactivate Employee button was pushed");
 		// Step 12 Verify that project role end date is displayed with the text: "(Account) - (Project) - (Role) will be set to end XX/XX/XXXX."
-		 
+		 TestReporter.assertTrue(employeePage.verifyDeactivateMessage(accountName, projectName, roleName, currentDate),
+				 "Verified the page warns the end date of the project role will be changed to today's date");
 		// Step 13 Click the Deactivate button.
-//		 employeePage.clickDeactivate();
-		 
+		 employeePage.clickDeactivate();
+		 TestReporter.assertTrue(employees.verifySuccessMessage(deactiveMessage), "Verified "+employeeName+" was deactivated");
 		// Step 14 Click on the deactivated employee's name and verify that their status has changed to "Inactive"
-		 
+		 employees.employeeSearch(employeeName);
+		 employees.selectEmployeeByName(lastName);
+		 TestReporter.assertTrue(employeePage.verifyEmployeeStatus("Inactive"), "Verified that "+employeeName+" has been set to Inactive");
 		// Step 15 Verify that the project end date is displayed as the current date.
-		 
+		 TestReporter.assertTrue(employeePage.verifyFirstRoleEndDate(currentDate), "Verified the role end date has been updated");
 	} 
 }

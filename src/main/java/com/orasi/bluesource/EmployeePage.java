@@ -23,6 +23,9 @@ public class EmployeePage {
 	@FindBy(xpath = "//*[@id='modal_1']/div/div") Label lblEditGeneralModal;
 	@FindBy(xpath = "//a[contains(text(),'Deactivate Employee')]") Button btnDeactivateEmployee;
 	@FindBy(xpath = "//a[contains(text(),'Deactivate')]") Button btnDeactivate;
+	@FindBy(xpath = "//*[@id='panel_body_1']/div/ul/li") Label lblDeactivateMessage;
+	@FindBy(xpath = "//td[contains(text(),'Status')]/../td[2]") Label lblEmployeeStatus;
+	@FindBy(xpath = "//*[@id='panel_body_1']/div/table/tbody/tr/td[5]") Label lblRoleEndDate;
 	
 	/**Constructor**/
 	public EmployeePage(OrasiDriver driver){
@@ -73,7 +76,7 @@ public class EmployeePage {
 	}
 	
 	public void clickDeactivate(){
-		btnDeactivateEmployee.syncVisible(2, true);
+		btnDeactivate.syncVisible(2, true);
 		btnDeactivate.click();
 	}
 	
@@ -93,4 +96,15 @@ public class EmployeePage {
 		return btnDeactivate.syncEnabled(2,true);
 	}
 	
+	public boolean verifyDeactivateMessage(String accountName, String projectName, String roleName, String currentDate) {
+		return lblDeactivateMessage.getText().equalsIgnoreCase(accountName+" - "+projectName+" - "+roleName+" will be set to end "+currentDate+".");
+	}
+	
+	public boolean verifyEmployeeStatus(String status) {
+		return lblEmployeeStatus.getText().equalsIgnoreCase(status);
+	}
+	
+	public boolean verifyFirstRoleEndDate(String date) {
+		return lblRoleEndDate.getText().equalsIgnoreCase(date);
+	}
 }
