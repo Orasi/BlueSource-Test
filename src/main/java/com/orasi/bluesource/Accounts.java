@@ -1,30 +1,16 @@
 package com.orasi.bluesource;
 
-import java.lang.reflect.UndeclaredThrowableException;
-import java.util.List;
-
-import javax.lang.model.util.Elements;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.orasi.utils.Randomness;
-import com.orasi.utils.TestReporter;
 import com.orasi.web.OrasiDriver;
 import com.orasi.web.PageLoaded;
-import com.orasi.web.webelements.Button;
-import com.orasi.web.webelements.Element;
-import com.orasi.web.webelements.Link;
-import com.orasi.web.webelements.Listbox;
-import com.orasi.web.webelements.Textbox;
-import com.orasi.web.webelements.Webtable;
+import com.orasi.web.webelements.*;
 import com.orasi.web.webelements.impl.internal.ElementFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.support.FindBy;
+
+import java.lang.reflect.UndeclaredThrowableException;
+import java.util.List;
 
 public class Accounts {
 	private OrasiDriver driver = null;
@@ -46,6 +32,11 @@ public class Accounts {
 	@FindBy(css = "div.btn.btn-secondary.btn-xs.quick-nav") private Button btnQuickNav;
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
+	@FindBy(xpath = "//h4[@class='panel-title' and contains(text(),'Project Info')]") private Element elmProjectInfoPanelHeader;
+	@FindBy(xpath = "//h4[@class='panel-title'and contains(text(),'Documents')]/../button") private Button btnProjectAddDocument;
+	@FindBy(xpath = "//th[contains(text(),'Document')]/../../..") private Webtable tblDocuments;
+
+
 
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
@@ -54,6 +45,77 @@ public class Accounts {
 	}
 	
 	/**Page Interactions**/
+
+	/**
+	 * This method provides standard checks that an element can be interacted with
+	 * @author David Grayson
+	 * @param element {@link Element} Element to check
+	 * @return {@link Boolean} Returns <code>true</code> if the element is enabled and visible, <code>false</code> otherwise
+	 */
+	private boolean canInteract(Element element) {
+		return element.syncEnabled(5) && element.syncVisible(5);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param document {@link String} the name of the document to find
+	 * @return {@link Boolean} Returns true if a document of the name provided exists in the documents table
+	 */
+	public boolean verifyDocumentExists(String document){
+		return tblDocuments.getRowWithCellText(document) > 0;
+	}
+
+	/**
+	 * Clicks the add document button in Account or Project pages
+	 * @author David Grayson
+	 */
+	public void clickAddDocument(){
+		if (canInteract(btnProjectAddDocument))
+			btnProjectAddDocument.click();
+	}
+
+
+	/**
+	 * would use the {@link #verifyProjectLink(String)} but it doesn't do what it's name implies
+	 * @author David Grayson
+	 * @param project {@link String} name of Project
+	 * @return {@link Boolean} Returns <code>true</code> if the link is clickable within 5 seconds, <code>false</code> otherwise.
+	 */
+	public boolean verifyProjectLinkValid(String project){
+		return driver.findLink(By.linkText(project)).syncEnabled(5,false) &&
+				driver.findLink(By.linkText(project)).syncVisible(5,false);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Projects parent account
+	 * @param strProject {@link String} name of project
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Projects page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyProjectPageIsLoaded(String strAccount, String strProject){
+		return PageLoaded.isElementLoaded(this.getClass(),driver, elmProjectInfoPanelHeader,5)
+				&& driver.findElement(By.xpath("//div[@class='breadcrumbs']")).getText()
+				.equals("Accounts - " + strAccount + " - " + strProject);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Account
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Accounts page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountPageIsLoaded(String strAccount){
+		String xpath = "//div[@class='breadcrumbs']/a[contains(text(),'" + strAccount + "')]";
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblProjects,5)
+				&& driver.findLink(By.xpath(xpath)).syncVisible(5,false);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the Accounts table is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountsPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblAccounts,5);
+	}
 
 	/*
 	 * Click on accounts tab 
