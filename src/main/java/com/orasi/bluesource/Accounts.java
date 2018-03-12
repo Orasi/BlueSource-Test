@@ -46,6 +46,12 @@ public class Accounts {
 	@FindBy(css = "div.btn.btn-secondary.btn-xs.quick-nav") private Button btnQuickNav;
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
+	@FindBy(xpath = "//span[@data-original-title='Edit Hours']/a") private Link lnkEditRoleHours;
+	@FindBy(xpath = "//h4[@class='panel-title' and contains(text(),'Project Info')]") private Element elmProjectInfoPanelHeader;
+	@FindBy(xpath = "//h4[@class='panel-title' and contains(text(),'Role Information')]") private Element elmRoleInfoPanelHeader;
+	@FindBy(xpath = "//th[contains(text(),'Document')]/../../..") private Webtable tblDocuments;
+	@FindBy(xpath = "//tr/th[contains(text(),'Rate')]/../../..") private Webtable tblRates;
+
 
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
@@ -54,6 +60,101 @@ public class Accounts {
 	}
 	
 	/**Page Interactions**/
+
+	/**
+	 * This method gets a Roles hours from the Roles page
+	 * @author David Grayson
+	 * @return {@link String} Returns the text of the most recent hours in the Rates panel
+	 */
+	public String getRoleHours(){
+		return tblRates.getCellData(1,4);
+	}
+
+	/**
+	 * This method will throw an error if no SOW document exists on Project page
+	 * @author David Grayson
+	 * @return {@link String} Returns the SOW document name
+	 */
+	public String getSOWDocumentName(){
+		PageLoaded.isDomComplete(driver);
+		int row = tblDocuments.getRowWithCellText("SOW");
+		return tblDocuments.getCell(row,1).getText();
+	}
+
+	/**
+	 * This method clicks the Edit Hours icon link (small clock) in the Rates panel on the Role page
+	 * @author David Grayson
+	 */
+	public void clickEditRoleHours(){
+		lnkEditRoleHours.syncEnabled(5);
+		lnkEditRoleHours.click();
+	}
+
+	/**
+	 * would use the {@link #verifyProjectLink(String)} but it doesn't do what it's name implies
+	 * @author David Grayson
+	 * @param project {@link String} name of Project
+	 * @return {@link Boolean} Returns <code>true</code> if the link is clickable within 5 seconds, <code>false</code> otherwise.
+	 */
+	public boolean verifyProjectLinkValid(String project){
+		return driver.findLink(By.linkText(project)).syncEnabled(5,false) &&
+				driver.findLink(By.linkText(project)).syncVisible(5,false);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strRole {@link String} The name of the Role
+	 * @return {@link Boolean} Returns <code>true</code> if the link is enabled and visible, <code>false</code> otherwise.
+	 */
+	public boolean verifyRoleLink(String strRole) {
+		return driver.findLink(By.linkText(strRole)).syncEnabled(5,false) &&
+				driver.findLink(By.linkText(strRole)).syncVisible(5,false);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Roles parent account
+	 * @param strProject {@link String} name of Roles parent project
+	 * @param strRole {@link String} name of role
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Roles page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyRolePageIsLoaded(String strAccount, String strProject, String strRole){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,elmRoleInfoPanelHeader,5)
+				&& driver.findElement(By.xpath("//div[@class='breadcrumbs']")).getText()
+				.equals("Accounts - " + strAccount + " - " + strProject + " - " + strRole);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Projects parent account
+	 * @param strProject {@link String} name of project
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Projects page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyProjectPageIsLoaded(String strAccount, String strProject){
+		return PageLoaded.isElementLoaded(this.getClass(),driver, elmProjectInfoPanelHeader,5)
+				&& driver.findElement(By.xpath("//div[@class='breadcrumbs']")).getText()
+				.equals("Accounts - " + strAccount + " - " + strProject);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Account
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Accounts page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountPageIsLoaded(String strAccount){
+		String xpath = "//div[@class='breadcrumbs']/a[contains(text(),'" + strAccount + "')]";
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblProjects,5)
+				&& driver.findLink(By.xpath(xpath)).syncVisible(5,false);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the Accounts table is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountsPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblAccounts,5);
+	}
+
 
 	/*
 	 * Click on accounts tab 
