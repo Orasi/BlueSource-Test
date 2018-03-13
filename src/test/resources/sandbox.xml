@@ -13,7 +13,10 @@
 	
 	<test name="In Progress test" parallel="methods" thread-count="20">
 		<classes>
-			<class name="com.bluesource.accounts.CreateAccount" />
+			<class name="com.bluesource.employees.DeactivateEmployeeActiveEmployees" />
+		 	<class name="com.bluesource.employees.DeactivateEmployeeInactiveEmployees" /> 
+			<class name="com.bluesource.employees.DeactivateEmployeeFutureVacation" />
+			<class name="com.bluesource.employees.DeactivateEmployeeCurrentVacationEndDate" />
 		</classes>
 	</test>
 
