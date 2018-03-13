@@ -1,5 +1,7 @@
 package com.orasi.bluesource;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 
 import com.orasi.web.OrasiDriver;
@@ -21,6 +23,11 @@ public class EmployeePage {
 	@FindBy(xpath = "//*[@id=\'accordion\']/div/div[7]/button") Button btnEditGeneral;
 	@FindBy(partialLinkText = "Deactivate Employee") Button btnDeactivateEmployee;
 	@FindBy(partialLinkText = "Deactivate") Button btnDeactivate;
+	@FindBy(xpath = "//*[@id='accordion']/div/div[3]/h4/a") Button btnManageProjectInfo;
+	@FindBy(xpath = "//*[@id='content']/div[6]/table/tbody/tr[6]/td/a") Button btnAddTimesheetWeek3;
+	@FindBy(xpath = "//input[@value='Save']") Button btnSaveTimesheet;
+	@FindBy(xpath = "(//*[@id='employee_reported_times___date_hours_hours'])[1]") Textbox txtFirstDayOfTimesheet;
+	@FindBy(xpath = "//*[@id='comment']") Textbox txtCommentBox;
 	
 	/**Constructor**/
 	public EmployeePage(OrasiDriver driver){
@@ -75,4 +82,39 @@ public class EmployeePage {
 		btnDeactivate.click();
 	}
 	
+	public void clickManageProjectInfo() {
+		btnManageProjectInfo.syncVisible(2,true);
+		btnManageProjectInfo.click();
+	}
+	
+	public boolean verifyManageProjectInfo() {
+		return btnManageProjectInfo.syncVisible(2,true);
+	}
+	
+	public void clickAddTimesheet3() {
+		btnAddTimesheetWeek3.syncVisible(2,true);
+		btnAddTimesheetWeek3.click();
+	}
+	
+	public boolean verifyAddTimesheet3() {
+		return btnAddTimesheetWeek3.syncVisible(2,true);
+	}
+	
+	public void clickSaveTimesheet() {
+		btnSaveTimesheet.syncVisible(2,true);
+		btnSaveTimesheet.click();
+	}
+	
+	public boolean verifySaveTimesheet() {
+		return btnSaveTimesheet.syncVisible(2,true);
+	}
+	
+	public void rightClickFirstDatOfTimesheet() {
+		Actions action = driver.actions();
+		action.contextClick(driver.findElement(By.xpath("(//*[@id='employee_reported_times___date_hours_hours'])[1]"))).build().perform();
+	}
+	
+	public boolean verifyCommentBox() {
+		return txtCommentBox.syncVisible(2,true);
+	}
 }
