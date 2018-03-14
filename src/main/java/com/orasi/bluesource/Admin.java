@@ -47,11 +47,19 @@ public class Admin {
 		return lblAddCompanyModal.syncVisible(2,true);
 	}
 	
+	/**
+	 * Sets the company name in the create company modal
+	 * @param companyName - Name of company
+	 */
 	public void populateCompanyName(String companyName) {
 		lblAddCompanyModal.syncVisible(2,true);
 		txtCompanyName.sendKeys(companyName);
 	}
 	
+	/**
+	 * Sets the logo path in the create company modal
+	 * @param logoPath - Path on computer to logo
+	 */
 	public void setCompanyLogo(String logoPath) {
 		btnCompanyLogo.sendKeys(logoPath);
 	}
@@ -61,6 +69,12 @@ public class Admin {
 		btnCreateCompany.click();
 	}
 	
+	/**
+	 * Attempts to check the list of companies for a specified name and logo
+	 * @param companyName - Name of company to check for
+	 * @param logoName - Name of logo to check for
+	 * @return - True if both exist
+	 */
 	public boolean verifyCreatedCompanyNameLogo(String companyName, String logoName) {
 		boolean checker = false;
 		if(driver.findLabel(By.xpath("//td[contains(text(),'"+companyName+"')]")).getText().equalsIgnoreCase(companyName) 
@@ -74,6 +88,10 @@ public class Admin {
 		btnEditThirdCompany.click();
 	}
 	
+	/**
+	 * Updates the Edit Company modal to the passed logo
+	 * @param logoPath - Path on computer to logo file
+	 */
 	public void updateCompanyLogo(String logoPath) {
 		btnChangeLogo.syncVisible(2,true);
 		btnChangeLogo.click();
@@ -84,15 +102,29 @@ public class Admin {
 		btnUpdateCompany.click();
 	}
 	
+	/**
+	 * Updates the Edit Company modal to the passed name
+	 * @param newCompanyName - Name to be changed to
+	 */
 	public void updateCompanyName(String newCompanyName) {
 		txtEditCompanyName.syncVisible(2,true);
 		txtEditCompanyName.set(newCompanyName);
 	}
 	
+	/**
+	 * Verifies the name of the third company is the company name passed
+	 * @param companyName - Name of the company
+	 * @return - True if they match
+	 */
 	public boolean verifyThirdCompanyName(String companyName) {
 		return lblThirdCompanyName.getText().equalsIgnoreCase(companyName);
 	}
 	
+	/**
+	 * Verifies the logo of the third company is the logo name passed
+	 * @param logoName - Name of the logo
+	 * @return - True if they match
+	 */
 	public boolean verifyThirdCompanyLogo(String logoName) {
 		return lblThirdCompanyLogo.getAttribute("alt").equalsIgnoreCase(logoName);
 	}

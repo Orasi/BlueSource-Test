@@ -1,3 +1,11 @@
+/**
+ * Tests Company Admin_Admin_Companies - Isse #946 & #964
+ * This test creates a company with a given name and logo,
+ *  then verifies the company was created correctly. The test
+ *  goes on to edit a company's name and logo and verify if
+ *  those are changed correctly
+ *  @author andrew.mcgrail
+ */
 package com.bluesource;
 
 import org.testng.ITestContext;
