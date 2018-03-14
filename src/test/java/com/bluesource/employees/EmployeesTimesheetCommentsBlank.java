@@ -8,38 +8,21 @@
 
 package com.bluesource.employees;
 
-import java.util.ResourceBundle;
-
 import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.orasi.bluesource.EmployeePage;
 import com.orasi.bluesource.Employees;
-import com.orasi.bluesource.FilledRoleForm;
-import com.orasi.bluesource.Header;
 import com.orasi.bluesource.LoginPage;
-import com.orasi.bluesource.MessageCenter;
-import com.orasi.utils.Constants;
 import com.orasi.utils.TestReporter;
-import com.orasi.utils.dataProviders.ExcelDataProvider;
-import com.orasi.utils.date.DateTimeConversion;
-import com.orasi.utils.date.SimpleDate;
 import com.orasi.web.WebBaseTest;
 
 public class EmployeesTimesheetCommentsBlank extends WebBaseTest{	
-	// ************* *
-	// Data Provider
-	// **************
-	/*@DataProvider(name = "login", parallel=true)
-	public Object[][] scenarios() {
-	return new ExcelDataProvider("/testdata/blueSource_Users.xlsx", "Sheet1").getTestData();
-	}*/
-			
+		
 	@BeforeMethod
 	@Parameters({ "runLocation", "browserUnderTest", "browserVersion",
 	"operatingSystem", "environment" })
@@ -66,6 +49,7 @@ public class EmployeesTimesheetCommentsBlank extends WebBaseTest{
 		 String firstName = "Issue";
 		 String lastName = "613";
 		 String fullName = firstName+" "+lastName;
+		 String comment = "This is a cool comment";
 		 
 		 LoginPage loginPage = new LoginPage(getDriver());
 		 Employees employees = new Employees(getDriver());
@@ -85,16 +69,24 @@ public class EmployeesTimesheetCommentsBlank extends WebBaseTest{
 		 // Step 6 On one of the timesheets, click the Add button.
 		 employeePage.clickAddTimesheet3();
 		 TestReporter.assertTrue(employeePage.verifySaveTimesheet(), "Successfully opened the timesheet modal");
+		 employeePage.assignTimesheetType();
 		 // Step 7 Right-Click in one of the time fields.
-		 employeePage.rightClickFirstDatOfTimesheet();
+		 employeePage.rightClickFirstDayOfTimesheet();
 		 TestReporter.assertTrue(employeePage.verifyCommentBox(), "The comment box is being displayed");
 		 // Step 8 Enter text into the comment box and click the OK button.
-		 
+		 employeePage.populateCommentBox(comment);
 		 // Step 9 Click the Save button
 		 employeePage.clickSaveTimesheet();
-		 
 		 // Step 10 If the message of a locked time sheet is displayed, Click the unlock button and then Click the pencil Icon
-		 
+		 TestReporter.assertTrue(employeePage.verifySaveTimesheetMessage(), "Verified the Timesheet was saved successfully");
+		 employeePage.clickEditTimesheet();
 		 // Step 11 Repeat steps 7 - 9 and verify that the speech bubble is present and the field is populated with "0"
+		 employeePage.rightClickFirstDayOfTimesheet();
+		 TestReporter.assertTrue(employeePage.verifyCommentBox(), "The comment box is being displayed");
+		 TestReporter.assertTrue(employeePage.verifyCommentBox(comment), "Verified the timesheet correctly retains the comment data");
+		 TestReporter.assertTrue(employeePage.verifyTimesheetTotalHours("0"), "Verified the timesheet still correctly has 0 hours");
+		 
+		 employeePage.clickSaveTimesheet();					// To reset the test
+		 employeePage.clickDeleteTimesheet();				// To reset the test
 	} 
 }
