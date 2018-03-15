@@ -18,8 +18,8 @@ public class Header {
 	@FindBy(xpath = "//li[contains(.,'Employees')]/a") private Link lnkEmployees;
 	@FindBy(xpath = "//a[contains(text(),'Project')]") private Link lnkProjemployees;
 	@FindBy(xpath = "//a[contains(text(),'Project')]//..//..//..//following-sibling::a") private Link lnkEmployeeSelector;
-	@FindBy(linkText = "Admin") private Link lnkAdmin;
-	@FindBy(linkText = "Timesheet Locks") private Link lnkTimesheetLocks;
+	@FindBy(xpath = "/html/body/header/div/nav/ul/li[2]/a") private Link lnkAdminDropdown;
+	@FindBy(xpath = "//a[contains(text(),'Company Holidays')]") private Link lnkCompanyHolidays;
 	
 	/**Constructor**/
 	public Header(OrasiDriver driver){
@@ -64,9 +64,12 @@ public class Header {
 	 * @author Paul
 	 */
 	public void navigateEmployees() {
-		MessageCenter messageCenter = new MessageCenter(driver);
-		messageCenter.closeMessageCenter();
-		lnkEmployees.click();		
+		lnkEmployees.syncVisible(2,true);
+	//	MessageCenter messageCenter = new MessageCenter(driver);
+	//	messageCenter.closeMessageCenter();
+		lnkEmployees.syncVisible(2,true);
+		lnkEmployees.syncInFrame(2,true);
+		lnkEmployees.click();
 	}
 	
 	public void navigateProjectEmployees() {
@@ -83,10 +86,9 @@ public class Header {
 		lnkLogout.click();		
 	}
 
-	public void navigateTimesheetLocks() {
-		MessageCenter messageCenter = new MessageCenter(driver);
-		messageCenter.closeMessageCenter();
-		lnkAdmin.click();
-		lnkTimesheetLocks.click();
+	public void navigateCompanyHolidays() {
+		lnkAdminDropdown.click();
+		lnkCompanyHolidays.syncVisible(2,true);
+		lnkCompanyHolidays.click();
 	}
 }
