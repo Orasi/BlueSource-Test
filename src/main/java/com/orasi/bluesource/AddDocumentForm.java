@@ -48,13 +48,6 @@ public class AddDocumentForm {
             elmDocumentFile.sendKeys(filePath);
     }
 
-    public String getFileName(){
-        if (canInteract(elmDocumentFile))
-            return elmDocumentFile.getText();
-        else
-            return "";
-    }
-
     public String getDocumentName(){
         return txtDocumentName.getText();
     }
@@ -88,11 +81,6 @@ public class AddDocumentForm {
             txtTotalBudget.clear();
             txtTotalBudget.sendKeys(String.valueOf(budget));
         }
-    }
-
-    public void checkSigned(){
-        if (canInteract(chkSigned))
-            chkSigned.check();
     }
 
     public void clickSignedCheckbox(){

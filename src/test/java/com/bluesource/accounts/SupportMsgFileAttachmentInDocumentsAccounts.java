@@ -35,11 +35,11 @@ public class SupportMsgFileAttachmentInDocumentsAccounts extends WebBaseTest {
         //Test variables
         String strAccount = "Account1";
         String strProject = "Project1";
-        String strMsgFilePath = "C:\\Users\\graysoda\\Documents\\test.msg";
+        String strMsgFilePath = "C:\\Users\\david.grayson\\Documents\\test msg.msg";
         String fileName = strMsgFilePath.split("\\\\")[strMsgFilePath.split("\\\\").length-1];
         int budget = 10000;
         double hours = 10000.00;
-        String documentType = "";
+        String documentType = "SOW";
         String documentName;
 
         //Page Models
@@ -50,40 +50,50 @@ public class SupportMsgFileAttachmentInDocumentsAccounts extends WebBaseTest {
 
         TestReporter.assertTrue(loginPage.verifyPageIsLoaded(),"Verifying BlueSource login page is loaded");
 
+        TestReporter.logStep("Logging in as Admin");
         loginPage.AdminLogin();
 
+        TestReporter.logStep("Navigating to Accounts");
         header.navigateAccounts();
 
         TestReporter.assertTrue(accounts.verifyAccountsPageIsLoaded(), "Verifying Accounts page is loaded");
         TestReporter.assertTrue(accounts.verifyAccountLink(strAccount), "Verifying account ["+strAccount+"] link");
 
+        TestReporter.logStep("Clicking [" + strAccount + "] link");
         accounts.clickAccountLink(strAccount);
 
         TestReporter.assertTrue(accounts.verifyAccountPageIsLoaded(strAccount),"Verifying account ["+strAccount+"] page is loaded");
         TestReporter.assertTrue(accounts.verifyProjectLinkValid(strProject),"Verifying Project ["+strProject+"] link");
 
+        TestReporter.logStep("Clicking [" + strProject + "] link");
         accounts.clickProjectLink(strProject);
 
         TestReporter.assertTrue(accounts.verifyProjectPageIsLoaded(strAccount,strProject),"Verifying Project ["+strProject+"] page is loaded");
 
+        TestReporter.logStep("Clicking Add Document button");
         accounts.clickAddDocument();
 
         TestReporter.assertTrue(addDocumentForm.verifyFormLoaded(),"Verifying Add Document form loaded");
 
+        TestReporter.logStep("Setting file path to ["+strMsgFilePath+"]");
         addDocumentForm.setFile(strMsgFilePath);
 
-        TestReporter.assertEquals(fileName,addDocumentForm.getDocumentName(),"Verifying File name is correct");
+        TestReporter.logStep("Selecting ["+documentType+"] as Document type");
+		addDocumentForm.selectDocumentType(documentType);
 
-        documentName = addDocumentForm.getDocumentName();
+		TestReporter.logStep("Getting document name");
+		documentName = addDocumentForm.getDocumentName();
 
-        addDocumentForm.selectDocumentType(documentType);
-
+		TestReporter.logStep("Setting Total Budget field to ["+budget+"]");
         addDocumentForm.setTotalBudget(budget);
 
+        TestReporter.logStep("Setting Total Hours field to ["+hours+"]");
         addDocumentForm.setTotalHours(hours);
 
+        TestReporter.logStep("Clicking Signed checkbox");
         addDocumentForm.clickSignedCheckbox();
 
+        TestReporter.logStep("Clicking Create Document button");
         addDocumentForm.clickCreateDocument();
 
         TestReporter.assertTrue(accounts.verifyDocumentExists(documentName),"Verifying Document was created");
