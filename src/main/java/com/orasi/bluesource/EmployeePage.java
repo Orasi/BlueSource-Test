@@ -1,5 +1,6 @@
 package com.orasi.bluesource;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.FindBy;
 
 import com.orasi.web.OrasiDriver;
@@ -7,28 +8,36 @@ import com.orasi.web.webelements.Button;
 import com.orasi.web.webelements.Checkbox;
 import com.orasi.web.webelements.Element;
 import com.orasi.web.webelements.Label;
+import com.orasi.web.webelements.Link;
 import com.orasi.web.webelements.Textbox;
 import com.orasi.web.webelements.Webtable;
 import com.orasi.web.webelements.impl.internal.ElementFactory;
 
 public class EmployeePage {
 	private OrasiDriver driver = null;
-		
-	/**Page Elements**/
+
+	/** Page Elements **/
 	@FindBy(xpath = "//tr[1]//a[@class='glyphicon glyphicon-pencil']") Button btnEditFirstProject;
 	@FindBy(xpath = "//div[@id='panel_body_1']//table") Webtable tblProjectInfo;
 	@FindBy(xpath = "//button[@data-target='#modal_1']") Button btnEditGeneral;
 	@FindBy(xpath = "//div//a[contains(text(),'Deactivate Employee')]") Button btnDeactivateEmployee;
 	@FindBy(xpath = "//div[@class='panel-heading']//a[contains(text(),'Deactivate')]") Button btnDeactivate;
-	
-	/**Constructor**/
-	public EmployeePage(OrasiDriver driver){
+	@FindBy(xpath = "//*[@id=\"all-content\"]/div[3]/div/div[2]/button") private Button btnAddEmployee;
+	@FindBy(xpath = "//input[@name='employee[username]']") private Textbox boxUsername;
+	@FindBy(xpath = "//input[@name='employee[first_name]']") private Textbox boxFirstName;
+	@FindBy(xpath = "//input[@name='employee[last_name]']") private Textbox boxLastName;
+	@FindBy(xpath = "//input[@value='Create Employee']") private Button btnCreateEmployee;
+	@FindBy(xpath = "//input[@id='search-bar']") private Textbox boxSearchBar;
+	@FindBy(linkText = "Employees") private Link lnkEmployees;
+
+	/** Constructor **/
+	public EmployeePage(OrasiDriver driver) {
 		this.driver = driver;
 		ElementFactory.initElements(driver, this);
 	}
 
-	/**Page Interactions**/
-	public void clickFirstEditProjectButton(){
+	/** Page Interactions **/
+	public void clickFirstEditProjectButton() {
 		btnEditFirstProject.click();
 	}
 
@@ -37,7 +46,7 @@ public class EmployeePage {
 		// get project column
 		Integer intColumn = tblProjectInfo.getColumnWithCellText("Project", 1);
 		Integer intRow = tblProjectInfo.getRowWithCellText(strProject, intColumn);
-		
+
 		if (strProject.equals(tblProjectInfo.getCellData(intRow, intColumn))) {
 			return true;
 		} else {
@@ -48,10 +57,10 @@ public class EmployeePage {
 	public boolean verifyStartDate(String strStartDate, String strProject) {
 		Integer intProjectColumn = tblProjectInfo.getColumnWithCellText("Project", 1);
 		Integer intProjectRow = tblProjectInfo.getRowWithCellText(strProject, intProjectColumn);
-		
+
 		Integer intStartDateColumn = tblProjectInfo.getColumnWithCellText("Start Date", 1);
-		
-		if (strStartDate.equals(tblProjectInfo.getCellData(intProjectRow, intStartDateColumn))){
+
+		if (strStartDate.equals(tblProjectInfo.getCellData(intProjectRow, intStartDateColumn))) {
 			return true;
 		} else {
 			return false;
@@ -60,15 +69,52 @@ public class EmployeePage {
 
 	public void editGeneralInfo() {
 		btnEditGeneral.click();
-		
-	}		
-	
+
+	}
+
 	public void clickDeactivateEmployee() {
 		btnDeactivateEmployee.click();
 	}
-	
-	public void clickDeactivate(){
+
+	public void clickDeactivate() {
 		btnDeactivate.click();
 	}
+
+	public void clickAddEmployee() {
+		btnAddEmployee.click();
+	}
 	
+	public void naviagateBackToEmployees() {
+		lnkEmployees.click();
+	}
+
+	/**
+	 * @author Zach Apple
+	 * @param fName
+	 *            the employee's first name
+	 * @param lName
+	 *            the employee's last name
+	 */
+	public void fillEmployeeInfo(String fName, String lName) {
+		boxUsername.sendKeys(fName + "." + lName);
+		boxFirstName.sendKeys(fName);
+		boxLastName.sendKeys(lName);
+		btnCreateEmployee.click();
+	}
+
+	/**
+	 * @author Zach Apple
+	 * @param fName
+	 *            the employee's first name
+	 * @param lName
+	 *            the employee's last name
+	 * @return true if the employee's last name has proper capitalization on their
+	 *         personal page, false otherwise
+	 */
+	public boolean verifyFoundEmployee(String fName, String lName) {
+		boxSearchBar.sendKeys(fName + " " + lName);
+		driver.findElement(By.partialLinkText(lName)).click();
+		return driver.findElement(By.xpath("//div[@class='search-area']/../h1")).getText().contains(lName);
+	}
+
 }
