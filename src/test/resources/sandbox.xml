@@ -13,6 +13,7 @@
 	
 	<test name="In Progress test" parallel="methods" thread-count="20">
 		<classes>
+			<class name="com.bluesource.accounts.CollapseExpandSubProjectHeadersTest" />
 			<class name="com.bluesource.admin.TimesheetLockDisplay" />
 		</classes>
 	</test>

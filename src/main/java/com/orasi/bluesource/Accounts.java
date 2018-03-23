@@ -1,7 +1,9 @@
 package com.orasi.bluesource;
 
 import java.lang.reflect.UndeclaredThrowableException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.lang.model.util.Elements;
 
@@ -28,9 +30,8 @@ import com.orasi.web.webelements.impl.internal.ElementFactory;
 
 public class Accounts {
 	private OrasiDriver driver = null;
-	
-	
-	/**Page Elements**/
+
+	/** Page Elements **/
 	@FindBy(xpath = "//*[@id='resource-content']/div[2]/p") private Element elmNumberPages;
 	@FindBy(xpath = "//*[@id=\"resource-content\"]/div[1]/table/tbody") private Webtable tblAccounts;
 	@FindBy(id = "preference_resources_per_page") private Listbox lstAccountPerPage;
@@ -47,42 +48,36 @@ public class Accounts {
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
 
-	/**Constructor**/
-	public Accounts(OrasiDriver driver){
+	/** Constructor **/
+	public Accounts(OrasiDriver driver) {
 		this.driver = driver;
 		ElementFactory.initElements(driver, this);
 	}
-	
-	/**Page Interactions**/
+
+	/** Page Interactions **/
 
 	/*
-	 * Click on accounts tab 
-	 * Make sure that the correct page loads
-	 * author: Daniel Smith
+	 * Click on accounts tab Make sure that the correct page loads author: Daniel
+	 * Smith
 	 */
-	public void click_accounts_tab(String username)
-	{
-		if (lnkAccountsTab.isDisplayed() == true)
-		{
-			System.out.println(username +" has account permissions");
+	public void click_accounts_tab(String username) {
+		if (lnkAccountsTab.isDisplayed() == true) {
+			System.out.println(username + " has account permissions");
 			lnkAccountsTab.click();
 		}
-		
+
 	}
-	
-	
+
 	/**
 	 * This method gets the number of rows on the Accounts page
+	 * 
 	 * @author Paul
 	 */
 	public int getAccountsTableRows() {
 		int rowCount = 0;
-		try
-		{
+		try {
 			rowCount = tblAccounts.getRowCount();
-		}
-		catch(NullPointerException e)
-		{
+		} catch (NullPointerException e) {
 			System.out.println("Null pointer exception, no accounts found  \n" + e.getLocalizedMessage());
 		}
 		return (rowCount - 1);
@@ -90,207 +85,198 @@ public class Accounts {
 
 	/**
 	 * This method gets the number of Accounts reported by the page
+	 * 
 	 * @author Paul
-	 * @return 
+	 * @return
 	 */
 	public Integer getNumberOfAccounts() {
 		String str;
 		String delims;
 		String[] tokens = null;
 		Integer lastItem = null;
-		
-		try
-		{
+
+		try {
 			tblAccounts.syncEnabled(3);
 			str = elmNumberPages.getText();
 			delims = "[ ]";
 			tokens = str.split(delims);
 			lastItem = tokens.length;
-			return Integer.valueOf(tokens[lastItem-1]);
-		}
-		catch(NoSuchElementException e)
-		{
+			return Integer.valueOf(tokens[lastItem - 1]);
+		} catch (NoSuchElementException e) {
 			System.out.println("No such exception, no accounts found \n" + e.getLocalizedMessage());
 		}
 		return lastItem;
-		
+
 	}
-	
+
 	/*
-	 * Change the number showing for accounts per page to 100
-	 * author: Daniel Smith
+	 * Change the number showing for accounts per page to 100 author: Daniel Smith
 	 */
-	public void accountsPerPage()
-	{
-		try
-		{
+	public void accountsPerPage() {
+		try {
 			lstAccountPerPage.selectValue("100");
-		}
-		catch(NoSuchElementException e)
-		{
+		} catch (NoSuchElementException e) {
 			System.out.println("No such element found.  \n" + e.getLocalizedMessage());
-		}
-		catch(UndeclaredThrowableException e)
-		{
+		} catch (UndeclaredThrowableException e) {
 			System.out.println("Undeclared throwable exception  \n" + e.getLocalizedMessage());
 		}
-		
+
 	}
-	
+
 	/*
 	 * Sort accounts table by industry
+	 * 
 	 * @author: Daniel Smith
 	 */
-	public void sort_by_industry()
-	{
-		if(lnkIndustry.isDisplayed() == true)
-		{
+	public void sort_by_industry() {
+		if (lnkIndustry.isDisplayed() == true) {
 			System.out.println("Link 'Industry' is present");
 			lnkIndustry.click();
-		}
-		else
+		} else
 			System.out.println("Link 'Industry' not on current page");
-	
+
 	}
-	
-	public void clickAccountLink(String strAccount){
+
+	public void clickAccountLink(String strAccount) {
 		String xpathExpression;
 		xpathExpression = "//td//a[contains(text(),'" + strAccount + "')]";
 		Link lnkAccount = driver.findLink(By.xpath(xpathExpression));
 		lnkAccount.click();
 	}
-	
-	public void clickProjectLink(String strProject){
-		/*String xpathExpression;
-		xpathExpression = "//td//a[contains(text(),'" + strProject + "')]";
-		Link lnkProject = driver.findLink(By.xpath(xpathExpression));
-		lnkProject.syncEnabled(5,true);
-		lnkProject.click();*/
-		
+
+	public void clickProjectLink(String strProject) {
+		/*
+		 * String xpathExpression; xpathExpression = "//td//a[contains(text(),'" +
+		 * strProject + "')]"; Link lnkProject =
+		 * driver.findLink(By.xpath(xpathExpression)); lnkProject.syncEnabled(5,true);
+		 * lnkProject.click();
+		 */
+
 		// verify project is in project column
 		// get project column
 		Integer intColumn = 1;
 		Integer intRow = tblProjects.getRowWithCellText(strProject, intColumn);
 		tblProjects.findElement(By.linkText(strProject)).click();
-		
-		//tblProjects.clickCell(intRow, intColumn);
+
+		// tblProjects.clickCell(intRow, intColumn);
 	}
-	
-	public Element verifyProjectLink(String strProject){
+
+	public Element verifyProjectLink(String strProject) {
 		Integer intColumn = 1;
 		Integer intRow = tblProjects.getRowWithCellText(strProject, intColumn);
-		
+
 		tblProjects.findElement(By.linkText(strProject)).click();
 		Element eleProject = tblProjects.findElement(By.linkText(strProject));
-		
+
 		return eleProject;
-		
+
 	}
-	
-	public void clickSubprojectLink(String strSubProject){
+
+	public void clickSubprojectLink(String strSubProject) {
 		String xpathExpression;
 		xpathExpression = "//td//a[contains(text(),'" + strSubProject + "')]";
-		Link  lnkSubProject = driver.findLink(By.xpath(xpathExpression));
-		lnkSubProject.syncEnabled(5,true);
+		Link lnkSubProject = driver.findLink(By.xpath(xpathExpression));
+		lnkSubProject.syncEnabled(5, true);
 		lnkSubProject.click();
 	}
-	
-	public void clickRoleLink(String strRole){
+
+	public void clickRoleLink(String strRole) {
 		String xpathExpression;
 		xpathExpression = "//td//a[contains(text(),'" + strRole + "')]";
 		Link lnkRole = driver.findLink(By.xpath(xpathExpression));
-		lnkRole.syncEnabled(5,true);
+		lnkRole.syncEnabled(5, true);
 		lnkRole.click();
 		PageLoaded.isDomComplete(driver, 5);
 	}
-	
-	public void clickAssignEmployee(){
-		btnAssignEmployee.syncEnabled(5,true);
+
+	public void clickAssignEmployee() {
+		btnAssignEmployee.syncEnabled(5, true);
 		btnAssignEmployee.click();
 	}
 
-	public void assignEmployee(String strAccount, String strProject, String strSubProject, String strRole, String strEmployeeName) {
+	public void assignEmployee(String strAccount, String strProject, String strSubProject, String strRole,
+			String strEmployeeName) {
 		FilledRoleForm filledRoleForm = new FilledRoleForm(driver);
-		
+
 		clickAccountLink(strAccount);
-		
+
 		clickProjectLink(strProject);
-		
+
 		clickSubprojectLink(strSubProject);
-		
+
 		clickRoleLink(strRole);
-		
+
 		filledRoleForm.selectEmployee(strEmployeeName);
-		
+
 	}
-	
-	public void clickAddAccount(){
+
+	public void clickAddAccount() {
 		btnAddAccount.click();
 	}
-	
-	public void setAccountNameTextbox(String strAccountName){
+
+	public void setAccountNameTextbox(String strAccountName) {
 		txtAccountName.set(strAccountName);
 	}
-	
-	public void selectIndustry(String strIndustry){
+
+	public void selectIndustry(String strIndustry) {
 		lstIndustry.select(strIndustry);
 	}
-	
-	public void clickCreateAccount(){
+
+	public void clickCreateAccount() {
 		btnCreateAccount.click();
 	}
-	
-	public boolean verifyAccountLink(String strAccountName){
+
+	public boolean verifyAccountLink(String strAccountName) {
 		String xpathExpression;
-		
+
 		xpathExpression = "//td//a[contains(text(),'" + strAccountName + "')]";
-		
+
 		Link lnkAccount = driver.findLink(By.xpath(xpathExpression));
-		
+
 		return lnkAccount.isDisplayed();
 	}
-	
-	public String createAccount(){
+
+	public String createAccount() {
 		clickAddAccount();
-		
+
 		PageLoaded.isDomComplete(driver, 5);
-		
+
 		String strAccountName = Randomness.randomAlphaNumeric(10);
-		
+
 		setAccountNameTextbox(strAccountName);
-		
+
 		selectIndustry("Other");
-		
+
 		clickCreateAccount();
-		
-		//clickAccountLink(strAccountName);
-		
+
+		// clickAccountLink(strAccountName);
+
 		return strAccountName;
-		
+
 	}
-	
+
 	/**
 	 * Checks if the add account button is visible.
 	 * 
-	 * @return <code>true</code> if the add account button is visible, 
-	 * <code>false</code> otherwise.
+	 * @return <code>true</code> if the add account button is visible,
+	 *         <code>false</code> otherwise.
 	 * @author Darryl Papke
 	 */
 	public boolean verifyAddButtonIsVisible() {
 		return btnAddAccount.syncVisible(3, false);
 	}
-	
+
 	/**
 	 * Checks if the edit account button is visible.
 	 * 
-	 * @return <code>true</code> if the edit account button is visible, 
-	 * <code>false</code> otherwise.
+	 * @return <code>true</code> if the edit account button is visible,
+	 *         <code>false</code> otherwise.
 	 * @author Darryl Papke
 	 */
 	public boolean verifyEditButtonIsVisible() {
 		return btnEditAccount.syncVisible(3, false);
 	}
-	
+
 	/**
 	 * Clicks the first account link in the accounts table.
 	 * 
@@ -299,40 +285,40 @@ public class Accounts {
 	public void clickFirstAccountLink() {
 		tblAccounts.getCell(2, 1).findElement(By.cssSelector("a[class='ng-binding']")).click();
 	}
-	
+
 	/**
 	 * Checks if the Quick Nav button is displayed.
 	 * 
-	 * @return <code>true</code> if the Quick Nav button is visible, 
-	 * <code>false</code> otherwise.
+	 * @return <code>true</code> if the Quick Nav button is visible,
+	 *         <code>false</code> otherwise.
 	 * @author Darryl Papke
 	 */
 	public boolean verifyQuickNavButtonIsVisible() {
 		return btnQuickNav.syncVisible(5, true);
 	}
-	
+
 	/**
-	 * Goes through each page of accounts and checks if the Quick Nav button
-	 * is visible on each page.
+	 * Goes through each page of accounts and checks if the Quick Nav button is
+	 * visible on each page.
 	 * 
-	 * @return <code>true</code> if the Quick Nav button is on each page, 
-	 * <code>false</code> otherwise.
+	 * @return <code>true</code> if the Quick Nav button is on each page,
+	 *         <code>false</code> otherwise.
 	 * @author Darryl Papke
 	 */
 	public boolean verifyQuickNavButtonEachPage() {
 		boolean answer = false;
 		PageLoaded.isDomComplete(driver, 5);
-		for(Button page : btnPages) {
+		for (Button page : btnPages) {
 			page.syncEnabled(5);
 			page.click();
 			answer = verifyQuickNavButtonIsVisible();
-			if(!verifyQuickNavButtonIsVisible()) {
+			if (!verifyQuickNavButtonIsVisible()) {
 				return false;
 			}
 		}
 		return answer;
 	}
-	
+
 	/**
 	 * Clicks the Quick Nav button.
 	 * 
@@ -351,30 +337,82 @@ public class Accounts {
 		PageLoaded.isDomComplete(driver, 5);
 		btnCloseQuickNav.click();
 	}
-	
+
 	/**
 	 * Checks if the Quick Nav close button is visible.
 	 * 
-	 * @return <code>true</code> if the Quick Nav close button is 
-	 * visible, <code>false</code> otherwise.
+	 * @return <code>true</code> if the Quick Nav close button is visible,
+	 *         <code>false</code> otherwise.
 	 * @author Darryl Papke
 	 */
 	public boolean verifyQuickNavCloseButtonIsVisible() {
 		PageLoaded.isDomComplete(driver, 5);
 		return btnCloseQuickNav.syncVisible(3, false);
 	}
-	
+
 	/**
 	 * Clicks on a cell in the Accounts table from given coordinates.
 	 * 
-	 * @param row Desired row in which to search for a particular cell
-	 * @param column Desired column in which to find the cell
+	 * @param row
+	 *            Desired row in which to search for a particular cell
+	 * @param column
+	 *            Desired column in which to find the cell
 	 * @author Darryl Papke
 	 */
 	public void selectCell(int row, int column) {
 		tblAccounts.clickCell(row, column);
 		PageLoaded.isDomComplete(driver, 1);
 	}
-	
-}
 
+	/**
+	 * Clicks on each header twice, changing from default to either collapse/expand
+	 * the header, and from the new state clicks again to return to the original
+	 * state. Returns the result of checking the change after each click.
+	 * 
+	 * @author Zach Apple
+	 * @return True if each header collapsed/expanded in respect to default state
+	 *         and if each header collapsed/expanded in respect to the changed
+	 *         state. False otherwise.
+	 */
+	public boolean verifyCollapseExpandHeaders() {
+		//holds the expected value that each header collapses/expands upon click
+		boolean headerCollapsesAndExpands = true;
+		PageLoaded.isDomComplete(driver, 5);
+		//a list of each header element
+		List<Element> list = driver.findElements(By.xpath("//span[contains(@class, 'glyphicon-chevron-')]"));
+		//a wait to be used after each click to give time for the header to fully collapse/expand
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		for (Element e : list) {
+			PageLoaded.isDomComplete(driver, 5);
+			if (e.getAttribute("class").contains("glyphicon-chevron-up")) {
+				e.click();
+				//wait for the attribute to change, or default 5 seconds
+				wait.until(ExpectedConditions.attributeContains(e, "class", "glyphicon-chevron-down"));
+				//verify the expected change
+				headerCollapsesAndExpands &= e.getAttribute("class").contains("glyphicon-chevron-down");
+				e.click();
+				//wait for the attribute to change, or default 5 seconds
+				wait.until(ExpectedConditions.attributeContains(e, "class", "glyphicon-chevron-up"));
+				//verify the expected change
+				headerCollapsesAndExpands &= e.getAttribute("class").contains("glyphicon-chevron-up");
+			} else {
+				e.click();
+				//wait for the attribute to change, or default 5 seconds
+				wait.until(ExpectedConditions.attributeContains(e, "class", "glyphicon-chevron-up"));
+				//verify the expected change
+				headerCollapsesAndExpands &= e.getAttribute("class").contains("glyphicon-chevron-up");
+				//wait for the attribute to change, or default 5 seconds
+				e.click();
+				wait.until(ExpectedConditions.attributeContains(e, "class", "glyphicon-chevron-down"));
+				//verify the expected change
+				headerCollapsesAndExpands &= e.getAttribute("class").contains("glyphicon-chevron-down");
+			}
+			if(!headerCollapsesAndExpands) {
+				//Short circuit the test, as it will have failed if headerCollapsesAndExpands is ever false
+				return false;
+			}
+		}
+		return headerCollapsesAndExpands;
+	}
+
+}
