@@ -1,30 +1,17 @@
 package com.orasi.bluesource;
 
-import java.lang.reflect.UndeclaredThrowableException;
-import java.util.List;
-
-import javax.lang.model.util.Elements;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.orasi.utils.Randomness;
 import com.orasi.utils.TestReporter;
 import com.orasi.web.OrasiDriver;
 import com.orasi.web.PageLoaded;
-import com.orasi.web.webelements.Button;
-import com.orasi.web.webelements.Element;
-import com.orasi.web.webelements.Link;
-import com.orasi.web.webelements.Listbox;
-import com.orasi.web.webelements.Textbox;
-import com.orasi.web.webelements.Webtable;
+import com.orasi.web.webelements.*;
 import com.orasi.web.webelements.impl.internal.ElementFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.support.FindBy;
+
+import java.lang.reflect.UndeclaredThrowableException;
+import java.util.List;
 
 public class Accounts {
 	private OrasiDriver driver = null;
@@ -46,6 +33,10 @@ public class Accounts {
 	@FindBy(css = "div.btn.btn-secondary.btn-xs.quick-nav") private Button btnQuickNav;
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
+	@FindBy(xpath = "//th[contains(text(),'Role')]/../../..") private Webtable tblProjectRoles;
+	@FindBy(xpath = "//th[contains(text(),'Rate')]/../../..") private Webtable tblRoleRates;
+	@FindBy(xpath = "//h4[@class='panel-title' and contains(text(),'Project Info')]") private Element elmProjectInfoPanelHeader;
+	@FindBy(xpath = "//h4[@class='panel-title' and contains(text(),'Role Information')]") private Element elmRoleInfoPanelHeader;
 
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
@@ -55,10 +46,80 @@ public class Accounts {
 	
 	/**Page Interactions**/
 
-	/*
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Roles parent account
+	 * @param strProject {@link String} name of Roles parent project
+	 * @param strRole {@link String} name of role
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Roles page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyRolePageIsLoaded(String strAccount, String strProject, String strRole){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,elmRoleInfoPanelHeader,5)
+				&& driver.findElement(By.xpath("//div[@class='breadcrumbs']")).getText()
+				.equals("Accounts - " + strAccount + " - " + strProject + " - " + strRole);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Projects parent account
+	 * @param strProject {@link String} name of project
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Projects page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyProjectPageIsLoaded(String strAccount, String strProject){
+		return PageLoaded.isElementLoaded(this.getClass(),driver, elmProjectInfoPanelHeader,5)
+				&& driver.findElement(By.xpath("//div[@class='breadcrumbs']")).getText()
+				.equals("Accounts - " + strAccount + " - " + strProject);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @param strAccount {@link String} name of Account
+	 * @return {@link Boolean} Returns <code>true</code> if the provided Accounts page is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountPageIsLoaded(String strAccount){
+		String xpath = "//div[@class='breadcrumbs']/a[contains(text(),'" + strAccount + "')]";
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblProjects,5)
+				&& driver.findLink(By.xpath(xpath)).syncVisible(5,false);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the Accounts table is loaded, <code>false</code> otherwise.
+	 */
+	public boolean verifyAccountsPageIsLoaded(){
+		return PageLoaded.isElementLoaded(this.getClass(),driver,tblAccounts,5);
+	}
+
+	/**
+	 * @author David Grayson
+	 * @return {@link Boolean} Returns <code>true</code> if the rate field from the Rates table on a Project page
+	 * matches the rate on the Rates table on the Role page.
+	 */
+	public boolean verifyRoleRate(String rate) {
+		TestReporter.log(driver.findElement(By.xpath("//div[@class='breadcrumbs']")).getText());
+		return tblRoleRates.syncVisible() && tblRoleRates.getRowWithCellText(rate, 5, 1, true) != 0;
+	}
+
+	/**
+	 * Gets the rate field in the Role Table on a project page
+	 * @author David Grayson
+	 * @param role {@link String}the name of the role to get the rate for
+	 * @return {@link String}
+	 */
+	public String getRoleRateFromProjectPage(String role){
+		final int colPosition = 2;
+		if (tblProjectRoles.syncEnabled(5,false) && tblProjectRoles.syncVisible(5,false)){
+			int row = tblProjectRoles.getRowWithCellText(role);
+			if (tblProjectRoles.getCell(row,colPosition).isEnabled() && tblProjectRoles.getCell(row,colPosition).isDisplayed())
+				return tblProjectRoles.getCell(row, colPosition).getText();
+		}
+		return "";
+	}
+
+	/**
 	 * Click on accounts tab 
 	 * Make sure that the correct page loads
-	 * author: Daniel Smith
+	 * @author: Daniel Smith
 	 */
 	public void click_accounts_tab(String username)
 	{
@@ -116,9 +177,9 @@ public class Accounts {
 		
 	}
 	
-	/*
+	/**
 	 * Change the number showing for accounts per page to 100
-	 * author: Daniel Smith
+	 * @author: Daniel Smith
 	 */
 	public void accountsPerPage()
 	{
@@ -137,7 +198,7 @@ public class Accounts {
 		
 	}
 	
-	/*
+	/**
 	 * Sort accounts table by industry
 	 * @author: Daniel Smith
 	 */
@@ -157,6 +218,7 @@ public class Accounts {
 		String xpathExpression;
 		xpathExpression = "//td//a[contains(text(),'" + strAccount + "')]";
 		Link lnkAccount = driver.findLink(By.xpath(xpathExpression));
+		lnkAccount.syncVisible();
 		lnkAccount.click();
 	}
 	

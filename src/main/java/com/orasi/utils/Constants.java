@@ -28,6 +28,7 @@ public class Constants {
     public final static String USER_CREDENTIALS_PATH = "UserCredentials";
     public final static String SANDBOX_PATH = "/sandbox/";
     public final static String TNSNAMES_PATH = "/database/";
+    final static public String EXCEL_SHEETS = "/excelsheets";
 
     /**
      * Defaults to "./" if there's an exception of any sort.

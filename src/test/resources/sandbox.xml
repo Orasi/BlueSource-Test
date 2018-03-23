@@ -9,7 +9,7 @@
 	<parameter name="environment" value="test" />
 	<parameter name="runLocation" value="local" />
 	<parameter name="browserVersion" value="" />
-	<parameter name="operatingSystem" value="WINDOWS" />
+	<parameter name="operatingSystem" value="Windows 10" />
 	
 	<test name="In Progress test" parallel="methods" thread-count="20">
 		<classes>
